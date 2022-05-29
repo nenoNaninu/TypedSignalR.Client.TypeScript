@@ -6,7 +6,7 @@ using App.Interfaces.Chat;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
-namespace Server.Hub;
+namespace SampleServer.Hub;
 
 public class ChatHub : Hub<IChatReceiver>, IChatHub
 {

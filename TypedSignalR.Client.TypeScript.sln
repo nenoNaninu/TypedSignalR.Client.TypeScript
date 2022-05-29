@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TypedSignalR.Client.TypeScr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{2F2FEF5E-8426-4223-A386-69726CE5F564}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\Server\Server.csproj", "{9B34AF32-9A8F-4B4B-8D1A-FD5F33D2A258}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleServer", "samples\SampleServer\SampleServer.csproj", "{9B34AF32-9A8F-4B4B-8D1A-FD5F33D2A258}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Interfaces", "samples\App.Interfaces\App.Interfaces.csproj", "{F5AED4EE-25EB-496C-B3E1-AEAE1BD4F7B2}"
 EndProject
@@ -29,9 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Console.CSharp", "samples\C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E898FC3D-C2A0-4CC1-8991-F5D4D8AF1501}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypedSignalR.Client.TypeScript.Tests.Server", "tests\TypedSignalR.Client.TypeScript.Tests.Server\TypedSignalR.Client.TypeScript.Tests.Server.csproj", "{2A6A7DAF-BA68-435D-822B-03607C3063E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TypedSignalR.Client.TypeScript.Tests.Server", "tests\TypedSignalR.Client.TypeScript.Tests.Server\TypedSignalR.Client.TypeScript.Tests.Server.csproj", "{2A6A7DAF-BA68-435D-822B-03607C3063E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypedSignalR.Client.TypeScript.Tests.Shared", "tests\TypedSignalR.Client.TypeScript.Tests.Shared\TypedSignalR.Client.TypeScript.Tests.Shared.csproj", "{F8D9F38E-E113-4DB8-B62F-CB60FCD299D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TypedSignalR.Client.TypeScript.Tests.Shared", "tests\TypedSignalR.Client.TypeScript.Tests.Shared\TypedSignalR.Client.TypeScript.Tests.Shared.csproj", "{F8D9F38E-E113-4DB8-B62F-CB60FCD299D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
