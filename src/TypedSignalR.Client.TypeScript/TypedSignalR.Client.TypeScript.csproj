@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+
+        <!-- NuGet -->
+        <PackageId>TypedSignalR.Client.TypeScript</PackageId>
+        <AssemblyName>TypedSignalR.Client.TypeScript</AssemblyName>
+        <Title>TypedSignalR.Client.TypeScript</Title>
+        <Description>TypedSignalR.Client.TypeScript is a library/CLI tool that analyzes SignalR hub and receiver type definitions written in C# and generates TypeScript source code to provide strongly typed SignalR clients.</Description>
+        <Authors>nenoNaninu</Authors>
+        <RepositoryUrl>https://github.com/nenoNaninu/TypedSignalR.Client.TypeScript</RepositoryUrl>
+        <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryType>git</RepositoryType>
+        <Copyright>(c) nenoNaninu</Copyright>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+        <PackageReference Include="Tapper" Version="1.2.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Templates\ApiTemplate.tt">
+            <Generator>TextTemplatingFilePreprocessor</Generator>
+            <LastGenOutput>ApiTemplate.cs</LastGenOutput>
+        </None>
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <Compile Update="Templates\ApiTemplate.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>ApiTemplate.tt</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+    </ItemGroup>
+
+</Project>

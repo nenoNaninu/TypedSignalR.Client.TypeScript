@@ -1,0 +1,121 @@
+<#@ template language="C#" linePragmas="false" debug="false" hostspecific="false"#>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+/* eslint-disable */
+<#= Header #>
+
+// components
+
+export type Disposable = {
+    dispose(): void;
+}
+
+export type HubProxyFactory<T> = {
+    createHubProxy(connection: HubConnection): T;
+}
+
+export type ReceiverRegister<T> = {
+    register(connection: HubConnection, receiver: T): Disposable;
+}
+
+type ReceiverMethod = {
+    methodName: string,
+    method: (...args: any[]) => void
+}
+
+class ReceiverMethodSubscription implements Disposable {
+
+    constructor(
+        private connection: HubConnection,
+        private receiverMethod: ReceiverMethod[]) {
+    }
+
+    dispose(): void {
+        for (const it of this.receiverMethod) {
+            this.connection.off(it.methodName, it.method);
+        }
+    }
+}
+
+// API
+
+export type HubProxyFactoryProvider = {
+<# foreach(var hubType in HubTypes) { #>
+    (hubType: "<#= hubType.Name #>"): HubProxyFactory<<#= hubType.Name #>>;
+<# } #>
+}
+
+export const getHubProxyFactory = ((hubType: string) => {
+<# foreach(var hubType in HubTypes) { #>
+    if(hubType === "<#= hubType.Name #>") {
+        return <#= hubType.Name #>_HubProxyFactory.Instance;
+    }
+<# } #>
+}) as HubProxyFactoryProvider;
+
+export type ReceiverRegisterProvider = {
+<# foreach(var receiverType in ReceiverTypes) { #>
+    (receiverType: "<#= receiverType.Name #>"): ReceiverRegister<<#= receiverType.Name #>>;
+<# } #>
+}
+
+export const getReceiverRegister = ((receiverType: string) => {
+<# foreach(var receiverType in ReceiverTypes) { #>
+    if(receiverType === "<#= receiverType.Name #>") {
+        return <#= receiverType.Name #>_Binder.Instance;
+    }
+<# } #>
+}) as ReceiverRegisterProvider;
+
+// HubProxy
+
+<# foreach(var hubType in HubTypes) { #>
+class <#= hubType.Name #>_HubProxyFactory implements HubProxyFactory<<#= hubType.Name #>> {
+    public static Instance = new <#= hubType.Name #>_HubProxyFactory();
+
+    createHubProxy(connection: HubConnection): <#= hubType.Name #> {
+        return new <#= hubType.Name #>_HubProxy(connection);
+    }
+}
+
+class <#= hubType.Name #>_HubProxy implements <#= hubType.Name #> {
+
+    constructor(private connection: HubConnection) {
+    }
+
+<# foreach(var method in hubType.Methods) { #>
+    <#= method.Name.Format(TranspilationOptions.NamingStyle) #> = async (<#= method.ParametersToTypeScriptString(TranspilationOptions) #>): <#= method.ReturnTypeToTypeScriptString(TranspilationOptions) #> => {
+        return await this.connection.invoke("<#= method.Name #>"<#= method.Parameters.Any() ? ", " : "" #><#= string.Join(", ", method.Parameters.Select(x => x.Name)) #>);
+    }
+<# } #>
+}
+
+<# } #>
+
+// Receiver
+
+<# foreach(var receiverType in ReceiverTypes) { #>
+class <#= receiverType.Name #>_Binder implements ReceiverRegister<<#= receiverType.Name #>>{
+
+    public static Instance = new <#= receiverType.Name #>_Binder();
+
+    register(connection: HubConnection, receiver: <#= receiverType.Name #>): Disposable {
+
+<# foreach(var method in receiverType.Methods) { #>
+        connection.on("<#= method.Name #>", receiver.<#= method.Name.Format(TranspilationOptions.NamingStyle) #>);
+<# } #>
+
+        const methodList: ReceiverMethod[] = [
+<# for(int i = 0; i < receiverType.Methods.Count; i++) { #>
+            { methodName: "<#= receiverType.Methods[i].Name #>", method: receiver.<#= receiverType.Methods[i].Name.Format(TranspilationOptions.NamingStyle) #> }<#= i != receiverType.Methods.Count - 1 ? "," : "" #>
+<# } #>
+        ]
+
+        return new ReceiverMethodSubscription(connection, methodList);
+    }
+}
+
+<# } #>

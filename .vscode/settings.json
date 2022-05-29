@@ -1,0 +1,7 @@
+{
+    "markdown.extension.toc.omittedFromToc": {
+        "README.md": [
+            "## Table of Contents"
+        ]
+    }
+}

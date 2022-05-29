@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <RootNamespace>TypedSignalR.Client.TypeScript</RootNamespace>
+
+        <!-- NuGet -->
+        <PackageId>TypedSignalR.Client.TypeScript.Attributes</PackageId>
+        <AssemblyName>TypedSignalR.Client.TypeScript.Attributes</AssemblyName>
+        <Title>TypedSignalR.Client.TypeScript.Attributes</Title>
+        <Description>TypedSignalR.Client.TypeScript is a library/CLI tool that analyzes SignalR hub and receiver type definitions written in C# and generates TypeScript source code to provide strongly typed SignalR clients.</Description>
+        <Authors>nenoNaninu</Authors>
+        <RepositoryUrl>https://github.com/nenoNaninu/TypedSignalR.Client.TypeScript</RepositoryUrl>
+        <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryType>git</RepositoryType>
+        <Copyright>(c) nenoNaninu</Copyright>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Tapper.Attributes" Version="1.2.1" />
+    </ItemGroup>
+
+</Project>
