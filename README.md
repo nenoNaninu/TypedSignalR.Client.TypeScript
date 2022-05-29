@@ -254,5 +254,5 @@ The Analyzer checks in real-time whether this rule is followed. If not, the IDE 
 - [nenoNaninu/TypedSignalR.Client](https://github.com/nenoNaninu/TypedSignalR.Client)
   - C# Source Generator to create strongly typed SignalR clients.
 - [nenoNaninu/Tapper](https://github.com/nenoNaninu/Tapper)
-  - The Tool Transpiling C# Type into TypeScript Type.
+  - A Tool Transpiling C# Type into TypeScript Type.
 
