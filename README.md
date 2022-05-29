@@ -10,7 +10,7 @@ TypedSignalR.Client.TypeScript is a library/CLI tool that analyzes SignalR hub a
 - [Usage](#usage)
 - [Supported Types](#supported-types)
   - [Built-in Supported Types](#built-in-supported-types)
-  - [User Defined Type](#user-defined-type)
+  - [User Defined Types](#user-defined-types)
 - [Analyzer](#analyzer)
 - [Related Works](#related-works)
 
@@ -94,9 +94,9 @@ The example of the actual generated code exists in [`/samples/console.typescript
 
 ## Packages
 
-- TypedSignalR.Client.TypeScript.Attributes
-- TypedSignalR.Client.TypeScript.Analyzer
-- TypedSignalR.Client.TypeScript.Generator
+- [TypedSignalR.Client.TypeScript.Attributes](https://www.nuget.org/packages/TypedSignalR.Client.TypeScript.Attributes/)
+- [TypedSignalR.Client.TypeScript.Analyzer](https://www.nuget.org/packages/TypedSignalR.Client.TypeScript.Analyzer/)
+- [TypedSignalR.Client.TypeScript.Generator](https://www.nuget.org/packages/TypedSignalR.Client.TypeScript.Generator/)
 
 ### Install Using .NET Tool
 
@@ -214,7 +214,7 @@ Here is a brief introduction of which types are supported.
 
 `bool` `byte` `sbyte` `char` `decimal` `double` `float` `int` `uint` `long` `ulong` `short` `ushort` `object` `string` `Uri` `Guid` `DateTime` `System.Nullable<T>` `byte[]` `T[]` `System.Array` `ArraySegment<T>` `List<T>` `LinkedList<T>` `Queue<T>` `Stack<T>` `HashSet<T>` `IEnumerable<T>` `IReadOnlyCollection<T>` `ICollection<T>` `IList<T>` `ISet<T>` `Dictionary<TKey, TValue>` `IDictionary<TKey, TValue>` `IReadOnlyDictionary<TKey, TValue>` `Tuple`
 
-### User Defined Type
+### User Defined Types
 
 Of course, you can use user-defined types as well as Built-in Supported Types.
 To transpile C# user-defined types to TypeScript types, annotate `TranspilationSourceAttribute`.
