@@ -78,6 +78,7 @@ internal class InterfaceTranspiler
 
         foreach (var method in interfaceSymbol.GetMethods())
         {
+            WriteJSDoc(method, ref codeWriter);
             codeWriter.Append($"    {method.Name.Format(options.NamingStyle)}(");
             WriteParameters(method, options, ref codeWriter);
             codeWriter.Append("): ");
@@ -87,6 +88,19 @@ internal class InterfaceTranspiler
 
         codeWriter.AppendLine("}");
         codeWriter.AppendLine();
+    }
+
+    private static void WriteJSDoc(IMethodSymbol methodSymbol, ref CodeWriter codeWriter)
+    {
+        codeWriter.AppendLine("    /**");
+
+        foreach (var parameter in methodSymbol.Parameters)
+        {
+            codeWriter.AppendLine($"    * @param {parameter.Name} Transpied from {parameter.Type.ToDisplayString()}");
+        }
+
+        codeWriter.AppendLine($"    * @returns Transpied from {methodSymbol.ReturnType.ToDisplayString()}");
+        codeWriter.AppendLine("    */");
     }
 
     private static void WriteParameters(IMethodSymbol methodSymbol, ITranspilationOptions options, ref CodeWriter codeWriter)
