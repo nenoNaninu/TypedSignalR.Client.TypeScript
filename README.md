@@ -12,7 +12,7 @@ TypedSignalR.Client.TypeScript is a library/CLI tool that analyzes SignalR hub a
   - [Built-in Supported Types](#built-in-supported-types)
   - [User Defined Types](#user-defined-types)
 - [Analyzer](#analyzer)
-- [Related Works](#related-works)
+- [Related Work](#related-work)
 
 
 ## Why TypedSignalR.Client.TypeScript?
@@ -250,7 +250,7 @@ The Analyzer checks in real-time whether this rule is followed. If not, the IDE 
 
 ![analyzer](https://user-images.githubusercontent.com/27144255/170770137-28790bcf-08d1-403f-9625-2cdf6f390e76.gif)
 
-## Related Works
+## Related Work
 - [nenoNaninu/TypedSignalR.Client](https://github.com/nenoNaninu/TypedSignalR.Client)
   - C# Source Generator to create strongly typed SignalR clients.
 - [nenoNaninu/Tapper](https://github.com/nenoNaninu/Tapper)
