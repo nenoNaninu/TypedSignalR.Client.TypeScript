@@ -31,7 +31,7 @@ const value = await connection.invoke<number>("HubMethod2", "message", 99);
 
 // Registering a client method requires a string, and parameter types must be set manually.
 const func = (message: string, count: number) => {...};
-connection.on<string, number>("ClientMethod", func);
+connection.on("ClientMethod", func);
 connection.off("ClientMethod", func);
 ```
 
