@@ -159,7 +159,7 @@ Finally, enter the following command.
 This command analyzes C# and generates TypeScript code.
 
 ```
-dotnet tsrts --project path/to/Project.csproj --out generated
+dotnet tsrts --project path/to/Project.csproj --output generated
 ```
 
 The generated code can be used as follows.
