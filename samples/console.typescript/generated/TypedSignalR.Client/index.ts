@@ -1,4 +1,5 @@
 /* eslint-disable */
+/* tslint:disable */
 import { HubConnection } from '@microsoft/signalr';
 import { IChatHub, IChatReceiver } from './App.Interfaces.Chat';
 import { IWhiteboardHub, IWhiteboardReceiver } from './App.Interfaces.WhiteBoard';

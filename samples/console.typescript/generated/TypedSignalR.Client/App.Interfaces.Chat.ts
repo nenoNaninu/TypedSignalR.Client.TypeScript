@@ -1,3 +1,5 @@
+/* eslint-disable */
+/* tslint:disable */
 import { Message } from '../App.Interfaces.Chat';
 
 export type IChatHub = {
