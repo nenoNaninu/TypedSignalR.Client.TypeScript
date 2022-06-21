@@ -50,6 +50,9 @@ internal class InterfaceTranspiler
 
     private void AddHeader(IGrouping<INamespaceSymbol, INamedTypeSymbol> interfaceTypes, ref CodeWriter codeWriter)
     {
+        codeWriter.AppendLine($"/* eslint-disable */");
+        codeWriter.AppendLine($"/* tslint:disable */");
+
         var appearTypes = interfaceTypes.SelectMany(static x => x.GetMethods())
             .SelectMany(static x => x.Parameters.Select(static y => y.Type).Concat(new[] { x.ReturnType }));
 

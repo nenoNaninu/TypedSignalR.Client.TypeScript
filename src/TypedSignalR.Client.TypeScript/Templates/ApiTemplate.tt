@@ -5,6 +5,7 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
 /* eslint-disable */
+/* tslint:disable */
 <#= Header #>
 
 // components
