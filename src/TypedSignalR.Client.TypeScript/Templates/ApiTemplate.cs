@@ -25,7 +25,7 @@ namespace TypedSignalR.Client.TypeScript.Templates
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("/* eslint-disable */\r\n");
+            this.Write("/* eslint-disable */\r\n/* tslint:disable */\r\n");
             this.Write(this.ToStringHelper.ToStringWithCulture(Header));
             this.Write(@"
 

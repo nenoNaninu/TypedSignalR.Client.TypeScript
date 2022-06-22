@@ -1,3 +1,5 @@
+/* eslint-disable */
+/* tslint:disable */
 import { ShapeType } from '../App.Interfaces.WhiteBoard';
 
 export type IWhiteboardHub = {
