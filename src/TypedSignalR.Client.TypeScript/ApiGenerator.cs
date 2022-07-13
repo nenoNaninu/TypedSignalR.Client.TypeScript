@@ -39,6 +39,21 @@ internal class ApiGenerator
 
     private string GenerateHeader(IReadOnlyList<INamedTypeSymbol> hubTypes, IReadOnlyList<INamedTypeSymbol> receiverTypes)
     {
+        static ITypeSymbol GetReturnType(IMethodSymbol methodSymbol)
+        {
+            ITypeSymbol typeSymbol = methodSymbol.ReturnType;
+
+            if (typeSymbol.IsGenericType())
+            {
+                if (typeSymbol is INamedTypeSymbol namedTypeSymbol) // Task<T>
+                {
+                    return namedTypeSymbol.TypeArguments[0];
+                }
+            }
+
+            return typeSymbol;
+        }
+
         var sb = new StringBuilder();
         sb.AppendLine(@"import { HubConnection } from '@microsoft/signalr';");
 
@@ -51,13 +66,8 @@ internal class ApiGenerator
             sb.AppendLine($"import {{ {string.Join(", ", group.Select(x => x.Name))} }} from './{group.Key.ToDisplayString()}';");
         }
 
-        var t1 = hubTypes.SelectMany(static x => x.GetMethods())
-            .SelectMany(static x => x.Parameters.Select(static y => y.Type).Concat(new[] { x.ReturnType }));
-
-        var t2 = receiverTypes.SelectMany(static x => x.GetMethods())
-            .SelectMany(static x => x.Parameters.Select(static y => y.Type).Concat(new[] { x.ReturnType }));
-
-        var appearTypes = t1.Concat(t2);
+        var appearTypes = hubTypes.SelectMany(static x => x.GetMethods())
+            .SelectMany(static x => x.Parameters.Select(static y => y.Type).Concat(new[] { GetReturnType(x) }));
 
         var tapperAttributeAnnotatedTypesLookup = appearTypes
             .OfType<INamedTypeSymbol>()
