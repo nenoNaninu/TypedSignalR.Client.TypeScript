@@ -28,7 +28,8 @@ public class App : ConsoleAppBase
         [Option("o", "Output directory")] string output,
         [Option("eol", "lf / crlf / cr")] string newLine = "lf",
         [Option("s", "Json / MessagePack : The output type will be suitable for the selected serializer.")] string serializer = "json",
-        [Option("n", "PascalCase / camelCase / none (The name in C# is used as it is.)")] string namingStyle = "camelCase")
+        [Option("n", "PascalCase / camelCase / none (The name in C# is used as it is.)")] string namingStyle = "camelCase",
+        [Option("en", "PascalCase / camelCase / none (The name in C# is used as it is.)")] string enumNamingStyle = "PascalCase")
     {
         newLine = newLine switch
         {
@@ -54,11 +55,16 @@ public class App : ConsoleAppBase
             return;
         }
 
+        if (!Enum.TryParse<EnumNamingStyle>(enumNamingStyle, true, out var enumStyle))
+        {
+            _logger.Log(LogLevel.Error, "The enum naming style can only be selected from None, CamelCase, or PascalCase. {style} is not supported.", enumNamingStyle);
+        }
+
         try
         {
             var compilation = await this.CreateCompilationAsync(project);
 
-            await TranspileCore(compilation, output, newLine, 4, serializerOption, style);
+            await TranspileCore(compilation, output, newLine, 4, serializerOption, style, enumStyle);
 
             _logger.Log(LogLevel.Information, "======== Transpilation is completed. ========");
             _logger.Log(LogLevel.Information, "Please check the output folder: {output}", output);
@@ -88,15 +94,15 @@ public class App : ConsoleAppBase
         return compilation;
     }
 
-    private async Task TranspileCore(Compilation compilation, string outputDir, string newLine, int indent, SerializerOption serializerOption, NamingStyle namingStyle)
+    private async Task TranspileCore(Compilation compilation, string outputDir, string newLine, int indent, SerializerOption serializerOption, NamingStyle namingStyle, EnumNamingStyle enumNamingStyle)
     {
         // Tapper
-        var transpiler = new Transpiler(compilation, newLine, indent, serializerOption, namingStyle, _logger);
+        var transpiler = new Transpiler(compilation, newLine, indent, serializerOption, namingStyle, enumNamingStyle, _logger);
 
         var generatedSourceCodes = transpiler.Transpile();
 
         // TypedSignalR.Client.TypeScript
-        var signalrCodeGenerator = new TypedSignalRCodeGenerator(compilation, serializerOption, namingStyle, _logger);
+        var signalrCodeGenerator = new TypedSignalRCodeGenerator(compilation, serializerOption, namingStyle, enumNamingStyle, _logger);
 
         var generatedSignalRSourceCodes = signalrCodeGenerator.Generate();
 
