@@ -12,13 +12,15 @@ public class TypedSignalRCodeGenerator
     private readonly Compilation _compilation;
     private readonly SerializerOption _serializerOption;
     private readonly NamingStyle _namingStyle;
+    private readonly EnumNamingStyle _enumNamingStyle;
     private readonly ILogger _logger;
 
-    public TypedSignalRCodeGenerator(Compilation compilation, SerializerOption serializerOption, NamingStyle namingStyle, ILogger logger)
+    public TypedSignalRCodeGenerator(Compilation compilation, SerializerOption serializerOption, NamingStyle namingStyle, EnumNamingStyle enumNamingStyle, ILogger logger)
     {
         _compilation = compilation;
         _serializerOption = serializerOption;
         _namingStyle = namingStyle;
+        _enumNamingStyle = enumNamingStyle;
         _logger = logger;
     }
 
@@ -31,7 +33,7 @@ public class TypedSignalRCodeGenerator
         typeMapperProvider.AddTypeMapper(new TaskTypeMapper(_compilation));
         typeMapperProvider.AddTypeMapper(new GenericTaskTypeMapper(_compilation));
 
-        var transpilationOptions = new TranspilationOptions(typeMapperProvider, _serializerOption, _namingStyle);
+        var transpilationOptions = new TranspilationOptions(typeMapperProvider, _serializerOption, _namingStyle, _enumNamingStyle);
 
         // generate index.ts + (namespace).ts
 
