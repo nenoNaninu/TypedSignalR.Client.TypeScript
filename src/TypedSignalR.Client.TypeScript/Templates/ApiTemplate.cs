@@ -51,12 +51,12 @@ type ReceiverMethod = {
 
 class ReceiverMethodSubscription implements Disposable {
 
-    constructor(
+    public constructor(
         private connection: HubConnection,
         private receiverMethod: ReceiverMethod[]) {
     }
 
-    dispose(): void {
+    public readonly dispose = () => {
         for (const it of this.receiverMethod) {
             this.connection.off(it.methodName, it.method);
         }
@@ -106,17 +106,18 @@ export type HubProxyFactoryProvider = {
             this.Write(this.ToStringHelper.ToStringWithCulture(hubType.Name));
             this.Write("> {\r\n    public static Instance = new ");
             this.Write(this.ToStringHelper.ToStringWithCulture(hubType.Name));
-            this.Write("_HubProxyFactory();\r\n\r\n    createHubProxy(connection: HubConnection): ");
+            this.Write("_HubProxyFactory();\r\n\r\n    private constructor() {\r\n    }\r\n\r\n    public readonly " +
+                    "createHubProxy = (connection: HubConnection): ");
             this.Write(this.ToStringHelper.ToStringWithCulture(hubType.Name));
-            this.Write(" {\r\n        return new ");
+            this.Write(" => {\r\n        return new ");
             this.Write(this.ToStringHelper.ToStringWithCulture(hubType.Name));
             this.Write("_HubProxy(connection);\r\n    }\r\n}\r\n\r\nclass ");
             this.Write(this.ToStringHelper.ToStringWithCulture(hubType.Name));
             this.Write("_HubProxy implements ");
             this.Write(this.ToStringHelper.ToStringWithCulture(hubType.Name));
-            this.Write(" {\r\n\r\n    constructor(private connection: HubConnection) {\r\n    }\r\n\r\n");
+            this.Write(" {\r\n\r\n    public constructor(private connection: HubConnection) {\r\n    }\r\n\r\n");
  foreach(var method in hubType.Methods) { 
-            this.Write("    ");
+            this.Write("    public readonly ");
             this.Write(this.ToStringHelper.ToStringWithCulture(method.Name.Format(TranspilationOptions.NamingStyle)));
             this.Write(" = async (");
             this.Write(this.ToStringHelper.ToStringWithCulture(method.ParametersToTypeScriptString(TranspilationOptions)));
@@ -137,11 +138,12 @@ export type HubProxyFactoryProvider = {
             this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Name));
             this.Write("_Binder implements ReceiverRegister<");
             this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Name));
-            this.Write(">{\r\n\r\n    public static Instance = new ");
+            this.Write("> {\r\n\r\n    public static Instance = new ");
             this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Name));
-            this.Write("_Binder();\r\n\r\n    register(connection: HubConnection, receiver: ");
+            this.Write("_Binder();\r\n\r\n    private constructor() {\r\n    }\r\n\r\n    public readonly register " +
+                    "= (connection: HubConnection, receiver: ");
             this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Name));
-            this.Write("): Disposable {\r\n\r\n");
+            this.Write("): Disposable => {\r\n\r\n");
  foreach(var method in receiverType.Methods) { 
             this.Write("        connection.on(\"");
             this.Write(this.ToStringHelper.ToStringWithCulture(method.Name));
