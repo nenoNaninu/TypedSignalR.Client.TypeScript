@@ -30,12 +30,12 @@ type ReceiverMethod = {
 
 class ReceiverMethodSubscription implements Disposable {
 
-    constructor(
+    public constructor(
         private connection: HubConnection,
         private receiverMethod: ReceiverMethod[]) {
     }
 
-    dispose(): void {
+    public readonly dispose = () => {
         for (const it of this.receiverMethod) {
             this.connection.off(it.methodName, it.method);
         }
@@ -78,18 +78,21 @@ export const getReceiverRegister = ((receiverType: string) => {
 class <#= hubType.Name #>_HubProxyFactory implements HubProxyFactory<<#= hubType.Name #>> {
     public static Instance = new <#= hubType.Name #>_HubProxyFactory();
 
-    createHubProxy(connection: HubConnection): <#= hubType.Name #> {
+    private constructor() {
+    }
+
+    public readonly createHubProxy = (connection: HubConnection): <#= hubType.Name #> => {
         return new <#= hubType.Name #>_HubProxy(connection);
     }
 }
 
 class <#= hubType.Name #>_HubProxy implements <#= hubType.Name #> {
 
-    constructor(private connection: HubConnection) {
+    public constructor(private connection: HubConnection) {
     }
 
 <# foreach(var method in hubType.Methods) { #>
-    <#= method.Name.Format(TranspilationOptions.NamingStyle) #> = async (<#= method.ParametersToTypeScriptString(TranspilationOptions) #>): <#= method.ReturnTypeToTypeScriptString(TranspilationOptions) #> => {
+    public readonly <#= method.Name.Format(TranspilationOptions.NamingStyle) #> = async (<#= method.ParametersToTypeScriptString(TranspilationOptions) #>): <#= method.ReturnTypeToTypeScriptString(TranspilationOptions) #> => {
         return await this.connection.invoke("<#= method.Name #>"<#= method.Parameters.Any() ? ", " : "" #><#= string.Join(", ", method.Parameters.Select(x => x.Name)) #>);
     }
 <# } #>
@@ -100,11 +103,14 @@ class <#= hubType.Name #>_HubProxy implements <#= hubType.Name #> {
 // Receiver
 
 <# foreach(var receiverType in ReceiverTypes) { #>
-class <#= receiverType.Name #>_Binder implements ReceiverRegister<<#= receiverType.Name #>>{
+class <#= receiverType.Name #>_Binder implements ReceiverRegister<<#= receiverType.Name #>> {
 
     public static Instance = new <#= receiverType.Name #>_Binder();
 
-    register(connection: HubConnection, receiver: <#= receiverType.Name #>): Disposable {
+    private constructor() {
+    }
+
+    public readonly register = (connection: HubConnection, receiver: <#= receiverType.Name #>): Disposable => {
 
 <# foreach(var method in receiverType.Methods) { #>
         connection.on("<#= method.Name #>", receiver.<#= method.Name.Format(TranspilationOptions.NamingStyle) #>);
