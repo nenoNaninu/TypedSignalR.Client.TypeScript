@@ -115,10 +115,10 @@ internal class InterfaceTranspiler
 
         foreach (var parameter in methodSymbol.Parameters)
         {
-            codeWriter.AppendLine($"    * @param {parameter.Name} Transpied from {parameter.Type.ToDisplayString()}");
+            codeWriter.AppendLine($"    * @param {parameter.Name} Transpiled from {parameter.Type.ToDisplayString()}");
         }
 
-        codeWriter.AppendLine($"    * @returns Transpied from {methodSymbol.ReturnType.ToDisplayString()}");
+        codeWriter.AppendLine($"    * @returns Transpiled from {methodSymbol.ReturnType.ToDisplayString()}");
         codeWriter.AppendLine("    */");
     }
 
