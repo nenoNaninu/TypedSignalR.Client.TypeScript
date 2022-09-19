@@ -13,14 +13,16 @@ public class TypedSignalRCodeGenerator
     private readonly SerializerOption _serializerOption;
     private readonly NamingStyle _namingStyle;
     private readonly EnumNamingStyle _enumNamingStyle;
+    private readonly bool _referencedAssembliesTranspilation;
     private readonly ILogger _logger;
 
-    public TypedSignalRCodeGenerator(Compilation compilation, SerializerOption serializerOption, NamingStyle namingStyle, EnumNamingStyle enumNamingStyle, ILogger logger)
+    public TypedSignalRCodeGenerator(Compilation compilation, SerializerOption serializerOption, NamingStyle namingStyle, EnumNamingStyle enumNamingStyle, bool referencedAssembliesTranspilation, ILogger logger)
     {
         _compilation = compilation;
         _serializerOption = serializerOption;
         _namingStyle = namingStyle;
         _enumNamingStyle = enumNamingStyle;
+        _referencedAssembliesTranspilation = referencedAssembliesTranspilation;
         _logger = logger;
     }
 
@@ -29,7 +31,7 @@ public class TypedSignalRCodeGenerator
         // preparation
         var specialSymbols = new SpecialSymbols(_compilation);
 
-        var typeMapperProvider = new DefaultTypeMapperProvider(_compilation);
+        var typeMapperProvider = new DefaultTypeMapperProvider(_compilation, _referencedAssembliesTranspilation);
         typeMapperProvider.AddTypeMapper(new TaskTypeMapper(_compilation));
         typeMapperProvider.AddTypeMapper(new GenericTaskTypeMapper(_compilation));
 
@@ -38,8 +40,8 @@ public class TypedSignalRCodeGenerator
         // generate index.ts + (namespace).ts
 
         // first, generate (namespace).ts
-        var hubTypes = _compilation.GetAttributeAnnotatedTypes(specialSymbols.HubAttributeSymbol);
-        var receiverTypes = _compilation.GetAttributeAnnotatedTypes(specialSymbols.ReceiverAttributeSymbol);
+        var hubTypes = _compilation.GetAttributeAnnotatedTypes(specialSymbols.HubAttributeSymbol, _referencedAssembliesTranspilation);
+        var receiverTypes = _compilation.GetAttributeAnnotatedTypes(specialSymbols.ReceiverAttributeSymbol, _referencedAssembliesTranspilation);
 
         var interfaceTranspiler = new InterfaceTranspiler(specialSymbols, transpilationOptions, _logger);
         var sources = interfaceTranspiler.Transpile(hubTypes.Concat(receiverTypes));

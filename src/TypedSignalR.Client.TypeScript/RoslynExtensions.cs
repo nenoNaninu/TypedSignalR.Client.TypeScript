@@ -4,43 +4,8 @@ using Microsoft.CodeAnalysis;
 
 namespace TypedSignalR.Client.TypeScript;
 
-internal static class RoslynExtensions
+internal static partial class RoslynExtensions
 {
-    public static IEnumerable<INamedTypeSymbol> GetNamedTypeSymbols(this Compilation compilation)
-    {
-        var namedTypeSymbols = compilation
-            .SyntaxTrees
-            .SelectMany(syntaxTree =>
-            {
-                var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                return syntaxTree.GetRoot()
-                    .DescendantNodes()
-                    .Select(x => semanticModel.GetDeclaredSymbol(x))
-                    .OfType<INamedTypeSymbol>();
-            }).ToArray();
-
-        return namedTypeSymbols;
-    }
-
-    public static INamedTypeSymbol[] GetAttributeAnnotatedTypes(this Compilation compilation, INamedTypeSymbol attributeSymbol)
-    {
-        var types = compilation.GetNamedTypeSymbols()
-            .Where(x =>
-            {
-                var attributes = x.GetAttributes();
-
-                if (attributes.IsEmpty)
-                {
-                    return false;
-                }
-
-                return attributes.Any(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, attributeSymbol));
-            })
-            .ToArray();
-
-        return types;
-    }
-
     public static IEnumerable<ISymbol> GetPublicFieldsAndProperties(this INamedTypeSymbol source)
     {
         return source.GetMembers()
