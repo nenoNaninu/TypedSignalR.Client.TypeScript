@@ -9,6 +9,7 @@ on:
 env:
   DOTNET_VERSION: "6.0.x"
   DOTNET_NOLOGO: true
+  NODE_VERSION: "16"
 
 jobs:
   build-and-test:
@@ -19,13 +20,12 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: |
-            ${{ env.DOTNET_VERSION }}
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Restore dependencies
         run: dotnet restore
