@@ -122,35 +122,18 @@ public class App : ConsoleAppBase
     {
         if (Directory.Exists(outputDir))
         {
-            var tsFiles = Directory.GetFiles(outputDir, "*.ts");
-
             _logger.Log(LogLevel.Information, "Cleanup old files...");
+         
+            var tsSignalRFiles = Directory.GetFiles(outputDir, "*.ts");
 
-            foreach (var tsFile in tsFiles)
+            foreach (var tsFile in tsSignalRFiles)
             {
                 File.Delete(tsFile);
-            }
-
-            var signalrDir = Path.Join(outputDir, "TypedSignalR.Client");
-
-            if (Directory.Exists(signalrDir))
-            {
-                var tsSignalRFiles = Directory.GetFiles(signalrDir, "*.ts");
-
-                foreach (var tsFile in tsSignalRFiles)
-                {
-                    File.Delete(tsFile);
-                }
-            }
-            else
-            {
-                Directory.CreateDirectory(Path.Join(outputDir, "TypedSignalR.Client"));
             }
         }
         else
         {
             Directory.CreateDirectory(outputDir);
-            Directory.CreateDirectory(Path.Join(outputDir, "TypedSignalR.Client"));
         }
 
         foreach (var generatedSourceCode in generatedSourceCodes)
