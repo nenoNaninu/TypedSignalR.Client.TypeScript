@@ -129,8 +129,8 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
 
     private static void AnalyzeSymbol(SymbolAnalysisContext context)
     {
-        var hubAttributeSymbol = context.Compilation.GetTypeByMetadataName("TypedSignalR.Client.TypeScript.HubAttribute");
-        var receiverAttributeSymbol = context.Compilation.GetTypeByMetadataName("TypedSignalR.Client.TypeScript.ReceiverAttribute");
+        var hubAttributeSymbol = context.Compilation.GetTypeByMetadataName("TypedSignalR.Client.HubAttribute");
+        var receiverAttributeSymbol = context.Compilation.GetTypeByMetadataName("TypedSignalR.Client.ReceiverAttribute");
         var transpilationSourceAttributeSymbol = context.Compilation.GetTypeByMetadataName("Tapper.TranspilationSourceAttribute");
         var taskSymbol = context.Compilation.GetTypeByMetadataName("System.Threading.Tasks.Task")!;
         var genericTaskSymbol = context.Compilation.GetTypeByMetadataName("System.Threading.Tasks.Task`1")!;
