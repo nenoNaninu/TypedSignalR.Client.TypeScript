@@ -21,7 +21,6 @@
 
     <ItemGroup>
         <PackageReference Include="Tapper.Attributes" Version="1.6.0" />
-        <PackageReference Include="TypedSignalR.Client.Attributes" Version="0.0.4" />
+        <PackageReference Include="TypedSignalR.Client.Attributes" Version="1.0.0" />
     </ItemGroup>
-
 </Project>
