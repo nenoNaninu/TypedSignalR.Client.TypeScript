@@ -130,7 +130,7 @@ Adding this attribute is relatively easy if you add the [TypedSignalR.Client.Typ
 
 ```cs
 using Tapper;
-using TypedSignalR.Client.TypeScript;
+using TypedSignalR.Client;
 
 namespace App.Interfaces.Chat;
 
