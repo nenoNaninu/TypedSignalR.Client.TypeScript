@@ -16,18 +16,18 @@ internal class SpecialSymbols
         TaskSymbol = compilation.GetTypeByMetadataName("System.Threading.Tasks.Task")!;
         GenericTaskSymbol = compilation.GetTypeByMetadataName("System.Threading.Tasks.Task`1")!;
 
-        var hubAttributeSymbol = compilation.GetTypeByMetadataName("TypedSignalR.Client.TypeScript.HubAttribute");
-        var receiverAttributeSymbol = compilation.GetTypeByMetadataName("TypedSignalR.Client.TypeScript.ReceiverAttribute");
+        var hubAttributeSymbol = compilation.GetTypeByMetadataName("TypedSignalR.Client.HubAttribute");
+        var receiverAttributeSymbol = compilation.GetTypeByMetadataName("TypedSignalR.Client.ReceiverAttribute");
         var transpilationSourceAttributeSymbol = compilation.GetTypeByMetadataName("Tapper.TranspilationSourceAttribute");
 
         if (hubAttributeSymbol is null)
         {
-            throw new InvalidOperationException("TypedSignalR.Client.TypeScript.HubAttribute is not found");
+            throw new InvalidOperationException("TypedSignalR.Client.HubAttribute is not found");
         }
 
         if (receiverAttributeSymbol is null)
         {
-            throw new InvalidOperationException("TypedSignalR.Client.TypeScript.ReceiverAttribute is not found");
+            throw new InvalidOperationException("TypedSignalR.Client.ReceiverAttribute is not found");
         }
 
         if (transpilationSourceAttributeSymbol is null)

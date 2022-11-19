@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Tapper;
-using TypedSignalR.Client.TypeScript;
+using TypedSignalR.Client;
 
 namespace SignalRServer.Shared;
 

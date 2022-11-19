@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Tapper;
-using TypedSignalR.Client.TypeScript;
+using TypedSignalR.Client;
 
 namespace App.Interfaces.Chat;
 
