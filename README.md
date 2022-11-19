@@ -104,15 +104,12 @@ Use `TypedSignalR.Client.TypeScript.Generatorr`(CLI Tool) to generate TypeScript
 `TypedSignalR.Client.TypeScript.Generatorr` can be easily installed using .NET Global Tools. You can use the installed tools with the command `dotnet tsts`(**T**yped**S**ignal**R**.Client.**T**ype**S**cript).
 
 ```bash
-# install (.NET 7)
+# install (require .NET 7)
 dotnet tool install --global TypedSignalR.Client.TypeScript.Generator
 dotnet tsrts help
 
 # update
 dotnet tool update --global TypedSignalR.Client.TypeScript.Generator
-
-# install (.NET 6)
-dotnet tool install --global TypedSignalR.Client.TypeScript.Generator --version 1.2.2
 ```
 
 ## Usage
