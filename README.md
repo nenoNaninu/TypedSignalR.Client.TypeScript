@@ -103,16 +103,23 @@ The example of the actual generated code exists in [`/samples/console.typescript
 Use `TypedSignalR.Client.TypeScript.Generatorr`(CLI Tool) to generate TypeScript source code to provide strongly typed SignalR clients.
 `TypedSignalR.Client.TypeScript.Generatorr` can be easily installed using .NET Global Tools. You can use the installed tools with the command `dotnet tsts`(**T**yped**S**ignal**R**.Client.**T**ype**S**cript).
 
-```
+```bash
+# install (.NET 7)
 dotnet tool install --global TypedSignalR.Client.TypeScript.Generator
 dotnet tsrts help
+
+# update
+dotnet tool update --global TypedSignalR.Client.TypeScript.Generator
+
+# install (.NET 6)
+dotnet tool install --global TypedSignalR.Client.TypeScript.Generator --version 1.2.2
 ```
 
 ## Usage
 
 First, add the following packages to your project. TypedSignalR.Client.TypeScript.Analyzer is optional, but recommended.
 
-```
+```bash
 dotnet add package TypedSignalR.Client.TypeScript.Attributes
 dotnet add package TypedSignalR.Client.TypeScript.Analyzer (optional, but recommended.)
 dotnet add package Tapper.Analyzer (optional, but recommended.)
@@ -158,7 +165,7 @@ public record Message(string Username, string Content, DateTime TimeStamp);
 Finally, enter the following command.
 This command analyzes C# and generates TypeScript code.
 
-```
+```bash
 dotnet tsrts --project path/to/Project.csproj --output generated
 ```
 
