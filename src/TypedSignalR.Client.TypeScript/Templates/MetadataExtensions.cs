@@ -17,4 +17,11 @@ internal static class MetadataExtensions
     {
         return TypeMapper.MapTo(methodSymbol.ReturnType, options);
     }
+
+    public static string ToLambdaEvent(this IMethodSymbol methodSymbol, ITranspilationOptions options)
+    {
+        var parameters = methodSymbol.ParametersToTypeScriptString(options);
+        var parametersWithoutType = string.Join(",", methodSymbol.Parameters.Select(static x => x.Name));
+        return $"({parameters}) => receiver.{methodSymbol.Name.Format(options.NamingStyle)}({parametersWithoutType})";
+    }
 }
