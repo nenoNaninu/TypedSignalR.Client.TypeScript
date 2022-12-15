@@ -145,7 +145,7 @@ export type HubProxyFactoryProvider = {
             this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Name));
             this.Write("): Disposable => {\r\n\r\n");
  foreach(var method in receiverType.Methods) { 
-            this.Write("    const __");
+            this.Write("        const __");
             this.Write(this.ToStringHelper.ToStringWithCulture(method.Name.Format(TranspilationOptions.NamingStyle)));
             this.Write(" = ");
             this.Write(this.ToStringHelper.ToStringWithCulture(method.ToSpreadSyntax(TranspilationOptions)));
