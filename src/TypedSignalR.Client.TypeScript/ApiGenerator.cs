@@ -66,10 +66,13 @@ internal class ApiGenerator
             sb.AppendLine($"import {{ {string.Join(", ", group.Select(x => x.Name))} }} from './{group.Key.ToDisplayString()}';");
         }
 
-        var appearTypes = hubTypes.SelectMany(static x => x.GetMethods())
+        var hubParametersAndReturnTypes = hubTypes.SelectMany(static x => x.GetMethods())
             .SelectMany(static x => x.Parameters.Select(static y => y.Type).Concat(new[] { GetReturnType(x) }));
 
-        var tapperAttributeAnnotatedTypesLookup = appearTypes
+        var receiverParameterTypes = receiverTypes.SelectMany(static x => x.GetMethods())
+            .SelectMany(static x => x.Parameters.Select(static y => y.Type));
+
+        var tapperAttributeAnnotatedTypesLookup = hubParametersAndReturnTypes.Concat(receiverParameterTypes)
             .OfType<INamedTypeSymbol>()
             .Where(x => x.IsAttributeAnnotated(_specialSymbols.TranspilationSourceAttributeSymbol))
             .Distinct<INamedTypeSymbol>(SymbolEqualityComparer.Default)
