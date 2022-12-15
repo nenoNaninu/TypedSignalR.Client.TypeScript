@@ -145,17 +145,25 @@ export type HubProxyFactoryProvider = {
             this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Name));
             this.Write("): Disposable => {\r\n\r\n");
  foreach(var method in receiverType.Methods) { 
+            this.Write("    const __");
+            this.Write(this.ToStringHelper.ToStringWithCulture(method.Name.Format(TranspilationOptions.NamingStyle)));
+            this.Write(" = ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(method.ToSpreadSyntax(TranspilationOptions)));
+            this.Write(";\r\n");
+ } 
+            this.Write("\r\n\r\n");
+ foreach(var method in receiverType.Methods) { 
             this.Write("        connection.on(\"");
             this.Write(this.ToStringHelper.ToStringWithCulture(method.Name));
-            this.Write("\", ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(method.ToLambdaEvent(TranspilationOptions)));
+            this.Write("\", __");
+            this.Write(this.ToStringHelper.ToStringWithCulture(method.Name.Format(TranspilationOptions.NamingStyle)));
             this.Write(");\r\n");
  } 
             this.Write("\r\n        const methodList: ReceiverMethod[] = [\r\n");
  for(int i = 0; i < receiverType.Methods.Count; i++) { 
             this.Write("            { methodName: \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Methods[i].Name));
-            this.Write("\", method: receiver.");
+            this.Write("\", method: __");
             this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Methods[i].Name.Format(TranspilationOptions.NamingStyle)));
             this.Write(" }");
             this.Write(this.ToStringHelper.ToStringWithCulture(i != receiverType.Methods.Count - 1 ? "," : ""));
