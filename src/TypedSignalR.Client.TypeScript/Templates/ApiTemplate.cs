@@ -148,10 +148,10 @@ export type HubProxyFactoryProvider = {
             this.Write("        const __");
             this.Write(this.ToStringHelper.ToStringWithCulture(method.Name.Format(TranspilationOptions.NamingStyle)));
             this.Write(" = ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(method.ToSpreadSyntax(TranspilationOptions)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(method.WrapLambdaExpressionSyntax(TranspilationOptions)));
             this.Write(";\r\n");
  } 
-            this.Write("\r\n\r\n");
+            this.Write("\r\n");
  foreach(var method in receiverType.Methods) { 
             this.Write("        connection.on(\"");
             this.Write(this.ToStringHelper.ToStringWithCulture(method.Name));
