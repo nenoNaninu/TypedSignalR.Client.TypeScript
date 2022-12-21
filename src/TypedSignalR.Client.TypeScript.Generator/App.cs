@@ -155,7 +155,7 @@ public class App : ConsoleAppBase
 
         foreach (var generatedSourceCode in generatedSourceCodes)
         {
-            using var fs = File.Create(Path.Join(outputDir, generatedSourceCode.SourceName));
+            await using var fs = File.Create(Path.Join(outputDir, generatedSourceCode.SourceName));
             await fs.WriteAsync(Encoding.UTF8.GetBytes(generatedSourceCode.Content.NormalizeNewLines(newLine)));
         }
     }
