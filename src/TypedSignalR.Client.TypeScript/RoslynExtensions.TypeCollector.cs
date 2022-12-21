@@ -56,16 +56,16 @@ internal static partial class RoslynExtensions
         var namedTypes = includeReferencedAssemblies ? compilation.GetGlobalNamedTypeSymbols() : compilation.GetNamedTypeSymbols();
 
         var types = namedTypes
-            .Where(x =>
+            .Where(t =>
             {
-                var attributes = x.GetAttributes();
+                var attributes = t.GetAttributes();
 
                 if (attributes.IsEmpty)
                 {
                     return false;
                 }
 
-                return attributes.Any(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, attributeSymbol));
+                return attributes.Any(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, attributeSymbol));
             })
             .ToArray();
 
