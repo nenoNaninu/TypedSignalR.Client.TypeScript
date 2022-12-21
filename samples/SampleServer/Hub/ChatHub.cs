@@ -10,7 +10,7 @@ namespace SampleServer.Hub;
 
 public class ChatHub : Hub<IChatReceiver>, IChatHub
 {
-    private static ConcurrentDictionary<string, string> UserNames = new();
+    private static readonly ConcurrentDictionary<string, string> UserNames = new();
     private readonly ILogger _logger;
 
     public ChatHub(ILogger<ChatHub> logger)
