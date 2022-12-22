@@ -37,7 +37,9 @@ class ReceiverMethodSubscription implements Disposable {
 
     public readonly dispose = () => {
         for (const it of this.receiverMethod) {
-            this.connection.off(it.methodName, it.method);
+            if (it.method) {
+                this.connection.off(it.methodName, it.method);
+            }
         }
     }
 }
