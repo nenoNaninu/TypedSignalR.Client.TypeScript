@@ -22,11 +22,11 @@ internal static class MetadataExtensions
     {
         if (methodSymbol.Parameters.Length == 0)
         {
-            return $"() => receiver.{methodSymbol.Name.Format(options.NamingStyle)}()";
+            return $"() => receiver.{methodSymbol.Name.Format(options.NamingStyle)}!()";
         }
 
         var parameters = ParametersToTypeArray(methodSymbol, options);
-        return $"(...args: {parameters}) => receiver.{methodSymbol.Name.Format(options.NamingStyle)}(...args)";
+        return $"(...args: {parameters}) => receiver.{methodSymbol.Name.Format(options.NamingStyle)}!(...args)";
     }
 
     private static string ParametersToTypeArray(IMethodSymbol methodSymbol, ITranspilationOptions options)

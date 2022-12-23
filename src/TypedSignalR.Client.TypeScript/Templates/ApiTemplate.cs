@@ -53,7 +53,7 @@ class ReceiverMethodSubscription implements Disposable {
 
     public constructor(
         private connection: HubConnection,
-        private receiverMethod: ReceiverMethod[]) {
+        private receiverMethod: ReadonlyArray<ReceiverMethod>) {
     }
 
     public readonly dispose = () => {
@@ -143,36 +143,28 @@ export type HubProxyFactoryProvider = {
             this.Write("> {\r\n\r\n    public static Instance = new ");
             this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Name));
             this.Write("_Binder();\r\n\r\n    private constructor() {\r\n    }\r\n\r\n    public readonly register " +
-                    "= (connection: HubConnection, receiver: ");
+                    "= (connection: HubConnection, receiver: Partial<");
             this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Name));
-            this.Write("): Disposable => {\r\n\r\n");
+            this.Write(">): Disposable => {\r\n\r\n        const methodList: ReceiverMethod[] = [];\r\n\r\n");
  foreach(var method in receiverType.Methods) { 
-            this.Write("        const __");
+            this.Write("        if (receiver.");
+            this.Write(this.ToStringHelper.ToStringWithCulture(method.Name.Format(TranspilationOptions.NamingStyle)));
+            this.Write("){\r\n            const __");
             this.Write(this.ToStringHelper.ToStringWithCulture(method.Name.Format(TranspilationOptions.NamingStyle)));
             this.Write(" = ");
             this.Write(this.ToStringHelper.ToStringWithCulture(method.WrapLambdaExpressionSyntax(TranspilationOptions)));
-            this.Write(";\r\n");
- } 
-            this.Write("\r\n");
- foreach(var method in receiverType.Methods) { 
-            this.Write("        connection.on(\"");
+            this.Write(";\r\n            connection.on(\"");
             this.Write(this.ToStringHelper.ToStringWithCulture(method.Name));
             this.Write("\", __");
             this.Write(this.ToStringHelper.ToStringWithCulture(method.Name.Format(TranspilationOptions.NamingStyle)));
-            this.Write(");\r\n");
- } 
-            this.Write("\r\n        const methodList: ReceiverMethod[] = [\r\n");
- for(int i = 0; i < receiverType.Methods.Count; i++) { 
-            this.Write("            { methodName: \"");
-            this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Methods[i].Name));
+            this.Write(");\r\n            methodList.push({ methodName: \"");
+            this.Write(this.ToStringHelper.ToStringWithCulture(method.Name));
             this.Write("\", method: __");
-            this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Methods[i].Name.Format(TranspilationOptions.NamingStyle)));
-            this.Write(" }");
-            this.Write(this.ToStringHelper.ToStringWithCulture(i != receiverType.Methods.Count - 1 ? "," : ""));
-            this.Write("\r\n");
+            this.Write(this.ToStringHelper.ToStringWithCulture(method.Name.Format(TranspilationOptions.NamingStyle)));
+            this.Write(" });\r\n        }\r\n");
  } 
-            this.Write("        ]\r\n\r\n        return new ReceiverMethodSubscription(connection, methodList" +
-                    ");\r\n    }\r\n}\r\n\r\n");
+            this.Write("\r\n        Object.freeze(methodList);\r\n        return new ReceiverMethodSubscripti" +
+                    "on(connection, methodList);\r\n    }\r\n}\r\n\r\n");
  } 
             return this.GenerationEnvironment.ToString();
         }
