@@ -7,9 +7,9 @@ $ dotnet run --project ./tests/TypedSignalR.Client.TypeScript.Tests.Server/Typed
 ```
 
 
-Generate TypeScript code. From last generator code.
+Generate TypeScript code.
 ```
-$  dotnet run --project ./src/TypedSignalR.Client.TypeScript.Generator/TypedSignalR.Client.TypeScript.Generator.csproj -- -p ./tests/TypedSignalR.Client.TypeScript.Tests.Shared/TypedSignalR.Client.TypeScript.Tests.Shared.csproj -o ./tests/TypeScriptTests/src/generated
+$ dotnet tsrts --project ./tests/TypedSignalR.Client.TypeScript.Tests.Shared/TypedSignalR.Client.TypeScript.Tests.Shared.csproj --out ./tests/TypeScriptTests/src/generated
 ```
 
 Launch tests.
