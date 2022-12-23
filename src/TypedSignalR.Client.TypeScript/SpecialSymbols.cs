@@ -20,8 +20,23 @@ internal class SpecialSymbols
         var receiverAttributeSymbol = compilation.GetTypeByMetadataName("TypedSignalR.Client.ReceiverAttribute");
         var transpilationSourceAttributeSymbol = compilation.GetTypeByMetadataName("Tapper.TranspilationSourceAttribute");
 
-        HubAttributeSymbol = hubAttributeSymbol ?? throw new InvalidOperationException("TypedSignalR.Client.HubAttribute is not found");
-        ReceiverAttributeSymbol = receiverAttributeSymbol ?? throw new InvalidOperationException("TypedSignalR.Client.ReceiverAttribute is not found");
-        TranspilationSourceAttributeSymbol = transpilationSourceAttributeSymbol ?? throw new InvalidOperationException("Tapper.TranspilationSourceAttribute is not found");
+        if (hubAttributeSymbol is null)
+        {
+            throw new InvalidOperationException("TypedSignalR.Client.HubAttribute is not found");
+        }
+
+        if (receiverAttributeSymbol is null)
+        {
+            throw new InvalidOperationException("TypedSignalR.Client.ReceiverAttribute is not found");
+        }
+
+        if (transpilationSourceAttributeSymbol is null)
+        {
+            throw new InvalidOperationException("Tapper.TranspilationSourceAttribute is not found");
+        }
+
+        HubAttributeSymbol = hubAttributeSymbol;
+        ReceiverAttributeSymbol = receiverAttributeSymbol;
+        TranspilationSourceAttributeSymbol = transpilationSourceAttributeSymbol;
     }
 }
