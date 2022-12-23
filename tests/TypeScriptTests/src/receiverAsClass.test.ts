@@ -47,7 +47,7 @@ class ReceiverAsClass implements IReceiver
         this.receiveMessageList.push([message, value]);
         return Promise.resolve();
     }
-    nofity(): Promise<void> {
+    notify(): Promise<void> {
         this.notifyCallCount += 1;
         return Promise.resolve();
     }

@@ -14,11 +14,11 @@ public interface IDataStore
 /// </summary>
 public class DataStore : IDataStore
 {
-    private readonly ConcurrentDictionary<string, IUserData> _dictonary = new();
+    private readonly ConcurrentDictionary<string, IUserData> _dictionary = new();
 
     public IUserData Get(string connectionId)
     {
-        if (_dictonary.TryGetValue(connectionId, out var data))
+        if (_dictionary.TryGetValue(connectionId, out var data))
         {
             return data;
         }
@@ -26,7 +26,7 @@ public class DataStore : IDataStore
         {
             var newData = new UserData();
 
-            _dictonary.TryAdd(connectionId, newData);
+            _dictionary.TryAdd(connectionId, newData);
 
             return newData;
         }
@@ -34,7 +34,7 @@ public class DataStore : IDataStore
 
     public void Remove(string connectionId)
     {
-        _dictonary.TryRemove(connectionId, out var _);
+        _dictionary.TryRemove(connectionId, out var _);
     }
 }
 

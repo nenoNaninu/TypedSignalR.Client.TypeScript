@@ -16,7 +16,7 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
     // 3. Receiver method return type must be Task
     // 4. HubAttribute and ReceiverAttribute can not apply generic interface
 
-    private static readonly DiagnosticDescriptor AnnotationRule = new DiagnosticDescriptor(
+    private static readonly DiagnosticDescriptor AnnotationRule = new(
         id: "TSRTS001",
         title: "Must apply TranspilationSourceAttribute",
         messageFormat: "Apply the TranspilationSourceAttribute to the {0}",
@@ -25,7 +25,7 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: "Must apply TranspilationSourceAttribute.");
 
-    private static readonly DiagnosticDescriptor HubAttributeAnnotationRule = new DiagnosticDescriptor(
+    private static readonly DiagnosticDescriptor HubAttributeAnnotationRule = new(
         id: "TSRTS002",
         title: "It is prohibited to apply the HubAttribute to generic types",
         messageFormat: "It is prohibited to apply the HubAttribute to generic types. {1} is generic type.",
@@ -34,7 +34,7 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: "It is prohibited to apply the HubAttribute to generic types.");
 
-    private static readonly DiagnosticDescriptor ReceiverAttributeAnnotationRule = new DiagnosticDescriptor(
+    private static readonly DiagnosticDescriptor ReceiverAttributeAnnotationRule = new(
         id: "TSRTS003",
         title: "It is prohibited to apply the ReceiverAttribute to generic types",
         messageFormat: "It is prohibited to apply the ReceiverAttribute to generic types. {1} is generic type.",
@@ -43,7 +43,7 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: "It is prohibited to apply the ReceiverAttribute to generic types.");
 
-    private static readonly DiagnosticDescriptor UnsupportedTypeRule = new DiagnosticDescriptor(
+    private static readonly DiagnosticDescriptor UnsupportedTypeRule = new(
         id: "TSRTS004",
         title: "Unsupported type",
         messageFormat: "{0} is unsupported type",
@@ -255,7 +255,6 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
 
         context.ReportDiagnostic(Diagnostic.Create(
             UnsupportedTypeRule, location, typeSymbol.ToDisplayString()));
-        return;
     }
 
     private static void ValidateHubReturnType(SymbolAnalysisContext context, IMethodSymbol methodSymbol, INamedTypeSymbol[] supportTypeSymbols, INamedTypeSymbol transpilationSourceAttribute, INamedTypeSymbol taskSymbol, INamedTypeSymbol genericTaskSymbol)
@@ -286,7 +285,7 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
         }
 
         // Validate type arguments of Task<T>
-        ValidateType(context, namedReturnTypeSymbol.TypeArguments[0]!, location, supportTypeSymbols, transpilationSourceAttribute);
+        ValidateType(context, namedReturnTypeSymbol.TypeArguments[0], location, supportTypeSymbols, transpilationSourceAttribute);
     }
 
     private static void ValidateReceiverReturnType(SymbolAnalysisContext context, IMethodSymbol methodSymbol, INamedTypeSymbol[] supportTypeSymbols, INamedTypeSymbol transpilationSourceAttribute, INamedTypeSymbol taskSymbol)

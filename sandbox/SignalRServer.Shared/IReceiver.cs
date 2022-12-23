@@ -11,7 +11,7 @@ namespace SignalRServer.Shared;
 public interface IReceiver
 {
     Task ReceiveMessage(string message, int value);
-    Task Nofity();
+    Task Notify();
     Task ReceiveCustomMessage(UserDefinedType userDefined);
 }
 

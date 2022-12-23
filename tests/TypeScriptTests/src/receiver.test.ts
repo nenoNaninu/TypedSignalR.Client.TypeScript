@@ -51,7 +51,7 @@ const testMethod = async () => {
             receiveMessageList.push([message, value]);
             return Promise.resolve();
         },
-        nofity: (): Promise<void> => {
+        notify: (): Promise<void> => {
             notifyCallCount += 1;
             return Promise.resolve();
         },
