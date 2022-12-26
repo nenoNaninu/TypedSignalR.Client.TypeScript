@@ -1,7 +1,8 @@
 import { HubConnectionBuilder } from '@microsoft/signalr'
-import { getHubProxyFactory, getReceiverRegister } from './generated/TypedSignalR.Client'
-import { UserDefinedType } from './generated/TypedSignalR.Client.TypeScript.Tests.Shared';
-import { IReceiver } from './generated/TypedSignalR.Client/TypedSignalR.Client.TypeScript.Tests.Shared';
+import { MessagePackHubProtocol } from '@microsoft/signalr-protocol-msgpack';
+import { getHubProxyFactory, getReceiverRegister } from '../generated/msgpack/TypedSignalR.Client'
+import { UserDefinedType } from '../generated/msgpack/TypedSignalR.Client.TypeScript.Tests.Shared';
+import { IReceiver } from '../generated/msgpack/TypedSignalR.Client/TypedSignalR.Client.TypeScript.Tests.Shared';
 
 const toUTCString = (date: string | Date): string => {
     if (typeof date === 'string') {
@@ -43,15 +44,15 @@ class ReceiverAsClass implements IReceiver
     public notifyCallCount: number = 0;
     public userDefinedList: UserDefinedType[] = [];
 
-    receiveMessage(message: string, value: number): Promise<void> {
+    ReceiveMessage(message: string, value: number): Promise<void> {
         this.receiveMessageList.push([message, value]);
         return Promise.resolve();
     }
-    notify(): Promise<void> {
+    Notify(): Promise<void> {
         this.notifyCallCount += 1;
         return Promise.resolve();
     }
-    receiveCustomMessage(userDefined: UserDefinedType): Promise<void> {
+    ReceiveCustomMessage(userDefined: UserDefinedType): Promise<void> {
         this.userDefinedList.push(userDefined)
         return Promise.resolve();
     }
@@ -61,6 +62,7 @@ class ReceiverAsClass implements IReceiver
 const testMethod = async () => {
     const connection = new HubConnectionBuilder()
         .withUrl("http://localhost:5000/realtime/receivertesthub")
+        .withHubProtocol(new MessagePackHubProtocol())
         .build();
 
     const receiver = new ReceiverAsClass();
@@ -72,7 +74,7 @@ const testMethod = async () => {
         .register(connection, receiver);
 
     await connection.start();
-    await hubProxy.start();
+    await hubProxy.Start();
 
     const receiveMessageList = receiver.receiveMessageList;
     const userDefinedList = receiver.userDefinedList;
@@ -86,8 +88,8 @@ const testMethod = async () => {
     }
 
     for (let i = 0; i < userDefinedList.length; i++) {
-        expect(userDefinedList[i].guid).toEqual(guids[i]);
-        expect(toUTCString(userDefinedList[i].dateTime)).toEqual(toUTCString(dateTimes[i]));
+        expect(userDefinedList[i].Guid).toEqual(guids[i]);
+        expect(toUTCString(userDefinedList[i].DateTime)).toEqual(toUTCString(dateTimes[i]));
     }
 
     subscription.dispose();

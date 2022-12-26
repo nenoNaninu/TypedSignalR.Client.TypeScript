@@ -7,7 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR()
+    .AddJsonProtocol()
+    .AddMessagePackProtocol();
 
 builder.Services.AddSingleton<IDataStore, DataStore>();
 

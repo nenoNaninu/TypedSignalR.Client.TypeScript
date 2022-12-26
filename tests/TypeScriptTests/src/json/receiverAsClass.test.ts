@@ -1,7 +1,7 @@
 import { HubConnectionBuilder } from '@microsoft/signalr'
-import { getHubProxyFactory, getReceiverRegister } from './generated/TypedSignalR.Client'
-import { UserDefinedType } from './generated/TypedSignalR.Client.TypeScript.Tests.Shared';
-import { IReceiver } from './generated/TypedSignalR.Client/TypedSignalR.Client.TypeScript.Tests.Shared';
+import { getHubProxyFactory, getReceiverRegister } from '../generated/json/TypedSignalR.Client'
+import { UserDefinedType } from '../generated/json/TypedSignalR.Client.TypeScript.Tests.Shared';
+import { IReceiver } from '../generated/json/TypedSignalR.Client/TypedSignalR.Client.TypeScript.Tests.Shared';
 
 const toUTCString = (date: string | Date): string => {
     if (typeof date === 'string') {
@@ -37,29 +37,33 @@ const dateTimes: string[] = [
     "2022-02-06",
 ];
 
+class ReceiverAsClass implements IReceiver  
+{
+    public receiveMessageList: [string, number][] = []; 
+    public notifyCallCount: number = 0;
+    public userDefinedList: UserDefinedType[] = [];
+
+    receiveMessage(message: string, value: number): Promise<void> {
+        this.receiveMessageList.push([message, value]);
+        return Promise.resolve();
+    }
+    notify(): Promise<void> {
+        this.notifyCallCount += 1;
+        return Promise.resolve();
+    }
+    receiveCustomMessage(userDefined: UserDefinedType): Promise<void> {
+        this.userDefinedList.push(userDefined)
+        return Promise.resolve();
+    }
+    
+}
+
 const testMethod = async () => {
     const connection = new HubConnectionBuilder()
         .withUrl("http://localhost:5000/realtime/receivertesthub")
         .build();
 
-    const receiveMessageList: [string, number][] = [];
-    const userDefinedList: UserDefinedType[] = [];
-    let notifyCallCount = 0;
-
-    const receiver: IReceiver = {
-        receiveMessage: (message: string, value: number): Promise<void> => {
-            receiveMessageList.push([message, value]);
-            return Promise.resolve();
-        },
-        notify: (): Promise<void> => {
-            notifyCallCount += 1;
-            return Promise.resolve();
-        },
-        receiveCustomMessage: (userDefined: UserDefinedType): Promise<void> => {
-            userDefinedList.push(userDefined)
-            return Promise.resolve();
-        }
-    }
+    const receiver = new ReceiverAsClass();
 
     const hubProxy = getHubProxyFactory("IReceiverTestHub")
         .createHubProxy(connection);
@@ -69,6 +73,10 @@ const testMethod = async () => {
 
     await connection.start();
     await hubProxy.start();
+
+    const receiveMessageList = receiver.receiveMessageList;
+    const userDefinedList = receiver.userDefinedList;
+    const notifyCallCount = receiver.notifyCallCount;
 
     expect(notifyCallCount).toEqual(17);
 

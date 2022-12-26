@@ -12,9 +12,13 @@
             "commandName": "Project",
             "commandLineArgs": "--project ..\\..\\..\\..\\..\\samples\\App.Interfaces\\App.Interfaces.csproj --output ..\\..\\..\\..\\..\\samples\\console.typescript\\generated --naming-style camelCase"
         },
-        "Test": {
+        "Test-json": {
             "commandName": "Project",
-            "commandLineArgs": "--project ..\\..\\..\\..\\..\\tests\\TypedSignalR.Client.TypeScript.Tests.Shared\\TypedSignalR.Client.TypeScript.Tests.Shared.csproj --output ..\\..\\..\\..\\..\\tests\\TypeScriptTests\\src\\generated"
+            "commandLineArgs": "--project ..\\..\\..\\..\\..\\tests\\TypedSignalR.Client.TypeScript.Tests.Shared\\TypedSignalR.Client.TypeScript.Tests.Shared.csproj --output ..\\..\\..\\..\\..\\tests\\TypeScriptTests\\src\\generated\\json"
+        },
+        "Test-msgpack": {
+            "commandName": "Project",
+            "commandLineArgs": "--project ..\\..\\..\\..\\..\\tests\\TypedSignalR.Client.TypeScript.Tests.Shared\\TypedSignalR.Client.TypeScript.Tests.Shared.csproj --output ..\\..\\..\\..\\..\\tests\\TypeScriptTests\\src\\generated\\msgpack --serializer MessagePack --naming-style none --enum-naming-style none"
         },
         "RefAsm": {
             "commandName": "Project",
