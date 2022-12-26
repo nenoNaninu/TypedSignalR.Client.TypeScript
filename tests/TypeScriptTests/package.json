@@ -13,7 +13,8 @@
         "test": "jest"
     },
     "dependencies": {
-        "@microsoft/signalr": "^6.0.5",
+        "@microsoft/signalr": "7.0.0",
+        "@microsoft/signalr-protocol-msgpack": "^7.0.0",
         "@msgpack/msgpack": "^2.7.2",
         "@types/node-fetch": "^2.6.1",
         "node-fetch": "2.6.7"

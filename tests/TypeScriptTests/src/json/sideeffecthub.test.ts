@@ -1,6 +1,6 @@
 import { HubConnectionBuilder } from '@microsoft/signalr'
-import { getHubProxyFactory } from './generated/TypedSignalR.Client'
-import { UserDefinedType } from './generated/TypedSignalR.Client.TypeScript.Tests.Shared';
+import { getHubProxyFactory } from '../generated/json/TypedSignalR.Client'
+import { UserDefinedType } from '../generated/json/TypedSignalR.Client.TypeScript.Tests.Shared';
 import crypto from 'crypto'
 
 const toUTCString = (date: string | Date): string => {
