@@ -12,6 +12,7 @@ TypedSignalR.Client.TypeScript is a library/CLI tool that analyzes SignalR hub a
   - [Built-in Supported Types](#built-in-supported-types)
   - [User Defined Types](#user-defined-types)
 - [Analyzer](#analyzer)
+- [MessagePack Hub Protocol Support](#messagepack-hub-protocol-support)
 - [Related Work](#related-work)
 
 
@@ -38,6 +39,12 @@ connection.off("ClientMethod", func);
 These are very painful and cause bugs.
 
 TypedSignalR.Client.TypeScript aims to **generates TypeScript** source code to provide strongly typed SignalR clients by **analyzing C#** interfaces in which the server and client methods are defined.
+You only need to execute one command to analyze your C# code and generate TypeScript code.
+Please see the [Install Using .NET Tool](#install-using-net-tool) and [Usage](#usage) sections for more information.
+
+```bash
+dotnet tsrts --project path/to/Project.csproj --output generated
+```
 
 ```ts
 // TypedSignalR.Client.TypeScript
@@ -253,6 +260,18 @@ User-defined types used in parameters and return values of methods defined withi
 The Analyzer checks in real-time whether this rule is followed. If not, the IDE will tell you.
 
 ![analyzer](https://user-images.githubusercontent.com/27144255/170770137-28790bcf-08d1-403f-9625-2cdf6f390e76.gif)
+
+
+## MessagePack Hub Protocol Support
+
+This tool can generate TypeScript code to use the MessagePack Hub Protocol.
+When serializing a user-defined type, use a property name as a key (in other words, it should be serialized as a map, not an array).
+Therefore, apply `[MessagePackObject(true)]` to a user-defined type, or use `ContractlessStandardResolver`.
+The default configuration for MessagePack Hub Protocol [includes the ContractlessStandardResolver](https://github.com/dotnet/aspnetcore/blob/release/7.0/src/SignalR/common/Protocols.MessagePack/src/Protocol/MessagePackHubProtocol.cs#L73-L77).
+
+```
+dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none
+```
 
 ## Related Work
 - [nenoNaninu/TypedSignalR.Client](https://github.com/nenoNaninu/TypedSignalR.Client)
