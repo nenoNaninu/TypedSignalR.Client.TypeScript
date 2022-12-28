@@ -276,6 +276,8 @@ dotnet tsrts --project path/to/Project.csproj --output generated --serializer Me
 ## Related Work
 - [nenoNaninu/TypedSignalR.Client](https://github.com/nenoNaninu/TypedSignalR.Client)
   - C# Source Generator to create strongly typed SignalR clients.
+- [nenoNaninu/TypedSignalR.Client.DevTools](https://github.com/nenoNaninu/TypedSignalR.Client.DevTools)
+  - SignalR development tools inspired by SwaggerUI.
 - [nenoNaninu/Tapper](https://github.com/nenoNaninu/Tapper)
   - A Tool Transpiling C# Type into TypeScript Type.
 
