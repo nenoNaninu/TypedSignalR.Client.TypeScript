@@ -90,11 +90,8 @@ class <#= hubType.Name #>_HubProxy implements <#= hubType.Name #> {
 
     public constructor(private connection: HubConnection) {
     }
-
 <# foreach(var method in hubType.Methods) { #>
-    public readonly <#= method.Name.Format(TranspilationOptions.NamingStyle) #> = async (<#= method.ParametersToTypeScriptString(TranspilationOptions) #>): <#= method.ReturnTypeToTypeScriptString(TranspilationOptions) #> => {
-        return await this.connection.invoke("<#= method.Name #>"<#= method.Parameters.Any() ? ", " : "" #><#= string.Join(", ", method.Parameters.Select(x => x.Name)) #>);
-    }
+<#= method.CreateMethodString(SpecialSymbols, TranspilationOptions) #>
 <# } #>
 }
 

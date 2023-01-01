@@ -31,6 +31,7 @@ internal class ApiGenerator
             Header = GenerateHeader(hubTypes, receiverTypes),
             HubTypes = hubTypes.Select(static x => new TypeMetadata(x)).ToArray(),
             ReceiverTypes = receiverTypes.Select(static x => new TypeMetadata(x)).ToArray(),
+            SpecialSymbols = _specialSymbols,
             TranspilationOptions = _transpilationOptions,
         };
 
@@ -55,7 +56,7 @@ internal class ApiGenerator
         }
 
         var sb = new StringBuilder();
-        sb.AppendLine(@"import { HubConnection } from '@microsoft/signalr';");
+        sb.AppendLine(@"import { HubConnection, IStreamResult, Subject } from '@microsoft/signalr';");
 
         var interfaceLookup = hubTypes.Concat(receiverTypes)
             .Distinct<INamedTypeSymbol>(SymbolEqualityComparer.Default)

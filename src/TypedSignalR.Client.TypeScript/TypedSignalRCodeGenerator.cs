@@ -34,6 +34,8 @@ public class TypedSignalRCodeGenerator
         var typeMapperProvider = new DefaultTypeMapperProvider(_compilation, _referencedAssembliesTranspilation);
         typeMapperProvider.AddTypeMapper(new TaskTypeMapper(_compilation));
         typeMapperProvider.AddTypeMapper(new GenericTaskTypeMapper(_compilation));
+        typeMapperProvider.AddTypeMapper(new AsyncEnumerableTypeMapper(_compilation));
+        typeMapperProvider.AddTypeMapper(new ChannelReaderTypeMapper(_compilation));
 
         var transpilationOptions = new TranspilationOptions(typeMapperProvider, _serializerOption, _namingStyle, _enumNamingStyle);
 

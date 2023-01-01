@@ -115,20 +115,10 @@ export type HubProxyFactoryProvider = {
             this.Write(this.ToStringHelper.ToStringWithCulture(hubType.Name));
             this.Write("_HubProxy implements ");
             this.Write(this.ToStringHelper.ToStringWithCulture(hubType.Name));
-            this.Write(" {\r\n\r\n    public constructor(private connection: HubConnection) {\r\n    }\r\n\r\n");
+            this.Write(" {\r\n\r\n    public constructor(private connection: HubConnection) {\r\n    }\r\n");
  foreach(var method in hubType.Methods) { 
-            this.Write("    public readonly ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(method.Name.Format(TranspilationOptions.NamingStyle)));
-            this.Write(" = async (");
-            this.Write(this.ToStringHelper.ToStringWithCulture(method.ParametersToTypeScriptString(TranspilationOptions)));
-            this.Write("): ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(method.ReturnTypeToTypeScriptString(TranspilationOptions)));
-            this.Write(" => {\r\n        return await this.connection.invoke(\"");
-            this.Write(this.ToStringHelper.ToStringWithCulture(method.Name));
-            this.Write("\"");
-            this.Write(this.ToStringHelper.ToStringWithCulture(method.Parameters.Any() ? ", " : ""));
-            this.Write(this.ToStringHelper.ToStringWithCulture(string.Join(", ", method.Parameters.Select(x => x.Name))));
-            this.Write(");\r\n    }\r\n");
+            this.Write(this.ToStringHelper.ToStringWithCulture(method.CreateMethodString(SpecialSymbols, TranspilationOptions)));
+            this.Write("\r\n");
  } 
             this.Write("}\r\n\r\n");
  } 
