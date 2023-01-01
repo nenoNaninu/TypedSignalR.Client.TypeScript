@@ -60,7 +60,7 @@ class ReceiverAsClass implements IReceiver
 
 const testMethod = async () => {
     const connection = new HubConnectionBuilder()
-        .withUrl("http://localhost:5000/realtime/receivertesthub")
+        .withUrl("http://localhost:5000/hubs/receivertesthub")
         .build();
 
     const receiver = new ReceiverAsClass();

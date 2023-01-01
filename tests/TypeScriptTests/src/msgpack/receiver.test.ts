@@ -40,7 +40,7 @@ const dateTimes: string[] = [
 
 const testMethod = async () => {
     const connection = new HubConnectionBuilder()
-        .withUrl("http://localhost:5000/realtime/receivertesthub")
+        .withUrl("http://localhost:5000/hubs/receivertesthub")
         .withHubProtocol(new MessagePackHubProtocol())
         .build();
 
