@@ -16,7 +16,13 @@ public class TypedSignalRCodeGenerator
     private readonly bool _referencedAssembliesTranspilation;
     private readonly ILogger _logger;
 
-    public TypedSignalRCodeGenerator(Compilation compilation, SerializerOption serializerOption, NamingStyle namingStyle, EnumNamingStyle enumNamingStyle, bool referencedAssembliesTranspilation, ILogger logger)
+    public TypedSignalRCodeGenerator(
+        Compilation compilation,
+        SerializerOption serializerOption,
+        NamingStyle namingStyle,
+        EnumNamingStyle enumNamingStyle,
+        bool referencedAssembliesTranspilation,
+        ILogger logger)
     {
         _compilation = compilation;
         _serializerOption = serializerOption;

@@ -123,7 +123,11 @@ internal class InterfaceTranspiler
         codeWriter.AppendLine();
     }
 
-    private static void AddInterface(INamedTypeSymbol interfaceSymbol, SpecialSymbols specialSymbols, ITranspilationOptions options, ref CodeWriter codeWriter)
+    private static void AddInterface(
+        INamedTypeSymbol interfaceSymbol,
+        SpecialSymbols specialSymbols,
+        ITranspilationOptions options,
+        ref CodeWriter codeWriter)
     {
         codeWriter.AppendLine($"export type {interfaceSymbol.Name} = {{");
 
@@ -184,7 +188,11 @@ internal class InterfaceTranspiler
         codeWriter.Append(string.Join(", ", paramStrings));
     }
 
-    private static void WriteReturnType(IMethodSymbol methodSymbol, ITranspilationOptions options, SpecialSymbols specialSymbols, ref CodeWriter codeWriter)
+    private static void WriteReturnType(
+        IMethodSymbol methodSymbol,
+        ITranspilationOptions options,
+        SpecialSymbols specialSymbols,
+        ref CodeWriter codeWriter)
     {
         var returnType = methodSymbol.ReturnType;
 
