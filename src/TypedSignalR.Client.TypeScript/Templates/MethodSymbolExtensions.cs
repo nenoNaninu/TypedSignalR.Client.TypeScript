@@ -20,7 +20,7 @@ internal static class MethodSymbolExtensions
 
     public static string CreateMethodString(this IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITranspilationOptions options)
     {
-        var methodType = SelectHubMethodType(methodSymbol, specialSymbols, options);
+        var methodType = methodSymbol.SelectHubMethodType(specialSymbols);
         return methodType switch
         {
             HubMethodType.Unary => CreateUnaryMethodString(methodSymbol, specialSymbols, options),
@@ -122,52 +122,5 @@ internal static class MethodSymbolExtensions
     public readonly {name} = async ({parameters}): {returnType} => {{
         return await this.connection.send(""{methodSymbol.Name}""{args});
     }}";
-    }
-
-    private static HubMethodType SelectHubMethodType(IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITranspilationOptions options)
-    {
-        // sever-to-client streaming method
-        //     return type : IAsyncEnumerable<T>, Task<IAsyncEnumerable<T>>, Task<ChannelReader<T>>
-        // client-to-server streaming method
-        //     parameter type : IAsyncEnumerable<T>, ChannelReader<T>
-        // other
-        //     ordinary method
-
-        var returnType = methodSymbol.ReturnType;
-
-        // sever-to-client streaming
-        // IAsyncEnumerable<T>
-        if (SymbolEqualityComparer.Default.Equals(returnType.OriginalDefinition, specialSymbols.AsyncEnumerableSymbol))
-        {
-            return HubMethodType.ServerToClientStreaming;
-        }
-
-        // Task<IAsyncEnumerable<T>>, Task<ChannelReader<T>>
-        if (SymbolEqualityComparer.Default.Equals(returnType.OriginalDefinition, specialSymbols.GenericTaskSymbol))
-        {
-            var typeArg = (returnType as INamedTypeSymbol)!.TypeArguments[0];
-
-            if (SymbolEqualityComparer.Default.Equals(typeArg.OriginalDefinition, specialSymbols.AsyncEnumerableSymbol)
-                || SymbolEqualityComparer.Default.Equals(typeArg.OriginalDefinition, specialSymbols.ChannelReaderSymbol))
-            {
-                return HubMethodType.ServerToClientStreaming;
-            }
-        }
-
-        // client-to-server streaming method
-        var isClientToServerStreaming = methodSymbol.Parameters
-            .Any(x =>
-                SymbolEqualityComparer.Default.Equals(x.Type.OriginalDefinition, specialSymbols.AsyncEnumerableSymbol)
-                || SymbolEqualityComparer.Default.Equals(x.Type.OriginalDefinition, specialSymbols.ChannelReaderSymbol)
-            );
-
-        return isClientToServerStreaming ? HubMethodType.ClientToServerStreaming : HubMethodType.Unary;
-    }
-
-    private enum HubMethodType
-    {
-        Unary,
-        ServerToClientStreaming,
-        ClientToServerStreaming,
     }
 }
