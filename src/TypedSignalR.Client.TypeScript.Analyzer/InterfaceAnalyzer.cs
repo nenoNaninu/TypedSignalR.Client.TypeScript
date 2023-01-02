@@ -65,19 +65,19 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
 
     public static readonly DiagnosticDescriptor HubMethodReturnTypeRule = new(
         id: "TSRTS005",
-        title: "The return type of methods in the interface must be Task or Task<T>",
-        messageFormat: "[The return type of methods in the interface used for hub proxy must be Task or Task<T>] The return type of {0} is not Task or Task<T>",
+        title: "The return type of methods in the interface must be Task or Task<T> or IAsyncEnumerable<T> or Task<IAsyncEnumerable<T>> or Task<ChannelReader<T>>",
+        messageFormat: "The return type of {0} is not suitable. Instead, use Task or Task<T> or IAsyncEnumerable<T> or Task<IAsyncEnumerable<T>> or Task<ChannelReader<T>>.",
         category: "Usage",
-        defaultSeverity: DiagnosticSeverity.Error,
+        defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        description: "The return type of methods in the interface used for hub proxy must be Task or Task<T>.");
+        description: "The return type of methods in the interface must be Task, Task<T>, IAsyncEnumerable<T>, Task<IAsyncEnumerable<T>>, or Task<ChannelReader<T>>.");
 
     public static readonly DiagnosticDescriptor ReceiverMethodReturnTypeRule = new(
         id: "TSRTS006",
         title: "The return type of methods in the interface must be Task",
         messageFormat: "[The return type of methods in the interface used for the receiver must be Task] The return type of {0} is not Task",
         category: "Usage",
-        defaultSeverity: DiagnosticSeverity.Error,
+        defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: "The return type of methods in the interface must be Task.");
 
