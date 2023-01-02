@@ -37,7 +37,7 @@ internal sealed class GenericTaskTypeMapper : ITypeMapper
     {
         if (typeSymbol is INamedTypeSymbol namedTypeSymbol
             && namedTypeSymbol.IsGenericType
-            && SymbolEqualityComparer.Default.Equals(namedTypeSymbol.ConstructedFrom, Assign))
+            && SymbolEqualityComparer.Default.Equals(namedTypeSymbol.OriginalDefinition, Assign))
         {
             var typeArgument = namedTypeSymbol.TypeArguments[0];
             var mapper = options.TypeMapperProvider.GetTypeMapper(typeArgument);
