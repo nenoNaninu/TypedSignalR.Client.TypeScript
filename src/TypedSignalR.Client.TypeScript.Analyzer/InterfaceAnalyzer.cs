@@ -306,9 +306,15 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
         }
 
         // Task, IAsyncEnumerable<T>
-        if (SymbolEqualityComparer.Default.Equals(namedReturnTypeSymbol, specialSymbols.TaskSymbol)
-            || SymbolEqualityComparer.Default.Equals(namedReturnTypeSymbol.OriginalDefinition, specialSymbols.AsyncEnumerableSymbol))
+        if (SymbolEqualityComparer.Default.Equals(namedReturnTypeSymbol, specialSymbols.TaskSymbol))
         {
+            return;
+        }
+
+        if (SymbolEqualityComparer.Default.Equals(namedReturnTypeSymbol.OriginalDefinition, specialSymbols.AsyncEnumerableSymbol))
+        {
+            var typeArg = namedReturnTypeSymbol.TypeArguments[0];
+            ValidateType(context, typeArg, location, supportTypeSymbols, transpilationSourceAttribute);
             return;
         }
 
