@@ -73,12 +73,12 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
 
     public static readonly DiagnosticDescriptor ReceiverMethodReturnTypeRule = new(
         id: "TSRTS006",
-        title: "The return type of methods in the interface must be Task",
-        messageFormat: "[The return type of methods in the interface used for the receiver must be Task] The return type of {0} is not Task",
+        title: "The return type of methods in the interface must be Task or Task<T>",
+        messageFormat: "The return type of {0} is not suitable. Instead, use Task or Task<T>.",
         category: "Usage",
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        description: "The return type of methods in the interface must be Task.");
+        description: "The return type of methods in the interface must be Task or Task<T>.");
 
     private static readonly Type[] SupportTypes = new[]
     {
@@ -221,7 +221,7 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
 
         foreach (var method in namedTypeSymbol.GetMethods())
         {
-            // Return type must be Task
+            // Return type must be Task or Task<T>
             ValidateReceiverReturnType(context, method, supportTypeSymbols, transpilationSourceAttributeSymbol, specialSymbols);
 
             foreach (var parameter in method.Parameters)
@@ -391,6 +391,15 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
         // Task
         if (SymbolEqualityComparer.Default.Equals(namedReturnTypeSymbol, specialSymbols.TaskSymbol))
         {
+            return;
+        }
+
+        // Task<T>
+        if (SymbolEqualityComparer.Default.Equals(namedReturnTypeSymbol.OriginalDefinition, specialSymbols.GenericTaskSymbol))
+        {
+            var typeArg = namedReturnTypeSymbol.TypeArguments[0];
+            ValidateType(context, typeArg, location, supportTypeSymbols, transpilationSourceAttribute);
+            
             return;
         }
 
