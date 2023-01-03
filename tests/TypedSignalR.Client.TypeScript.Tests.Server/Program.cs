@@ -31,5 +31,6 @@ app.MapHub<UnaryHub>("/hubs/UnaryHub");
 app.MapHub<SideEffectHub>("/hubs/SideEffectHub");
 app.MapHub<ReceiverTestHub>("/hubs/ReceiverTestHub");
 app.MapHub<StreamingHub>("/hubs/StreamingHub");
+app.MapHub<ClientResultsTestHub>("/hubs/ClientResultsTestHub");
 
 app.Run();

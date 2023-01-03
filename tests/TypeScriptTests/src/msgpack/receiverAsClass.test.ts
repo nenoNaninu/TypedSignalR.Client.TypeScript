@@ -96,4 +96,4 @@ const testMethod = async () => {
     await connection.stop()
 }
 
-test('receiver.test', testMethod);
+test('receiverAsClass.test', testMethod);
