@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Reflection.Metadata;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 
@@ -258,7 +257,8 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            if (namedTypeSymbol.GetAttributes().Any(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, transpilationSourceAttribute)))
+            if (namedTypeSymbol.GetAttributes()
+                .Any(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, transpilationSourceAttribute)))
             {
                 return;
             }
