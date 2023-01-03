@@ -14,7 +14,7 @@ const toUTCString = (date: string | Date): string => {
 
 const testMethod = async () => {
     const connection = new HubConnectionBuilder()
-        .withUrl("http://localhost:5000/realtime/sideeffecthub")
+        .withUrl("http://localhost:5000/hubs/sideeffecthub")
         .build();
 
     const hubProxy = getHubProxyFactory("ISideEffectHub")

@@ -27,8 +27,9 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapHub<UnaryHub>("/realtime/UnaryHub");
-app.MapHub<SideEffectHub>("/realtime/SideEffectHub");
-app.MapHub<ReceiverTestHub>("/realtime/ReceiverTestHub");
+app.MapHub<UnaryHub>("/hubs/UnaryHub");
+app.MapHub<SideEffectHub>("/hubs/SideEffectHub");
+app.MapHub<ReceiverTestHub>("/hubs/ReceiverTestHub");
+app.MapHub<StreamingHub>("/hubs/StreamingHub");
 
 app.Run();

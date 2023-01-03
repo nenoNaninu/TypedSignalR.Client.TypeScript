@@ -11,9 +11,19 @@ namespace TypedSignalR.Client.TypeScript.Analyzer;
 public class InterfaceAnalyzer : DiagnosticAnalyzer
 {
     // Analysis Items
-    // 1. Method parameter is primitive support type or annotated TranspilationSourceAttribute
-    // 2. Hub method return type must be Task or Task<T>
-    // 3. Receiver method return type must be Task
+    // 1. Method parameter is
+    //     - primitive support type
+    //     - annotated TranspilationSourceAttribute
+    // 2. Hub method return type must be Task, Task<T>, IAsyncEnumerable<T>, Task<IAsyncEnumerable<T>>, or Task<ChannelReader<T>>
+    //     Task, Task<T> :
+    //         - Ordinary hub method
+    //     IAsyncEnumerable<T>, Task<IAsyncEnumerable<T>>, or Task<ChannelReader<T> :
+    //         - server-to-client streaming method
+    // 3. Receiver method return type must be Task or Task<T>
+    //     Task :
+    //         - Ordinary receiver method
+    //     Task<T> :
+    //         - Client results
     // 4. HubAttribute and ReceiverAttribute can not apply generic interface
 
     private static readonly DiagnosticDescriptor AnnotationRule = new(
@@ -54,19 +64,19 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
 
     public static readonly DiagnosticDescriptor HubMethodReturnTypeRule = new(
         id: "TSRTS005",
-        title: "The return type of methods in the interface must be Task or Task<T>",
-        messageFormat: "[The return type of methods in the interface used for hub proxy must be Task or Task<T>] The return type of {0} is not Task or Task<T>",
+        title: "The return type of methods in the interface must be Task or Task<T> or IAsyncEnumerable<T> or Task<IAsyncEnumerable<T>> or Task<ChannelReader<T>>",
+        messageFormat: "The return type of {0} is not suitable. Instead, use Task or Task<T> or IAsyncEnumerable<T> or Task<IAsyncEnumerable<T>> or Task<ChannelReader<T>>.",
         category: "Usage",
-        defaultSeverity: DiagnosticSeverity.Error,
+        defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        description: "The return type of methods in the interface used for hub proxy must be Task or Task<T>.");
+        description: "The return type of methods in the interface must be Task, Task<T>, IAsyncEnumerable<T>, Task<IAsyncEnumerable<T>>, or Task<ChannelReader<T>>.");
 
     public static readonly DiagnosticDescriptor ReceiverMethodReturnTypeRule = new(
         id: "TSRTS006",
         title: "The return type of methods in the interface must be Task",
         messageFormat: "[The return type of methods in the interface used for the receiver must be Task] The return type of {0} is not Task",
         category: "Usage",
-        defaultSeverity: DiagnosticSeverity.Error,
+        defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: "The return type of methods in the interface must be Task.");
 
@@ -111,6 +121,9 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
         typeof(Dictionary<,>),
         typeof(IDictionary<,>),
         typeof(IReadOnlyDictionary<,>)
+        // streaming
+        //typeof(IAsyncEnumerable<T>), // cannot use in netstandard2.0
+        //typeof(ChannelReader<T>) // cannot use in netstandard2.0
     };
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
@@ -129,22 +142,16 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
 
     private static void AnalyzeSymbol(SymbolAnalysisContext context)
     {
-        var hubAttributeSymbol = context.Compilation.GetTypeByMetadataName("TypedSignalR.Client.HubAttribute");
-        var receiverAttributeSymbol = context.Compilation.GetTypeByMetadataName("TypedSignalR.Client.ReceiverAttribute");
-        var transpilationSourceAttributeSymbol = context.Compilation.GetTypeByMetadataName("Tapper.TranspilationSourceAttribute");
-        var taskSymbol = context.Compilation.GetTypeByMetadataName("System.Threading.Tasks.Task")!;
-        var genericTaskSymbol = context.Compilation.GetTypeByMetadataName("System.Threading.Tasks.Task`1")!;
-
-        if (hubAttributeSymbol is null || receiverAttributeSymbol is null || transpilationSourceAttributeSymbol is null)
+        if (context.Symbol is not INamedTypeSymbol namedTypeSymbol)
         {
             return;
         }
 
-        var supportTypeSymbols = SupportTypes
-            .Select(x => context.Compilation.GetTypeByMetadataName(x.FullName)!)
-            .ToArray();
+        var hubAttributeSymbol = context.Compilation.GetTypeByMetadataName("TypedSignalR.Client.HubAttribute");
+        var receiverAttributeSymbol = context.Compilation.GetTypeByMetadataName("TypedSignalR.Client.ReceiverAttribute");
+        var transpilationSourceAttributeSymbol = context.Compilation.GetTypeByMetadataName("Tapper.TranspilationSourceAttribute");
 
-        if (context.Symbol is not INamedTypeSymbol namedTypeSymbol)
+        if (hubAttributeSymbol is null || receiverAttributeSymbol is null || transpilationSourceAttributeSymbol is null)
         {
             return;
         }
@@ -155,18 +162,34 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
         var isReceiverType = namedTypeSymbol.GetAttributes()
             .Any(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, receiverAttributeSymbol));
 
+        if (!(isHubType || isReceiverType))
+        {
+            return;
+        }
+
+        var specialSymbols = new SpecialSymbols(context.Compilation);
+
+        var supportTypeSymbols = SupportTypes
+            .Select(x => context.Compilation.GetTypeByMetadataName(x.FullName!)!)
+            .ToArray();
+
         if (isHubType)
         {
-            AnalyzeHubInterface(context, namedTypeSymbol, supportTypeSymbols, transpilationSourceAttributeSymbol, taskSymbol, genericTaskSymbol);
+            AnalyzeHubInterface(context, namedTypeSymbol, supportTypeSymbols, transpilationSourceAttributeSymbol, specialSymbols);
         }
 
         if (isReceiverType)
         {
-            AnalyzeReceiverInterface(context, namedTypeSymbol, supportTypeSymbols, transpilationSourceAttributeSymbol, taskSymbol);
+            AnalyzeReceiverInterface(context, namedTypeSymbol, supportTypeSymbols, transpilationSourceAttributeSymbol, specialSymbols);
         }
     }
 
-    private static void AnalyzeHubInterface(SymbolAnalysisContext context, INamedTypeSymbol namedTypeSymbol, INamedTypeSymbol[] supportTypeSymbols, INamedTypeSymbol transpilationSourceAttributeSymbol, INamedTypeSymbol taskSymbol, INamedTypeSymbol genericTaskSymbol)
+    private static void AnalyzeHubInterface(
+        SymbolAnalysisContext context,
+        INamedTypeSymbol namedTypeSymbol,
+        INamedTypeSymbol[] supportTypeSymbols,
+        INamedTypeSymbol transpilationSourceAttributeSymbol,
+        SpecialSymbols specialSymbols)
     {
         if (namedTypeSymbol.IsGenericType)
         {
@@ -177,17 +200,17 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
 
         foreach (var method in namedTypeSymbol.GetMethods())
         {
-            // Return type must be Task or Task<T>
-            ValidateHubReturnType(context, method, supportTypeSymbols, transpilationSourceAttributeSymbol, taskSymbol, genericTaskSymbol);
-
-            foreach (var parameter in method.Parameters)
-            {
-                ValidateType(context, parameter.Type, parameter.Locations[0], supportTypeSymbols, transpilationSourceAttributeSymbol);
-            }
+            ValidateHubReturnType(context, method, supportTypeSymbols, transpilationSourceAttributeSymbol, specialSymbols);
+            ValidateHubParameterType(context, method, supportTypeSymbols, transpilationSourceAttributeSymbol, specialSymbols);
         }
     }
 
-    private static void AnalyzeReceiverInterface(SymbolAnalysisContext context, INamedTypeSymbol namedTypeSymbol, INamedTypeSymbol[] supportTypeSymbols, INamedTypeSymbol transpilationSourceAttributeSymbol, INamedTypeSymbol taskSymbol)
+    private static void AnalyzeReceiverInterface(
+        SymbolAnalysisContext context,
+        INamedTypeSymbol namedTypeSymbol,
+        INamedTypeSymbol[] supportTypeSymbols,
+        INamedTypeSymbol transpilationSourceAttributeSymbol,
+        SpecialSymbols specialSymbols)
     {
         if (namedTypeSymbol.IsGenericType)
         {
@@ -199,7 +222,7 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
         foreach (var method in namedTypeSymbol.GetMethods())
         {
             // Return type must be Task
-            ValidateReceiverReturnType(context, method, supportTypeSymbols, transpilationSourceAttributeSymbol, taskSymbol);
+            ValidateReceiverReturnType(context, method, supportTypeSymbols, transpilationSourceAttributeSymbol, specialSymbols);
 
             foreach (var parameter in method.Parameters)
             {
@@ -208,12 +231,17 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
         }
     }
 
-    private static void ValidateType(SymbolAnalysisContext context, ITypeSymbol typeSymbol, Location location, INamedTypeSymbol[] supportTypeSymbols, INamedTypeSymbol transpilationSourceAttribute)
+    private static void ValidateType(
+        SymbolAnalysisContext context,
+        ITypeSymbol typeSymbol,
+        Location location,
+        INamedTypeSymbol[] supportTypeSymbols,
+        INamedTypeSymbol transpilationSourceAttribute)
     {
         if (typeSymbol is INamedTypeSymbol namedTypeSymbol)
         {
             var sourceType = namedTypeSymbol.IsGenericType
-               ? namedTypeSymbol.ConstructedFrom
+               ? namedTypeSymbol.OriginalDefinition
                : namedTypeSymbol;
 
             if (supportTypeSymbols.Contains(sourceType, SymbolEqualityComparer.Default))
@@ -229,7 +257,8 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            if (namedTypeSymbol.GetAttributes().Any(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, transpilationSourceAttribute)))
+            if (namedTypeSymbol.GetAttributes()
+                .Any(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, transpilationSourceAttribute)))
             {
                 return;
             }
@@ -257,7 +286,15 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
             UnsupportedTypeRule, location, typeSymbol.ToDisplayString()));
     }
 
-    private static void ValidateHubReturnType(SymbolAnalysisContext context, IMethodSymbol methodSymbol, INamedTypeSymbol[] supportTypeSymbols, INamedTypeSymbol transpilationSourceAttribute, INamedTypeSymbol taskSymbol, INamedTypeSymbol genericTaskSymbol)
+    /// <summary>
+    /// Return type must be Task, Task&lt;T&gt;, IAsyncEnumerable&lt;T&gt;, Task&lt;IAsyncEnumerable&lt;T&gt;&gt;, or Task&lt;ChannelReader&lt;T&gt;&gt;
+    /// </summary>
+    private static void ValidateHubReturnType(
+        SymbolAnalysisContext context,
+        IMethodSymbol methodSymbol,
+        INamedTypeSymbol[] supportTypeSymbols,
+        INamedTypeSymbol transpilationSourceAttribute,
+        SpecialSymbols specialSymbols)
     {
         var location = methodSymbol.Locations[0];
 
@@ -268,27 +305,79 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        if (!namedReturnTypeSymbol.IsGenericType)
+        // Task, IAsyncEnumerable<T>
+        if (SymbolEqualityComparer.Default.Equals(namedReturnTypeSymbol, specialSymbols.TaskSymbol))
         {
-            // Task
-            if (SymbolEqualityComparer.Default.Equals(namedReturnTypeSymbol, taskSymbol))
-            {
-                return;
-            }
+            return;
         }
 
-        // Task<T>
-        if (!SymbolEqualityComparer.Default.Equals(namedReturnTypeSymbol.ConstructedFrom, genericTaskSymbol))
+        if (SymbolEqualityComparer.Default.Equals(namedReturnTypeSymbol.OriginalDefinition, specialSymbols.AsyncEnumerableSymbol))
         {
-            context.ReportDiagnostic(Diagnostic.Create(
-                HubMethodReturnTypeRule, location, methodSymbol.ToDisplayString()));
+            var typeArg = namedReturnTypeSymbol.TypeArguments[0];
+            ValidateType(context, typeArg, location, supportTypeSymbols, transpilationSourceAttribute);
+            return;
         }
 
-        // Validate type arguments of Task<T>
-        ValidateType(context, namedReturnTypeSymbol.TypeArguments[0], location, supportTypeSymbols, transpilationSourceAttribute);
+        // Task<T>,  Task<IAsyncEnumerable<T>>, Task<ChannelReader<T>>
+        if (SymbolEqualityComparer.Default.Equals(namedReturnTypeSymbol.OriginalDefinition, specialSymbols.GenericTaskSymbol))
+        {
+            // Task<T> -> T
+            var typeArg = namedReturnTypeSymbol.TypeArguments[0];
+
+            var featuredType = SymbolEqualityComparer.Default.Equals(typeArg.OriginalDefinition, specialSymbols.AsyncEnumerableSymbol)
+                || SymbolEqualityComparer.Default.Equals(typeArg.OriginalDefinition, specialSymbols.ChannelReaderSymbol)
+                ? (typeArg as INamedTypeSymbol)!.TypeArguments[0] // IAsyncEnumerable<T>, ChannelReader<T> -> T
+                : typeArg;
+
+            ValidateType(context, featuredType, location, supportTypeSymbols, transpilationSourceAttribute);
+            return;
+        }
+
+        context.ReportDiagnostic(Diagnostic.Create(
+            HubMethodReturnTypeRule, location, methodSymbol.ToDisplayString()));
     }
 
-    private static void ValidateReceiverReturnType(SymbolAnalysisContext context, IMethodSymbol methodSymbol, INamedTypeSymbol[] supportTypeSymbols, INamedTypeSymbol transpilationSourceAttribute, INamedTypeSymbol taskSymbol)
+    private static void ValidateHubParameterType(
+        SymbolAnalysisContext context,
+        IMethodSymbol methodSymbol,
+        INamedTypeSymbol[] supportTypeSymbols,
+        INamedTypeSymbol transpilationSourceAttribute,
+        SpecialSymbols specialSymbols)
+    {
+        var methodType = methodSymbol.SelectHubMethodType(specialSymbols);
+
+        foreach (var parameter in methodSymbol.Parameters)
+        {
+            if (methodType == HubMethodType.ServerToClientStreaming)
+            {
+                if (SymbolEqualityComparer.Default.Equals(parameter.Type, specialSymbols.CancellationTokenSymbol))
+                {
+                    continue;
+                }
+            }
+
+            if (methodType == HubMethodType.ClientToServerStreaming)
+            {
+                if (SymbolEqualityComparer.Default.Equals(parameter.Type.OriginalDefinition, specialSymbols.AsyncEnumerableSymbol)
+                    || SymbolEqualityComparer.Default.Equals(parameter.Type.OriginalDefinition, specialSymbols.ChannelReaderSymbol))
+                {
+                    var typeArg = (parameter.Type as INamedTypeSymbol)!.TypeArguments[0];
+                    ValidateType(context, typeArg, parameter.Locations[0], supportTypeSymbols, transpilationSourceAttribute);
+
+                    continue;
+                }
+            }
+
+            ValidateType(context, parameter.Type, parameter.Locations[0], supportTypeSymbols, transpilationSourceAttribute);
+        }
+    }
+
+    private static void ValidateReceiverReturnType(
+        SymbolAnalysisContext context,
+        IMethodSymbol methodSymbol,
+        INamedTypeSymbol[] supportTypeSymbols,
+        INamedTypeSymbol transpilationSourceAttribute,
+        SpecialSymbols specialSymbols)
     {
         var location = methodSymbol.Locations[0];
 
@@ -300,7 +389,7 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
         }
 
         // Task
-        if (SymbolEqualityComparer.Default.Equals(namedReturnTypeSymbol, taskSymbol))
+        if (SymbolEqualityComparer.Default.Equals(namedReturnTypeSymbol, specialSymbols.TaskSymbol))
         {
             return;
         }

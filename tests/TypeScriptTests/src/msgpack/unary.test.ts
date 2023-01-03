@@ -19,7 +19,7 @@ const toUTCString = (date: string | Date): string => {
 
 const testMethod = async () => {
     const connection = new HubConnectionBuilder()
-        .withUrl("http://localhost:5000/realtime/unaryhub")
+        .withUrl("http://localhost:5000/hubs/unaryhub")
         .withHubProtocol(new MessagePackHubProtocol())
         .build();
 

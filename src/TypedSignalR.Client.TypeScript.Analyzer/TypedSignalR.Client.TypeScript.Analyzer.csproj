@@ -36,6 +36,8 @@
 
     <ItemGroup>
         <Compile Include="..\TypedSignalR.Client.TypeScript\RoslynExtensions.cs" LinkBase="" />
+        <Compile Include="..\TypedSignalR.Client.TypeScript\SpecialSymbols.cs" LinkBase="" />
+        <Compile Include="..\TypedSignalR.Client.TypeScript\Utils.cs" LinkBase="" />
     </ItemGroup>
 
 </Project>

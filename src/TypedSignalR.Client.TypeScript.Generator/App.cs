@@ -46,7 +46,7 @@ public class App : ConsoleAppBase
 
         if (!Enum.TryParse<SerializerOption>(serializer, true, out var serializerOption))
         {
-            _logger.Log(LogLevel.Information, "Only json or messagepack can be selected for serializer. {type} is not supported.", serializer);
+            _logger.Log(LogLevel.Information, "Only JSON or MessagePack can be selected for serializer. {type} is not supported.", serializer);
             return;
         }
 

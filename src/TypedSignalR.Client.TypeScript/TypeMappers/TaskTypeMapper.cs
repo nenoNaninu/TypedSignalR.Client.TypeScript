@@ -1,14 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Tapper;
 
 namespace TypedSignalR.Client.TypeScript.TypeMappers;
 
-internal class TaskTypeMapper : ITypeMapper
+internal sealed class TaskTypeMapper : ITypeMapper
 {
     public ITypeSymbol Assign { get; }
 
@@ -28,7 +24,7 @@ internal class TaskTypeMapper : ITypeMapper
     }
 }
 
-internal class GenericTaskTypeMapper : ITypeMapper
+internal sealed class GenericTaskTypeMapper : ITypeMapper
 {
     public ITypeSymbol Assign { get; }
 
@@ -41,7 +37,7 @@ internal class GenericTaskTypeMapper : ITypeMapper
     {
         if (typeSymbol is INamedTypeSymbol namedTypeSymbol
             && namedTypeSymbol.IsGenericType
-            && SymbolEqualityComparer.Default.Equals(namedTypeSymbol.ConstructedFrom, Assign))
+            && SymbolEqualityComparer.Default.Equals(namedTypeSymbol.OriginalDefinition, Assign))
         {
             var typeArgument = namedTypeSymbol.TypeArguments[0];
             var mapper = options.TypeMapperProvider.GetTypeMapper(typeArgument);
