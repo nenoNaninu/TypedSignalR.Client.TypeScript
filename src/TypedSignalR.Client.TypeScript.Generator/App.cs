@@ -10,6 +10,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.Extensions.Logging;
 using Tapper;
+using TypedSignalR.Client.TypeScript.TypeMappers;
 
 namespace TypedSignalR.Client.TypeScript;
 
@@ -87,8 +88,15 @@ public class App : ConsoleAppBase
         NamingStyle namingStyle,
         EnumStyle enumStyle)
     {
+        var typeMapperProvider = new DefaultTypeMapperProvider(compilation, referencedAssembliesTranspilation);
+
+        typeMapperProvider.AddTypeMapper(new TaskTypeMapper(compilation));
+        typeMapperProvider.AddTypeMapper(new GenericTaskTypeMapper(compilation));
+        typeMapperProvider.AddTypeMapper(new AsyncEnumerableTypeMapper(compilation));
+        typeMapperProvider.AddTypeMapper(new ChannelReaderTypeMapper(compilation));
+
         var options = new TranspilationOptions(
-            new DefaultTypeMapperProvider(compilation, referencedAssembliesTranspilation),
+            typeMapperProvider,
             serializerOption,
             namingStyle,
             enumStyle,
