@@ -44,12 +44,6 @@ public class TypedSignalRCodeGenerator
         // preparation
         var specialSymbols = new SpecialSymbols(_compilation);
 
-        var typeMapperProvider = new DefaultTypeMapperProvider(_compilation, _options.IncludeReferencedAssemblies);
-        typeMapperProvider.AddTypeMapper(new TaskTypeMapper(_compilation));
-        typeMapperProvider.AddTypeMapper(new GenericTaskTypeMapper(_compilation));
-        typeMapperProvider.AddTypeMapper(new AsyncEnumerableTypeMapper(_compilation));
-        typeMapperProvider.AddTypeMapper(new ChannelReaderTypeMapper(_compilation));
-
         // generate index.ts + (namespace).ts
 
         // first, generate (namespace).ts
