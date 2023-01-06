@@ -214,7 +214,7 @@ internal class InterfaceTranspiler
             // IAsyncEnumerable<T>
             if (SymbolEqualityComparer.Default.Equals(returnType.OriginalDefinition, specialSymbols.AsyncEnumerableSymbol))
             {
-                var typeArg = (returnType as INamedTypeSymbol)!.TypeArguments[0];
+                var typeArg = ((INamedTypeSymbol)returnType).TypeArguments[0];
                 codeWriter.Append($"IStreamResult<{TypeMapper.MapTo(typeArg, options)}>");
                 return;
             }
@@ -223,7 +223,7 @@ internal class InterfaceTranspiler
             // Task<ChannelReader<T>>
             if (SymbolEqualityComparer.Default.Equals(returnType.OriginalDefinition, specialSymbols.GenericTaskSymbol))
             {
-                var typeArg = (returnType as INamedTypeSymbol)!.TypeArguments[0];
+                var typeArg = ((INamedTypeSymbol)returnType).TypeArguments[0];
 
                 if (typeArg.IsGenericType() && typeArg is INamedTypeSymbol namedTypeArg)
                 {

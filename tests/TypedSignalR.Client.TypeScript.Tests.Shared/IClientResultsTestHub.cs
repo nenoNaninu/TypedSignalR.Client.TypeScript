@@ -3,6 +3,7 @@ namespace TypedSignalR.Client.TypeScript.Tests.Shared;
 [Hub]
 public interface IClientResultsTestHub
 {
+    //Person Ge2tPersonFromClient(); // user defined type
     Task<bool> StartTest();
 }
 
