@@ -20,8 +20,23 @@ public class TypedSignalRCodeGenerator
         ILogger logger)
     {
         _compilation = compilation;
-        _options = options;
         _logger = logger;
+
+        var typeMapperProvider = new DefaultTypeMapperProvider(_compilation, options.IncludeReferencedAssemblies);
+        typeMapperProvider.AddTypeMapper(new TaskTypeMapper(_compilation));
+        typeMapperProvider.AddTypeMapper(new GenericTaskTypeMapper(_compilation));
+        typeMapperProvider.AddTypeMapper(new AsyncEnumerableTypeMapper(_compilation));
+        typeMapperProvider.AddTypeMapper(new ChannelReaderTypeMapper(_compilation));
+
+        _options = new TranspilationOptions(
+            typeMapperProvider,
+            options.SerializerOption,
+            options.NamingStyle,
+            options.EnumStyle,
+            options.NewLine,
+            options.Indent,
+            options.IncludeReferencedAssemblies
+        );
     }
 
     public IEnumerable<GeneratedSourceCode> Generate()
