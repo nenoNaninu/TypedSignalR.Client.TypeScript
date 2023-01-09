@@ -4,7 +4,7 @@ using Tapper;
 
 namespace TypedSignalR.Client.TypeScript.TypeMappers;
 
-internal sealed class AsyncEnumerableTypeMapper : ITypeMapper
+public sealed class AsyncEnumerableTypeMapper : ITypeMapper
 {
     public ITypeSymbol Assign { get; }
 
@@ -28,7 +28,7 @@ internal sealed class AsyncEnumerableTypeMapper : ITypeMapper
     }
 }
 
-internal sealed class ChannelReaderTypeMapper : ITypeMapper
+public sealed class ChannelReaderTypeMapper : ITypeMapper
 {
     public ITypeSymbol Assign { get; }
 
