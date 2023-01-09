@@ -12,6 +12,8 @@ TypedSignalR.Client.TypeScript is a library/CLI tool that analyzes SignalR hub a
   - [Built-in Supported Types](#built-in-supported-types)
   - [User Defined Types](#user-defined-types)
 - [Analyzer](#analyzer)
+- [Streaming Support](#streaming-support)
+- [Client Results Support](#client-results-support)
 - [MessagePack Hub Protocol Support](#messagepack-hub-protocol-support)
 - [Related Work](#related-work)
 
@@ -261,6 +263,105 @@ The Analyzer checks in real-time whether this rule is followed. If not, the IDE 
 
 ![analyzer](https://user-images.githubusercontent.com/27144255/170770137-28790bcf-08d1-403f-9625-2cdf6f390e76.gif)
 
+
+## Streaming Support
+
+SignalR supports both [server-to-client streaming and client-to-server streaming](https://docs.microsoft.com/en-us/aspnet/core/signalr/streaming?view=aspnetcore-6.0).
+
+TypedSignalR.Client.TypeScript supports both server-to-client streaming and client-to-server streaming.
+If you use `IAsyncEnumerable<T>`, `Task<IAsyncEnumerable<T>>`, or `Task<ChannelReader<T>>` for the method return type, it is analyzed as server-to-client streaming.
+And if `IAsyncEnumerable<T>` or `ChannelReader<T>` is used in the method parameter, it is analyzed as client-to-server streaming.
+
+When using server-to-client streaming, a single `CancellationToken` can be used as a method parameter (Note: `CancellationToken` cannot be used as a parameter except for server-to-client streaming).
+
+```cs
+// C# source code
+[Hub]
+public interface IMyStreamingHub
+{
+    // Server-to-Client streaming
+    // Return type : IAsyncEnumerable<T> or Task<IAsyncEnumerable<T>> or Task<ChannelReader<T>>
+    // Parameter : CancellationToken can use.
+    Task<ChannelReader<MyStreamItem>> ServerToClientStreaming(MyType instance, int init, CancellationToken cancellationToken);
+
+    // Client-to-Server streaming
+    // Return type : Task (not Task<T>)
+    // Parameter : IAsyncEnumerable<T> and ChannelReader<T> can use as stream from client to server.
+    Task ClientToServerStreaming(MyType instance, ChannelReader<MyStreamItem> stream);
+}
+```
+
+```ts
+// Usage in TypeScript
+// Parameters and return types are strongly typed by generated TypeScript code
+
+const connection: HubConnection = ...;
+
+const hubProxy = getHubProxyFactory("IMyStreamingHub")
+    .createHubProxy(connection);
+
+await connection.start();
+
+const instance: MyType = ...;
+
+// subscribe server to client streaming message
+hubProxy.serverToClientStreaming(instance, 99) // IStreamResult<MyStreamItem>
+    .subscribe({
+        next: (value: MyStreamItem): void => {
+            console.log(value)
+        },
+        error: (err: any): void => {
+            console.log(err)
+        },
+        complete: (): void => {
+            console.log("complete")
+        }
+    });
+
+const subject = new Subject<MyStreamItem>(); // stream
+
+// set client to server stream
+await hubProxy.clientToServerStreaming(instance, subject);
+
+const item: MyStreamItem = ...;
+subject.next(item); // write item to stream
+subject.next(item);
+subject.complete();
+```
+
+## Client Results Support
+
+.NET 7 and later, you can use [client results](https://learn.microsoft.com/en-us/aspnet/core/signalr/hubs?view=aspnetcore-7.0#client-results).
+
+TypedSignalR.Client.TypeScript supports client results.
+If you use `Task<T>` for the method return type in the receiver interface, you can use client results.
+
+```cs
+// C# source code
+[Receiver]
+public interface IMyHubReceiver
+{
+    // Return type: Task<T> 
+    Task<Guid> GetGuidFromClient();
+}
+```
+
+```ts
+// Usage in TypeScript
+// Parameters and return types are strongly typed by generated TypeScript code
+
+const connection: HubConnection = ...;
+
+const receiver: IMyHubReceiver = {
+    getGuidFromClient: (): Promise<string> => {
+        // return value.
+        return Promise.resolve("ba3088bb-e7ea-4924-b01b-695e879bb166");
+    }
+}
+
+const subscription = getReceiverRegister("IMyHubReceiver")
+    .register(connection, receiver);
+```
 
 ## MessagePack Hub Protocol Support
 

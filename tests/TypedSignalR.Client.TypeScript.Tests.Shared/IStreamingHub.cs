@@ -30,3 +30,27 @@ public record Person(Guid Id, string Name, int Number);
 
 [TranspilationSource]
 public record Message(Person Publisher, int Value);
+
+[Hub]
+public interface IMyStreamingHub
+{
+    // Server-to-Client streaming
+    // Return type : IAsyncEnumerable<T> or Task<IAsyncEnumerable<T>> or Task<ChannelReader<T>>
+    // Parameter : CancellationToken can use.
+    Task<ChannelReader<MyStreamItem>> ServerToClientStreaming(MyType instance, int init, CancellationToken cancellationToken);
+
+    // Client-to-Server streaming
+    // Return type : Task (not Task<T>)
+    // Parameter : IAsyncEnumerable<T> and ChannelReader<T> can use as stream from client to server.
+    Task ClientToServerStreaming(MyType instance, ChannelReader<MyStreamItem> stream);
+}
+
+[TranspilationSource]
+public class MyType
+{
+}
+
+[TranspilationSource]
+public class MyStreamItem
+{
+}
