@@ -293,6 +293,8 @@ public interface IMyStreamingHub
 
 ```ts
 // Usage in TypeScript
+// Parameters and return types are strongly typed by generated TypeScript code
+
 const connection: HubConnection = ...;
 
 const hubProxy = getHubProxyFactory("IMyStreamingHub")
@@ -303,7 +305,7 @@ await connection.start();
 const instance: MyType = ...;
 
 // subscribe server to client streaming message
-hubProxy.serverToClientStreaming(instance, 99)
+hubProxy.serverToClientStreaming(instance, 99) // IStreamResult<MyStreamItem>
     .subscribe({
         next: (value: MyStreamItem): void => {
             console.log(value)
@@ -346,6 +348,8 @@ public interface IMyHubReceiver
 
 ```ts
 // Usage in TypeScript
+// Parameters and return types are strongly typed by generated TypeScript code
+
 const connection: HubConnection = ...;
 
 const receiver: IMyHubReceiver = {
