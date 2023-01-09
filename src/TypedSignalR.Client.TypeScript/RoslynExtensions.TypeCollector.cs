@@ -71,4 +71,45 @@ internal static partial class RoslynExtensions
 
         return types;
     }
+
+    public static ITypeSymbol GetFeaturedType(this ITypeSymbol typeSymbol, SpecialSymbols specialSymbols)
+    {
+        if (typeSymbol.IsGenericType())
+        {
+            // IAsyncEnumerable<T> -> T
+            // ChannelReader<T> -> T
+            // Task<T> -> T
+            // Task<IAsyncEnumerable<T>> -> T
+            // Task<ChannelReader<T>> -> T
+            if (typeSymbol is INamedTypeSymbol namedTypeSymbol)
+            {
+                // IAsyncEnumerable<T>
+                // ChannelReader<T>
+                if (SymbolEqualityComparer.Default.Equals(namedTypeSymbol.OriginalDefinition, specialSymbols.AsyncEnumerableSymbol)
+                    || SymbolEqualityComparer.Default.Equals(namedTypeSymbol.OriginalDefinition, specialSymbols.ChannelReaderSymbol))
+                {
+                    return namedTypeSymbol.TypeArguments[0];
+                }
+
+                // Task<T>
+                if (SymbolEqualityComparer.Default.Equals(namedTypeSymbol.OriginalDefinition, specialSymbols.GenericTaskSymbol))
+                {
+                    var typeArg = namedTypeSymbol.TypeArguments[0] as INamedTypeSymbol;
+
+                    // Task<IAsyncEnumerable<T>> -> T
+                    // Task<ChannelReader<T>> -> T
+                    if (SymbolEqualityComparer.Default.Equals(typeArg?.OriginalDefinition, specialSymbols.AsyncEnumerableSymbol)
+                        || SymbolEqualityComparer.Default.Equals(typeArg?.OriginalDefinition, specialSymbols.ChannelReaderSymbol))
+                    {
+                        return typeArg.TypeArguments[0];
+                    }
+
+                    // Task<T> -> T
+                    return namedTypeSymbol.TypeArguments[0];
+                }
+            }
+        }
+
+        return typeSymbol;
+    }
 }
