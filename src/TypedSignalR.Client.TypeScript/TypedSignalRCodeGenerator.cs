@@ -31,8 +31,8 @@ public class TypedSignalRCodeGenerator
         // generate index.ts + (namespace).ts
 
         // first, generate (namespace).ts
-        var hubTypes = _compilation.GetAttributeAnnotatedTypes(specialSymbols.HubAttributeSymbol, _options.IncludeReferencedAssemblies);
-        var receiverTypes = _compilation.GetAttributeAnnotatedTypes(specialSymbols.ReceiverAttributeSymbol, _options.IncludeReferencedAssemblies);
+        var hubTypes = _compilation.GetAttributeAnnotatedTypes(specialSymbols.HubAttributeSymbol, _options.ReferencedAssembliesTranspilation);
+        var receiverTypes = _compilation.GetAttributeAnnotatedTypes(specialSymbols.ReceiverAttributeSymbol, _options.ReferencedAssembliesTranspilation);
 
         var interfaceTranspiler = new InterfaceTranspiler(specialSymbols, _options, _logger);
         var sources = interfaceTranspiler.Transpile(hubTypes.Concat(receiverTypes));
