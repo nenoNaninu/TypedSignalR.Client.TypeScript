@@ -113,7 +113,8 @@ Use `TypedSignalR.Client.TypeScript.Generatorr`(CLI Tool) to generate TypeScript
 `TypedSignalR.Client.TypeScript.Generatorr` can be easily installed using .NET Global Tools. You can use the installed tools with the command `dotnet tsts`(**T**yped**S**ignal**R**.Client.**T**ype**S**cript).
 
 ```bash
-# install (require .NET 7)
+# install
+# TypedSignalR.Client.TypeScript CLI (dotnet tool) requires .NET 7, but your app TFM can use .NET 6, etc.
 dotnet tool install --global TypedSignalR.Client.TypeScript.Generator
 dotnet tsrts help
 
