@@ -38,7 +38,9 @@ public class App : ConsoleAppBase
         [Option("n", "camelCase (default) / PascalCase / none (The name in C# is used as it is.)")]
         NamingStyle namingStyle = NamingStyle.CamelCase,
         [Option("en", "value (default) / nameString / nameCamel / NamePascal / union / unionCamel / UnionPascal")]
-        EnumStyle @enum = EnumStyle.Value)
+        EnumStyle @enum = EnumStyle.Value,
+        [Option("attr", "The flag whether attributes such as JsonPropertyName should affect transpilation.")]
+        bool attribute = true)
     {
         _logger.Log(LogLevel.Information, "Start loading the csproj of {path}.", Path.GetFullPath(project));
 
@@ -48,7 +50,7 @@ public class App : ConsoleAppBase
         {
             var compilation = await this.CreateCompilationAsync(project);
 
-            await TranspileCore(compilation, output, newLine, 4, assemblies, serializer, namingStyle, @enum);
+            await TranspileCore(compilation, output, newLine, 4, assemblies, serializer, namingStyle, @enum, attribute);
 
             _logger.Log(LogLevel.Information, "======== Transpilation is completed. ========");
             _logger.Log(LogLevel.Information, "Please check the output folder: {output}", output);
@@ -86,7 +88,8 @@ public class App : ConsoleAppBase
         bool referencedAssembliesTranspilation,
         SerializerOption serializerOption,
         NamingStyle namingStyle,
-        EnumStyle enumStyle)
+        EnumStyle enumStyle,
+        bool enableAttributeReference)
     {
         var typeMapperProvider = new DefaultTypeMapperProvider(compilation, referencedAssembliesTranspilation);
 
@@ -96,13 +99,15 @@ public class App : ConsoleAppBase
         typeMapperProvider.AddTypeMapper(new ChannelReaderTypeMapper(compilation));
 
         var options = new TranspilationOptions(
+            compilation,
             typeMapperProvider,
             serializerOption,
             namingStyle,
             enumStyle,
             newLine,
             indent,
-            referencedAssembliesTranspilation
+            referencedAssembliesTranspilation,
+            enableAttributeReference
         );
 
         // Tapper
