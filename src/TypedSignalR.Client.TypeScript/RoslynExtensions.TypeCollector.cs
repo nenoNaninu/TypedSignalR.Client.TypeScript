@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
@@ -66,6 +67,38 @@ internal static partial class RoslynExtensions
                 }
 
                 return attributes.Any(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, attributeSymbol));
+            })
+            .ToArray();
+
+        return types;
+    }
+
+    public static IReadOnlyList<INamedTypeSymbol> GetAttributeAnnotatedTypes(
+        this Compilation compilation,
+        ImmutableArray<INamedTypeSymbol> attributeSymbols,
+        bool includeReferencedAssemblies)
+    {
+        var namedTypes = includeReferencedAssemblies ? compilation.GetGlobalNamedTypeSymbols() : compilation.GetNamedTypeSymbols();
+
+        var types = namedTypes
+            .Where(t =>
+            {
+                var attributes = t.GetAttributes();
+
+                if (attributes.IsEmpty)
+                {
+                    return false;
+                }
+
+                foreach (var attributeSymbol in attributeSymbols)
+                {
+                    if (attributes.Any(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, attributeSymbol)))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             })
             .ToArray();
 
