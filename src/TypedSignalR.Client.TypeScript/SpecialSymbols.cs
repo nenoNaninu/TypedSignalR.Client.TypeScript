@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 
 namespace TypedSignalR.Client.TypeScript;
@@ -10,9 +11,9 @@ internal class SpecialSymbols
     public readonly INamedTypeSymbol AsyncEnumerableSymbol;
     public readonly INamedTypeSymbol ChannelReaderSymbol;
     public readonly INamedTypeSymbol CancellationTokenSymbol;
-    public readonly INamedTypeSymbol HubAttributeSymbol;
-    public readonly INamedTypeSymbol ReceiverAttributeSymbol;
-    public readonly INamedTypeSymbol TranspilationSourceAttributeSymbol;
+    public readonly ImmutableArray<INamedTypeSymbol> HubAttributeSymbols;
+    public readonly ImmutableArray<INamedTypeSymbol> ReceiverAttributeSymbols;
+    public readonly ImmutableArray<INamedTypeSymbol> TranspilationSourceAttributeSymbols;
 
     public SpecialSymbols(Compilation compilation)
     {
@@ -22,27 +23,27 @@ internal class SpecialSymbols
         ChannelReaderSymbol = compilation.GetTypeByMetadataName("System.Threading.Channels.ChannelReader`1")!;
         CancellationTokenSymbol = compilation.GetTypeByMetadataName("System.Threading.CancellationToken")!;
 
-        var hubAttributeSymbol = compilation.GetTypeByMetadataName("TypedSignalR.Client.HubAttribute");
-        var receiverAttributeSymbol = compilation.GetTypeByMetadataName("TypedSignalR.Client.ReceiverAttribute");
-        var transpilationSourceAttributeSymbol = compilation.GetTypeByMetadataName("Tapper.TranspilationSourceAttribute");
+        var hubAttributeSymbol = compilation.GetTypesByMetadataName("TypedSignalR.Client.HubAttribute");
+        var receiverAttributeSymbol = compilation.GetTypesByMetadataName("TypedSignalR.Client.ReceiverAttribute");
+        var transpilationSourceAttributeSymbol = compilation.GetTypesByMetadataName("Tapper.TranspilationSourceAttribute");
 
-        if (hubAttributeSymbol is null)
+        if (hubAttributeSymbol.IsEmpty)
         {
             throw new InvalidOperationException("TypedSignalR.Client.HubAttribute is not found");
         }
 
-        if (receiverAttributeSymbol is null)
+        if (receiverAttributeSymbol.IsEmpty)
         {
             throw new InvalidOperationException("TypedSignalR.Client.ReceiverAttribute is not found");
         }
 
-        if (transpilationSourceAttributeSymbol is null)
+        if (transpilationSourceAttributeSymbol.IsEmpty)
         {
             throw new InvalidOperationException("Tapper.TranspilationSourceAttribute is not found");
         }
 
-        HubAttributeSymbol = hubAttributeSymbol;
-        ReceiverAttributeSymbol = receiverAttributeSymbol;
-        TranspilationSourceAttributeSymbol = transpilationSourceAttributeSymbol;
+        HubAttributeSymbols = hubAttributeSymbol;
+        ReceiverAttributeSymbols = receiverAttributeSymbol;
+        TranspilationSourceAttributeSymbols = transpilationSourceAttributeSymbol;
     }
 }

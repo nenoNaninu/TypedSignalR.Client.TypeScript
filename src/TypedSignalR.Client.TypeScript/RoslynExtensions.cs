@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
@@ -65,6 +66,19 @@ internal static partial class RoslynExtensions
     {
         return source.GetAttributes()
             .Any(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, attributeSymbol));
+    }
+
+    public static bool IsAttributeAnnotated(this INamedTypeSymbol source, ImmutableArray<INamedTypeSymbol> attributeSymbols)
+    {
+        foreach (var attribute in attributeSymbols)
+        {
+            if (source.IsAttributeAnnotated(attribute))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static bool IsGenericType(this ITypeSymbol source)
