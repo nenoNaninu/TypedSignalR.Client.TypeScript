@@ -10,13 +10,13 @@ namespace TypedSignalR.Client.TypeScript;
 internal class InterfaceTranspiler
 {
     private readonly SpecialSymbols _specialSymbols;
-    private readonly ITranspilationOptions _transpilationOptions;
+    private readonly ITypedSignalRTranspilationOptions _transpilationOptions;
     private readonly ILogger _logger;
 
-    public InterfaceTranspiler(SpecialSymbols specialSymbols, ITranspilationOptions transpilationOptions, ILogger logger)
+    public InterfaceTranspiler(SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options, ILogger logger)
     {
         _specialSymbols = specialSymbols;
-        _transpilationOptions = transpilationOptions;
+        _transpilationOptions = options;
         _logger = logger;
     }
 
@@ -85,7 +85,7 @@ internal class InterfaceTranspiler
     private static void AddInterface(
         INamedTypeSymbol interfaceSymbol,
         SpecialSymbols specialSymbols,
-        ITranspilationOptions options,
+        ITypedSignalRTranspilationOptions options,
         ref CodeWriter codeWriter)
     {
         codeWriter.AppendLine($"export type {interfaceSymbol.Name} = {{");
@@ -93,7 +93,7 @@ internal class InterfaceTranspiler
         foreach (var method in interfaceSymbol.GetMethods())
         {
             WriteJSDoc(method, ref codeWriter);
-            codeWriter.Append($"    {method.Name.Format(options.NamingStyle)}(");
+            codeWriter.Append($"    {method.Name.Format(options.MethodStyle)}(");
             WriteParameters(method, options, specialSymbols, ref codeWriter);
             codeWriter.Append("): ");
             WriteReturnType(method, options, specialSymbols, ref codeWriter);

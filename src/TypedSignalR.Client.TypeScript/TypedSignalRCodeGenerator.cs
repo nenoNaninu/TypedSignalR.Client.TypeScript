@@ -8,14 +8,14 @@ namespace TypedSignalR.Client.TypeScript;
 
 public class TypedSignalRCodeGenerator
 {
-    private readonly ITranspilationOptions _options;
+    private readonly ITypedSignalRTranspilationOptions _options;
     private readonly Compilation _compilation;
 
     private readonly ILogger _logger;
 
     public TypedSignalRCodeGenerator(
         Compilation compilation,
-        ITranspilationOptions options,
+        ITypedSignalRTranspilationOptions options,
         ILogger logger)
     {
         _compilation = compilation;

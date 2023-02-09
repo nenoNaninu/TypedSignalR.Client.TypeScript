@@ -39,6 +39,8 @@ public class App : ConsoleAppBase
         NamingStyle namingStyle = NamingStyle.CamelCase,
         [Option("en", "value (default) / nameString / nameCamel / NamePascal / union / unionCamel / UnionPascal")]
         EnumStyle @enum = EnumStyle.Value,
+        [Option("m", "camelCase (default) / PascalCase / none (The name in C# is used as it is.)")]
+        MethodStyle method = MethodStyle.CamelCase,
         [Option("attr", "The flag whether attributes such as JsonPropertyName should affect transpilation.")]
         bool attribute = true)
     {
@@ -50,7 +52,7 @@ public class App : ConsoleAppBase
         {
             var compilation = await this.CreateCompilationAsync(project);
 
-            await TranspileCore(compilation, output, newLine, 4, assemblies, serializer, namingStyle, @enum, attribute);
+            await TranspileCore(compilation, output, newLine, 4, assemblies, serializer, namingStyle, @enum, method, attribute);
 
             _logger.Log(LogLevel.Information, "======== Transpilation is completed. ========");
             _logger.Log(LogLevel.Information, "Please check the output folder: {output}", output);
@@ -89,6 +91,7 @@ public class App : ConsoleAppBase
         SerializerOption serializerOption,
         NamingStyle namingStyle,
         EnumStyle enumStyle,
+        MethodStyle methodStyle,
         bool enableAttributeReference)
     {
         var typeMapperProvider = new DefaultTypeMapperProvider(compilation, referencedAssembliesTranspilation);
@@ -98,12 +101,13 @@ public class App : ConsoleAppBase
         typeMapperProvider.AddTypeMapper(new AsyncEnumerableTypeMapper(compilation));
         typeMapperProvider.AddTypeMapper(new ChannelReaderTypeMapper(compilation));
 
-        var options = new TranspilationOptions(
+        var options = new TypedSignalRTranspilationOptions(
             compilation,
             typeMapperProvider,
             serializerOption,
             namingStyle,
             enumStyle,
+            methodStyle,
             newLine,
             indent,
             referencedAssembliesTranspilation,
