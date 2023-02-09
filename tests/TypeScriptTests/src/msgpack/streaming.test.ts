@@ -38,7 +38,7 @@ const test_ZeroParameter = async (hubProxy: IStreamingHub) => {
     var pcs = new PromiseCompletionSource();
     const list: Person[] = [];
 
-    hubProxy.ZeroParameter()
+    hubProxy.zeroParameter()
         .subscribe({
             next: (value: Person): void => {
                 list.push(value);
@@ -64,7 +64,7 @@ const test_CancellationTokenOnly = async (hubProxy: IStreamingHub) => {
     var pcs = new PromiseCompletionSource();
     const list: Person[] = [];
 
-    hubProxy.CancellationTokenOnly()
+    hubProxy.cancellationTokenOnly()
         .subscribe({
             next: (value: Person): void => {
                 list.push(value);
@@ -98,7 +98,7 @@ const test_Counter = async (hubProxy: IStreamingHub) => {
 
     const step = 2;
 
-    hubProxy.Counter(publisher, 0, step, 10)
+    hubProxy.counter(publisher, 0, step, 10)
         .subscribe({
             next: (value: Message): void => {
                 list.push(value);
@@ -137,7 +137,7 @@ const test_CancelableCounter = async (hubProxy: IStreamingHub) => {
 
     const step = 2;
 
-    hubProxy.CancelableCounter(publisher, 0, step, 10)
+    hubProxy.cancelableCounter(publisher, 0, step, 10)
         .subscribe({
             next: (value: Message): void => {
                 list.push(value);
@@ -176,7 +176,7 @@ const test_TaskCancelableCounter = async (hubProxy: IStreamingHub) => {
 
     const step = 2;
 
-    hubProxy.TaskCancelableCounter(publisher, 0, step, 10)
+    hubProxy.taskCancelableCounter(publisher, 0, step, 10)
         .subscribe({
             next: (value: Message): void => {
                 list.push(value);
@@ -206,7 +206,7 @@ const test_ZeroParameterChannel = async (hubProxy: IStreamingHub) => {
     var pcs = new PromiseCompletionSource();
     const list: Person[] = [];
 
-    hubProxy.ZeroParameterChannel()
+    hubProxy.zeroParameterChannel()
         .subscribe({
             next: (value: Person): void => {
                 list.push(value);
@@ -231,7 +231,7 @@ const test_CancellationTokenOnlyChannel = async (hubProxy: IStreamingHub) => {
     var pcs = new PromiseCompletionSource();
     const list: Person[] = [];
 
-    hubProxy.CancellationTokenOnlyChannel()
+    hubProxy.cancellationTokenOnlyChannel()
         .subscribe({
             next: (value: Person): void => {
                 list.push(value);
@@ -265,7 +265,7 @@ const test_CounterChannel = async (hubProxy: IStreamingHub) => {
 
     const step = 2;
 
-    hubProxy.CounterChannel(publisher, 0, step, 10)
+    hubProxy.counterChannel(publisher, 0, step, 10)
         .subscribe({
             next: (value: Message): void => {
                 list.push(value);
@@ -304,7 +304,7 @@ const test_CancelableCounterChannel = async (hubProxy: IStreamingHub) => {
 
     const step = 2;
 
-    hubProxy.CancelableCounterChannel(publisher, 0, step, 10)
+    hubProxy.cancelableCounterChannel(publisher, 0, step, 10)
         .subscribe({
             next: (value: Message): void => {
                 list.push(value);

@@ -28,19 +28,19 @@ const testMethod = async () => {
 
     await connection.start();
 
-    const r1 = await hubProxy.Get();
+    const r1 = await hubProxy.get();
     expect(r1).toEqual("TypedSignalR.Client.TypeScript");
 
     const x = getRandomInt(1000);
     const y = getRandomInt(1000);
 
-    const r2 = await hubProxy.Add(x, y);
+    const r2 = await hubProxy.add(x, y);
     expect(r2).toEqual(x + y);
 
     const s1 = "revue";
     const s2 = "starlight";
 
-    const r3 = await hubProxy.Cat(s1, s2);;
+    const r3 = await hubProxy.cat(s1, s2);;
 
     expect(r3).toEqual(s1 + s2);
 
@@ -49,7 +49,7 @@ const testMethod = async () => {
         Guid: crypto.randomUUID()
     }
 
-    const r4 = await hubProxy.Echo(instance);
+    const r4 = await hubProxy.echo(instance);
 
     instance.DateTime = r4.DateTime
     r4.DateTime = r4.DateTime

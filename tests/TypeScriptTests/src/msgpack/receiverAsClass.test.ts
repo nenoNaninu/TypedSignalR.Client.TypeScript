@@ -44,15 +44,15 @@ class ReceiverAsClass implements IReceiver
     public notifyCallCount: number = 0;
     public userDefinedList: UserDefinedType[] = [];
 
-    ReceiveMessage(message: string, value: number): Promise<void> {
+    receiveMessage(message: string, value: number): Promise<void> {
         this.receiveMessageList.push([message, value]);
         return Promise.resolve();
     }
-    Notify(): Promise<void> {
+    notify(): Promise<void> {
         this.notifyCallCount += 1;
         return Promise.resolve();
     }
-    ReceiveCustomMessage(userDefined: UserDefinedType): Promise<void> {
+    receiveCustomMessage(userDefined: UserDefinedType): Promise<void> {
         this.userDefinedList.push(userDefined)
         return Promise.resolve();
     }
@@ -74,7 +74,7 @@ const testMethod = async () => {
         .register(connection, receiver);
 
     await connection.start();
-    await hubProxy.Start();
+    await hubProxy.start();
 
     const receiveMessageList = receiver.receiveMessageList;
     const userDefinedList = receiver.userDefinedList;

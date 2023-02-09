@@ -11,14 +11,14 @@ namespace TypedSignalR.Client.TypeScript;
 
 internal class ApiGenerator
 {
-    private readonly ITranspilationOptions _transpilationOptions;
+    private readonly ITypedSignalRTranspilationOptions _options;
     private readonly ILogger _logger;
     private readonly SpecialSymbols _specialSymbols;
 
-    public ApiGenerator(SpecialSymbols specialSymbols, ITranspilationOptions transpilationOptions, ILogger logger)
+    public ApiGenerator(SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options, ILogger logger)
     {
         _specialSymbols = specialSymbols;
-        _transpilationOptions = transpilationOptions;
+        _options = options;
         _logger = logger;
     }
 
@@ -32,7 +32,7 @@ internal class ApiGenerator
             HubTypes = hubTypes.Select(static x => new TypeMetadata(x)).ToArray(),
             ReceiverTypes = receiverTypes.Select(static x => new TypeMetadata(x)).ToArray(),
             SpecialSymbols = _specialSymbols,
-            TranspilationOptions = _transpilationOptions,
+            Options = _options,
         };
 
         return new[] { new GeneratedSourceCode("TypedSignalR.Client/index.ts", template.TransformText().NormalizeNewLines("\n")) };

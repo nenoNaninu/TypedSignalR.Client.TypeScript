@@ -5,24 +5,39 @@ namespace TypedSignalR.Client.TypeScript;
 
 internal static class StringExtensions
 {
-    public static string NormalizeNewLines(this string source, string newline)
+    public static string NormalizeNewLines(this string text, string newline)
     {
-        return source.Replace("\r\n", "\n").Replace("\n", newline);
+        return text.Replace("\r\n", "\n").Replace("\n", newline);
     }
 
-    public static string NormalizeNewLines(this string source)
+    public static string NormalizeNewLines(this string text)
     {
-        return source.NormalizeNewLines(Environment.NewLine);
+        return text.NormalizeNewLines(Environment.NewLine);
     }
 
-    public static string Format(this string source, NamingStyle namingStyle)
+    public static string Format(this string text, NamingStyle namingStyle)
     {
         return namingStyle switch
         {
-            NamingStyle.None => source,
-            NamingStyle.CamelCase => $"{char.ToLower(source[0])}{source[1..]}",
-            NamingStyle.PascalCase => $"{char.ToUpper(source[0])}{source[1..]}",
+            NamingStyle.None => text,
+            NamingStyle.CamelCase => ToCamel(text),
+            NamingStyle.PascalCase => ToPascal(text),
             _ => throw new InvalidOperationException(),
         };
     }
+
+    public static string Format(this string text, MethodStyle methodStyle)
+    {
+        return methodStyle switch
+        {
+            MethodStyle.None => text,
+            MethodStyle.CamelCase => ToCamel(text),
+            MethodStyle.PascalCase => ToPascal(text),
+            _ => throw new InvalidOperationException(),
+        };
+    }
+
+    private static string ToCamel(string text) => $"{char.ToLower(text[0])}{text[1..]}";
+
+    private static string ToPascal(string text) => $"{char.ToUpper(text[0])}{text[1..]}";
 }
