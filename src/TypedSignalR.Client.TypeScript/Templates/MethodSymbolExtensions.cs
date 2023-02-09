@@ -1,24 +1,23 @@
 using System.Linq;
 using Microsoft.CodeAnalysis;
-using Tapper;
 using Tapper.TypeMappers;
 
 namespace TypedSignalR.Client.TypeScript.Templates;
 
 internal static class MethodSymbolExtensions
 {
-    public static string WrapLambdaExpressionSyntax(this IMethodSymbol methodSymbol, ITranspilationOptions options)
+    public static string WrapLambdaExpressionSyntax(this IMethodSymbol methodSymbol, ITypedSignalRTranspilationOptions options)
     {
         if (methodSymbol.Parameters.Length == 0)
         {
-            return $"() => receiver.{methodSymbol.Name.Format(options.NamingStyle)}()";
+            return $"() => receiver.{methodSymbol.Name.Format(options.MethodStyle)}()";
         }
 
         var parameters = ParametersToTypeArray(methodSymbol, options);
-        return $"(...args: {parameters}) => receiver.{methodSymbol.Name.Format(options.NamingStyle)}(...args)";
+        return $"(...args: {parameters}) => receiver.{methodSymbol.Name.Format(options.MethodStyle)}(...args)";
     }
 
-    public static string CreateMethodString(this IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITranspilationOptions options)
+    public static string CreateMethodString(this IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
     {
         var methodType = methodSymbol.SelectHubMethodType(specialSymbols);
         return methodType switch
@@ -30,7 +29,7 @@ internal static class MethodSymbolExtensions
         };
     }
 
-    private static string ParametersToTypeScriptString(this IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITranspilationOptions options)
+    private static string ParametersToTypeScriptString(this IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
     {
         var parameters = methodSymbol.Parameters
             .Where(x => !SymbolEqualityComparer.Default.Equals(x.Type, specialSymbols.CancellationTokenSymbol))
@@ -39,7 +38,7 @@ internal static class MethodSymbolExtensions
         return string.Join(", ", parameters);
     }
 
-    private static string ParametersToTypeScriptArgumentString(this IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITranspilationOptions options)
+    private static string ParametersToTypeScriptArgumentString(this IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
     {
         var args = methodSymbol.Parameters
             .Where(x => !SymbolEqualityComparer.Default.Equals(x.Type, specialSymbols.CancellationTokenSymbol))
@@ -50,7 +49,7 @@ internal static class MethodSymbolExtensions
             : string.Empty;
     }
 
-    private static string ReturnTypeToTypeScriptString(this IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITranspilationOptions options)
+    private static string ReturnTypeToTypeScriptString(this IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
     {
         var returnType = methodSymbol.ReturnType;
         // for sever-to-client streaming
@@ -79,15 +78,15 @@ internal static class MethodSymbolExtensions
         return TypeMapper.MapTo(methodSymbol.ReturnType, options);
     }
 
-    private static string ParametersToTypeArray(IMethodSymbol methodSymbol, ITranspilationOptions options)
+    private static string ParametersToTypeArray(IMethodSymbol methodSymbol, ITypedSignalRTranspilationOptions options)
     {
         var parameters = methodSymbol.Parameters.Select(x => TypeMapper.MapTo(x.Type, options));
         return $"[{string.Join(", ", parameters)}]";
     }
 
-    private static string CreateUnaryMethodString(IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITranspilationOptions options)
+    private static string CreateUnaryMethodString(IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
     {
-        var name = methodSymbol.Name.Format(options.NamingStyle);
+        var name = methodSymbol.Name.Format(options.MethodStyle);
         var parameters = methodSymbol.ParametersToTypeScriptString(specialSymbols, options);
         var returnType = methodSymbol.ReturnTypeToTypeScriptString(specialSymbols, options);
         var args = methodSymbol.ParametersToTypeScriptArgumentString(specialSymbols, options);
@@ -98,9 +97,9 @@ internal static class MethodSymbolExtensions
     }}";
     }
 
-    private static string CreateServerToClientStreamingMethodString(IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITranspilationOptions options)
+    private static string CreateServerToClientStreamingMethodString(IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
     {
-        var name = methodSymbol.Name.Format(options.NamingStyle);
+        var name = methodSymbol.Name.Format(options.MethodStyle);
         var parameters = methodSymbol.ParametersToTypeScriptString(specialSymbols, options);
         var returnType = methodSymbol.ReturnTypeToTypeScriptString(specialSymbols, options);
         var args = methodSymbol.ParametersToTypeScriptArgumentString(specialSymbols, options);
@@ -111,9 +110,9 @@ internal static class MethodSymbolExtensions
     }}";
     }
 
-    private static string CreateClientToServerStreamingMethodString(IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITranspilationOptions options)
+    private static string CreateClientToServerStreamingMethodString(IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
     {
-        var name = methodSymbol.Name.Format(options.NamingStyle);
+        var name = methodSymbol.Name.Format(options.MethodStyle);
         var parameters = methodSymbol.ParametersToTypeScriptString(specialSymbols, options);
         var returnType = methodSymbol.ReturnTypeToTypeScriptString(specialSymbols, options);
         var args = methodSymbol.ParametersToTypeScriptArgumentString(specialSymbols, options);

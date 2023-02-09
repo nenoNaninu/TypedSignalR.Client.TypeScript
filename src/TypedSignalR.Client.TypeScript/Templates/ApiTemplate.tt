@@ -91,7 +91,7 @@ class <#= hubType.Name #>_HubProxy implements <#= hubType.Name #> {
     public constructor(private connection: HubConnection) {
     }
 <# foreach(var method in hubType.Methods) { #>
-<#= method.CreateMethodString(SpecialSymbols, TranspilationOptions) #>
+<#= method.CreateMethodString(SpecialSymbols, Options) #>
 <# } #>
 }
 
@@ -110,16 +110,16 @@ class <#= receiverType.Name #>_Binder implements ReceiverRegister<<#= receiverTy
     public readonly register = (connection: HubConnection, receiver: <#= receiverType.Name #>): Disposable => {
 
 <# foreach(var method in receiverType.Methods) { #>
-        const __<#= method.Name.Format(TranspilationOptions.NamingStyle) #> = <#= method.WrapLambdaExpressionSyntax(TranspilationOptions) #>;
+        const __<#= method.Name.Format(Options.NamingStyle) #> = <#= method.WrapLambdaExpressionSyntax(Options) #>;
 <# } #>
 
 <# foreach(var method in receiverType.Methods) { #>
-        connection.on("<#= method.Name #>", __<#= method.Name.Format(TranspilationOptions.NamingStyle) #>);
+        connection.on("<#= method.Name #>", __<#= method.Name.Format(Options.NamingStyle) #>);
 <# } #>
 
         const methodList: ReceiverMethod[] = [
 <# for(int i = 0; i < receiverType.Methods.Count; i++) { #>
-            { methodName: "<#= receiverType.Methods[i].Name #>", method: __<#= receiverType.Methods[i].Name.Format(TranspilationOptions.NamingStyle) #> }<#= i != receiverType.Methods.Count - 1 ? "," : "" #>
+            { methodName: "<#= receiverType.Methods[i].Name #>", method: __<#= receiverType.Methods[i].Name.Format(Options.NamingStyle) #> }<#= i != receiverType.Methods.Count - 1 ? "," : "" #>
 <# } #>
         ]
 

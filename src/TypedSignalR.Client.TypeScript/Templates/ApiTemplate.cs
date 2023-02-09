@@ -117,7 +117,7 @@ export type HubProxyFactoryProvider = {
             this.Write(this.ToStringHelper.ToStringWithCulture(hubType.Name));
             this.Write(" {\r\n\r\n    public constructor(private connection: HubConnection) {\r\n    }\r\n");
  foreach(var method in hubType.Methods) { 
-            this.Write(this.ToStringHelper.ToStringWithCulture(method.CreateMethodString(SpecialSymbols, TranspilationOptions)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(method.CreateMethodString(SpecialSymbols, Options)));
             this.Write("\r\n");
  } 
             this.Write("}\r\n\r\n");
@@ -136,9 +136,9 @@ export type HubProxyFactoryProvider = {
             this.Write("): Disposable => {\r\n\r\n");
  foreach(var method in receiverType.Methods) { 
             this.Write("        const __");
-            this.Write(this.ToStringHelper.ToStringWithCulture(method.Name.Format(TranspilationOptions.NamingStyle)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(method.Name.Format(Options.NamingStyle)));
             this.Write(" = ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(method.WrapLambdaExpressionSyntax(TranspilationOptions)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(method.WrapLambdaExpressionSyntax(Options)));
             this.Write(";\r\n");
  } 
             this.Write("\r\n");
@@ -146,7 +146,7 @@ export type HubProxyFactoryProvider = {
             this.Write("        connection.on(\"");
             this.Write(this.ToStringHelper.ToStringWithCulture(method.Name));
             this.Write("\", __");
-            this.Write(this.ToStringHelper.ToStringWithCulture(method.Name.Format(TranspilationOptions.NamingStyle)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(method.Name.Format(Options.NamingStyle)));
             this.Write(");\r\n");
  } 
             this.Write("\r\n        const methodList: ReceiverMethod[] = [\r\n");
@@ -154,7 +154,7 @@ export type HubProxyFactoryProvider = {
             this.Write("            { methodName: \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Methods[i].Name));
             this.Write("\", method: __");
-            this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Methods[i].Name.Format(TranspilationOptions.NamingStyle)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Methods[i].Name.Format(Options.NamingStyle)));
             this.Write(" }");
             this.Write(this.ToStringHelper.ToStringWithCulture(i != receiverType.Methods.Count - 1 ? "," : ""));
             this.Write("\r\n");

@@ -10,13 +10,13 @@ namespace TypedSignalR.Client.TypeScript;
 internal class InterfaceTranspiler
 {
     private readonly SpecialSymbols _specialSymbols;
-    private readonly ITypedSignalRTranspilationOptions _transpilationOptions;
+    private readonly ITypedSignalRTranspilationOptions _options;
     private readonly ILogger _logger;
 
     public InterfaceTranspiler(SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options, ILogger logger)
     {
         _specialSymbols = specialSymbols;
-        _transpilationOptions = options;
+        _options = options;
         _logger = logger;
     }
 
@@ -37,7 +37,7 @@ internal class InterfaceTranspiler
             {
                 _logger.Log(LogLevel.Information, "Transpile {typename}...", type.ToDisplayString());
 
-                AddInterface(type, _specialSymbols, _transpilationOptions, ref codeWriter);
+                AddInterface(type, _specialSymbols, _options, ref codeWriter);
             }
 
             var code = codeWriter.ToString().NormalizeNewLines("\n");
