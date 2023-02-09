@@ -49,15 +49,15 @@ const testMethod = async () => {
     let notifyCallCount = 0;
 
     const receiver: IReceiver = {
-        ReceiveMessage: (message: string, value: number): Promise<void> => {
+        receiveMessage: (message: string, value: number): Promise<void> => {
             receiveMessageList.push([message, value]);
             return Promise.resolve();
         },
-        Notify: (): Promise<void> => {
+        notify: (): Promise<void> => {
             notifyCallCount += 1;
             return Promise.resolve();
         },
-        ReceiveCustomMessage: (userDefined: UserDefinedType): Promise<void> => {
+        receiveCustomMessage: (userDefined: UserDefinedType): Promise<void> => {
             userDefinedList.push(userDefined)
             return Promise.resolve();
         }
@@ -70,7 +70,7 @@ const testMethod = async () => {
         .register(connection, receiver);
 
     await connection.start();
-    await hubProxy.Start();
+    await hubProxy.start();
 
     expect(notifyCallCount).toEqual(17);
 

@@ -24,13 +24,13 @@ const testMethod = async () => {
 
     await connection.start();
 
-    await hubProxy.Init()
-    await hubProxy.Increment();
-    await hubProxy.Increment();
-    await hubProxy.Increment();
-    await hubProxy.Increment();
+    await hubProxy.init()
+    await hubProxy.increment();
+    await hubProxy.increment();
+    await hubProxy.increment();
+    await hubProxy.increment();
 
-    const r1 = await hubProxy.Result();
+    const r1 = await hubProxy.result();
 
     expect(r1).toEqual(4);
 
@@ -43,10 +43,10 @@ const testMethod = async () => {
         };
 
         list.push(instance);
-        await hubProxy.Post(instance);
+        await hubProxy.post(instance);
     }
 
-    const data = await hubProxy.Fetch();
+    const data = await hubProxy.fetch();
 
     for (let i = 0; i < list.length; i++) {
         const it1 = list[i];
