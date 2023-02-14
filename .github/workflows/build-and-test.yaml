@@ -9,7 +9,7 @@ on:
 env:
   DOTNET_VERSION: "7.0.x"
   DOTNET_NOLOGO: true
-  NODE_VERSION: "16"
+  NODE_VERSION: "18"
 
 jobs:
   build-and-test:
@@ -55,7 +55,7 @@ jobs:
         run: npm install -g yarn
 
       - name: Yarn install
-        run: yarn --cwd ./tests/TypeScriptTests/ install
+        run: yarn --cwd ./tests/TypeScriptTests/ install --frozen-lockfile
 
       - name: Yarn Test
         run: yarn --cwd ./tests/TypeScriptTests/ test
