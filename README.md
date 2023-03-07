@@ -375,6 +375,19 @@ The default configuration for MessagePack Hub Protocol [includes the Contractles
 dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none
 ```
 
+SignalR serializes an enum as a string by default. The following configuration is required to serialize an enum as an integer value.
+
+```cs
+builder.Services.AddSignalR()
+    .AddJsonProtocol()
+    .AddMessagePackProtocol(options =>
+    {
+        options.SerializerOptions = MessagePackSerializerOptions.Standard
+            .WithResolver(ContractlessStandardResolver.Instance)
+            .WithSecurity(MessagePackSecurity.UntrustedData);
+    });
+```
+
 ## Related Work
 - [nenoNaninu/TypedSignalR.Client](https://github.com/nenoNaninu/TypedSignalR.Client)
   - C# Source Generator to create strongly typed SignalR clients.
