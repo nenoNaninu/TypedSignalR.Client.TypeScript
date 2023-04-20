@@ -37,7 +37,7 @@ public class App : ConsoleAppBase
         SerializerOption serializer = SerializerOption.Json,
         [Option("n", "camelCase (default) / PascalCase / none (The name in C# is used as it is.)")]
         NamingStyle namingStyle = NamingStyle.CamelCase,
-        [Option("en", "value (default) / nameString / nameCamel / NamePascal / union / unionCamel / UnionPascal")]
+        [Option("en", "value (default) / name / nameCamel / NamePascal / union / unionCamel / UnionPascal")]
         EnumStyle @enum = EnumStyle.Value,
         [Option("m", "camelCase (default) / PascalCase / none (The name in C# is used as it is.)")]
         MethodStyle method = MethodStyle.CamelCase,
