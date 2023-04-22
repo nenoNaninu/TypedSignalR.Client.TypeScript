@@ -58,4 +58,4 @@ jobs:
         run: yarn --cwd ./tests/TypeScriptTests/ install --frozen-lockfile
 
       - name: Yarn Test
-        run: yarn --cwd ./tests/TypeScriptTests/ test
+        run: yarn --cwd ./tests/TypeScriptTests/ test --detectOpenHandles
