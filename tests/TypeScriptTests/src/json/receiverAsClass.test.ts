@@ -37,9 +37,8 @@ const dateTimes: string[] = [
     "2022-02-06",
 ];
 
-class ReceiverAsClass implements IReceiver  
-{
-    public receiveMessageList: [string, number][] = []; 
+class ReceiverAsClass implements IReceiver {
+    public receiveMessageList: [string, number][] = [];
     public notifyCallCount: number = 0;
     public userDefinedList: UserDefinedType[] = [];
 
@@ -55,7 +54,7 @@ class ReceiverAsClass implements IReceiver
         this.userDefinedList.push(userDefined)
         return Promise.resolve();
     }
-    
+
 }
 
 const testMethod = async () => {
@@ -71,27 +70,30 @@ const testMethod = async () => {
     const subscription = getReceiverRegister("IReceiver")
         .register(connection, receiver);
 
-    await connection.start();
-    await hubProxy.start();
+    try {
+        await connection.start();
+        await hubProxy.start();
 
-    const receiveMessageList = receiver.receiveMessageList;
-    const userDefinedList = receiver.userDefinedList;
-    const notifyCallCount = receiver.notifyCallCount;
+        const receiveMessageList = receiver.receiveMessageList;
+        const userDefinedList = receiver.userDefinedList;
+        const notifyCallCount = receiver.notifyCallCount;
 
-    expect(notifyCallCount).toEqual(17);
+        expect(notifyCallCount).toEqual(17);
 
-    for (let i = 0; i < receiveMessageList.length; i++) {
-        expect(receiveMessageList[i][0]).toEqual(answerMessages[i]);
-        expect(receiveMessageList[i][1]).toEqual(i);
+        for (let i = 0; i < receiveMessageList.length; i++) {
+            expect(receiveMessageList[i][0]).toEqual(answerMessages[i]);
+            expect(receiveMessageList[i][1]).toEqual(i);
+        }
+
+        for (let i = 0; i < userDefinedList.length; i++) {
+            expect(userDefinedList[i].guid).toEqual(guids[i]);
+            expect(toUTCString(userDefinedList[i].dateTime)).toEqual(toUTCString(dateTimes[i]));
+        }
     }
-
-    for (let i = 0; i < userDefinedList.length; i++) {
-        expect(userDefinedList[i].guid).toEqual(guids[i]);
-        expect(toUTCString(userDefinedList[i].dateTime)).toEqual(toUTCString(dateTimes[i]));
+    finally {
+        subscription.dispose();
+        await connection.stop()
     }
-
-    subscription.dispose();
-    await connection.stop()
 }
 
 test('receiverAsClass.test', testMethod);

@@ -33,13 +33,16 @@ const testMethod = async () => {
     const subscription = getReceiverRegister("IClientResultsTestHubReceiver")
         .register(connection, receiver);
 
-    await connection.start();
-    const result = await hubProxy.startTest();
+    try {
+        await connection.start();
+        const result = await hubProxy.startTest();
 
-    expect(result).toEqual(true);
-
-    subscription.dispose();
-    await connection.stop()
+        expect(result).toEqual(true);
+    }
+    finally {
+        subscription.dispose();
+        await connection.stop()
+    }
 }
 
 test('clientResults.test', testMethod);

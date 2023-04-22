@@ -67,23 +67,26 @@ const testMethod = async () => {
     const subscription = getReceiverRegister("IReceiver")
         .register(connection, receiver);
 
-    await connection.start();
-    await hubProxy.start();
+    try {
+        await connection.start();
+        await hubProxy.start();
 
-    expect(notifyCallCount).toEqual(17);
+        expect(notifyCallCount).toEqual(17);
 
-    for (let i = 0; i < receiveMessageList.length; i++) {
-        expect(receiveMessageList[i][0]).toEqual(answerMessages[i]);
-        expect(receiveMessageList[i][1]).toEqual(i);
+        for (let i = 0; i < receiveMessageList.length; i++) {
+            expect(receiveMessageList[i][0]).toEqual(answerMessages[i]);
+            expect(receiveMessageList[i][1]).toEqual(i);
+        }
+
+        for (let i = 0; i < userDefinedList.length; i++) {
+            expect(userDefinedList[i].guid).toEqual(guids[i]);
+            expect(toUTCString(userDefinedList[i].dateTime)).toEqual(toUTCString(dateTimes[i]));
+        }
     }
-
-    for (let i = 0; i < userDefinedList.length; i++) {
-        expect(userDefinedList[i].guid).toEqual(guids[i]);
-        expect(toUTCString(userDefinedList[i].dateTime)).toEqual(toUTCString(dateTimes[i]));
+    finally {
+        subscription.dispose();
+        await connection.stop()
     }
-
-    subscription.dispose();
-    await connection.stop()
 }
 
 test('receiver.test', testMethod);
