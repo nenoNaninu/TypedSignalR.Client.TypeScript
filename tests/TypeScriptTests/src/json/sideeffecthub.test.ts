@@ -20,43 +20,46 @@ const testMethod = async () => {
     const hubProxy = getHubProxyFactory("ISideEffectHub")
         .createHubProxy(connection);
 
-    await connection.start();
+    try {
+        await connection.start();
 
-    await hubProxy.init()
-    await hubProxy.increment();
-    await hubProxy.increment();
-    await hubProxy.increment();
-    await hubProxy.increment();
+        await hubProxy.init()
+        await hubProxy.increment();
+        await hubProxy.increment();
+        await hubProxy.increment();
+        await hubProxy.increment();
 
-    const r1 = await hubProxy.result();
+        const r1 = await hubProxy.result();
 
-    expect(r1).toEqual(4);
+        expect(r1).toEqual(4);
 
-    const list: UserDefinedType[] = []
+        const list: UserDefinedType[] = []
 
-    for (let i = 0; i < 10; i++) {
-        var instance: UserDefinedType = {
-            guid: crypto.randomUUID(),
-            dateTime: new Date(),
-        };
+        for (let i = 0; i < 10; i++) {
+            var instance: UserDefinedType = {
+                guid: crypto.randomUUID(),
+                dateTime: new Date(),
+            };
 
-        list.push(instance);
-        await hubProxy.post(instance);
+            list.push(instance);
+            await hubProxy.post(instance);
+        }
+
+        const data = await hubProxy.fetch();
+
+        for (let i = 0; i < list.length; i++) {
+            const it1 = list[i];
+            const it2 = data[i]
+
+            it1.dateTime = toUTCString(it1.dateTime)
+            it2.dateTime = toUTCString(it2.dateTime)
+
+            expect(it1).toEqual(it2)
+        }
     }
-
-    const data = await hubProxy.fetch();
-
-    for (let i = 0; i < list.length; i++) {
-        const it1 = list[i];
-        const it2 = data[i]
-        
-        it1.dateTime = toUTCString(it1.dateTime)
-        it2.dateTime = toUTCString(it2.dateTime)
-
-        expect(it1).toEqual(it2)
+    finally {
+        await connection.stop();
     }
-
-    await connection.stop();
 }
 
 test('sideeffecthub.test', testMethod);

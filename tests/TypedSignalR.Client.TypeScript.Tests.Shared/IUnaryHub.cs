@@ -9,6 +9,15 @@ public class UserDefinedType
     public Guid Guid { get; set; }
 }
 
+[TranspilationSource]
+public enum MyEnum
+{
+    None = 0,
+    One = 1,
+    Two = 2,
+    Four = 4,
+}
+
 [Hub]
 public interface IUnaryHub
 {
@@ -16,4 +25,5 @@ public interface IUnaryHub
     Task<int> Add(int x, int y);
     Task<string> Cat(string x, string y);
     Task<UserDefinedType> Echo(UserDefinedType instance);
+    Task<MyEnum> EchoMyEnum(MyEnum myEnum);
 }

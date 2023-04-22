@@ -119,7 +119,7 @@ const test_Counter = async (hubProxy: IStreamingHub) => {
     for (let i = 0; i < persons.length; i++) {
         expect(list[i].Publisher).toEqual(publisher);
         expect(list[i].Value).toEqual(value);
-        
+
         value += step;
     }
 }
@@ -158,7 +158,7 @@ const test_CancelableCounter = async (hubProxy: IStreamingHub) => {
     for (let i = 0; i < persons.length; i++) {
         expect(list[i].Publisher).toEqual(publisher);
         expect(list[i].Value).toEqual(value);
-        
+
         value += step;
     }
 }
@@ -197,7 +197,7 @@ const test_TaskCancelableCounter = async (hubProxy: IStreamingHub) => {
     for (let i = 0; i < persons.length; i++) {
         expect(list[i].Publisher).toEqual(publisher);
         expect(list[i].Value).toEqual(value);
-        
+
         value += step;
     }
 }
@@ -286,7 +286,7 @@ const test_CounterChannel = async (hubProxy: IStreamingHub) => {
     for (let i = 0; i < persons.length; i++) {
         expect(list[i].Publisher).toEqual(publisher);
         expect(list[i].Value).toEqual(value);
-        
+
         value += step;
     }
 }
@@ -325,7 +325,7 @@ const test_CancelableCounterChannel = async (hubProxy: IStreamingHub) => {
     for (let i = 0; i < persons.length; i++) {
         expect(list[i].Publisher).toEqual(publisher);
         expect(list[i].Value).toEqual(value);
-        
+
         value += step;
     }
 }
@@ -339,12 +339,15 @@ const testMethod1 = async () => {
     const hubProxy = getHubProxyFactory("IStreamingHub")
         .createHubProxy(connection);
 
-    await connection.start();
+    try {
+        await connection.start();
 
-    await test_ZeroParameter(hubProxy);
-    await test_CancellationTokenOnly(hubProxy);
-
-    await connection.stop()
+        await test_ZeroParameter(hubProxy);
+        await test_CancellationTokenOnly(hubProxy);
+    }
+    finally {
+        await connection.stop()
+    }
 }
 
 const testMethod2 = async () => {
@@ -356,13 +359,16 @@ const testMethod2 = async () => {
     const hubProxy = getHubProxyFactory("IStreamingHub")
         .createHubProxy(connection);
 
-    await connection.start();
+    try {
+        await connection.start();
 
-    await test_Counter(hubProxy);
-    await test_CancelableCounter(hubProxy);
-    await test_TaskCancelableCounter(hubProxy);
-
-    await connection.stop()
+        await test_Counter(hubProxy);
+        await test_CancelableCounter(hubProxy);
+        await test_TaskCancelableCounter(hubProxy);
+    }
+    finally {
+        await connection.stop();
+    }
 }
 
 const testMethod3 = async () => {
@@ -373,12 +379,16 @@ const testMethod3 = async () => {
 
     const hubProxy = getHubProxyFactory("IStreamingHub")
         .createHubProxy(connection);
-    await connection.start();
 
-    await test_ZeroParameterChannel(hubProxy);
-    await test_CancellationTokenOnlyChannel(hubProxy);
+    try {
+        await connection.start();
 
-    await connection.stop()
+        await test_ZeroParameterChannel(hubProxy);
+        await test_CancellationTokenOnlyChannel(hubProxy);
+    }
+    finally {
+        await connection.stop()
+    }
 }
 
 const testMethod4 = async () => {
@@ -390,12 +400,15 @@ const testMethod4 = async () => {
     const hubProxy = getHubProxyFactory("IStreamingHub")
         .createHubProxy(connection);
 
-    await connection.start();
+    try {
+        await connection.start();
 
-    await test_CounterChannel(hubProxy);
-    await test_CancelableCounterChannel(hubProxy);
-
-    await connection.stop()
+        await test_CounterChannel(hubProxy);
+        await test_CancelableCounterChannel(hubProxy);
+    }
+    finally {
+        await connection.stop()
+    }
 }
 
 test('streaming1.test', testMethod1);

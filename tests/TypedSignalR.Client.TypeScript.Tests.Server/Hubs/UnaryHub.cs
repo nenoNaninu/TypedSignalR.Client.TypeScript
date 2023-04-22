@@ -33,6 +33,12 @@ public class UnaryHub : Hub, IUnaryHub
         return Task.FromResult(instance);
     }
 
+    public Task<MyEnum> EchoMyEnum(MyEnum myEnum)
+    {
+        _logger.Log(LogLevel.Information, "UnaryHub.EchoMyEnum");
+        return Task.FromResult(myEnum);
+    }
+
     public Task<string> Get()
     {
         _logger.Log(LogLevel.Information, "UnaryHub.Get");

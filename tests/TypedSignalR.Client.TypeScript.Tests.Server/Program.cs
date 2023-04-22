@@ -1,3 +1,5 @@
+using MessagePack;
+using MessagePack.Resolvers;
 using Microsoft.AspNetCore.HttpLogging;
 using TypedSignalR.Client.TypeScript.Tests.Server.Hubs;
 using TypedSignalR.Client.TypeScript.Tests.Server.Services;
@@ -9,7 +11,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddSignalR()
     .AddJsonProtocol()
-    .AddMessagePackProtocol();
+   // dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none --enum name
+   // .AddMessagePackProtocol(); // default
+   // Configuration to serialize an enum as a value instead of a string.
+   // dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none
+   .AddMessagePackProtocol(options =>
+   {
+       options.SerializerOptions = MessagePackSerializerOptions.Standard
+           .WithResolver(ContractlessStandardResolver.Instance)
+           .WithSecurity(MessagePackSecurity.UntrustedData);
+   });
 
 builder.Services.AddSingleton<IDataStore, DataStore>();
 
