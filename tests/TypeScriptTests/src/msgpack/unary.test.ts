@@ -1,6 +1,6 @@
 import { HubConnectionBuilder } from '@microsoft/signalr'
 import { getHubProxyFactory } from '../generated/msgpack/TypedSignalR.Client'
-import { UserDefinedType } from '../generated/msgpack/TypedSignalR.Client.TypeScript.Tests.Shared';
+import { MyEnum, UserDefinedType } from '../generated/msgpack/TypedSignalR.Client.TypeScript.Tests.Shared';
 import crypto from 'crypto'
 import { MessagePackHubProtocol } from '@microsoft/signalr-protocol-msgpack';
 
@@ -55,6 +55,10 @@ const testMethod = async () => {
     r4.DateTime = r4.DateTime
 
     expect(r4).toEqual(instance)
+
+    const r5 = await hubProxy.echoMyEnum(MyEnum.Four);
+
+    expect(r5).toEqual(MyEnum.Four)
 
     await connection.stop();
 }

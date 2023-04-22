@@ -1,6 +1,6 @@
 import { HubConnectionBuilder } from '@microsoft/signalr'
 import { getHubProxyFactory } from '../generated/json/TypedSignalR.Client'
-import { UserDefinedType } from '../generated/json/TypedSignalR.Client.TypeScript.Tests.Shared';
+import { MyEnum, UserDefinedType } from '../generated/json/TypedSignalR.Client.TypeScript.Tests.Shared';
 import crypto from 'crypto'
 
 const getRandomInt = (max: number) => {
@@ -53,6 +53,10 @@ const testMethod = async () => {
     r4.dateTime = toUTCString(r4.dateTime)
 
     expect(r4).toEqual(instance)
+
+    const r5 = await hubProxy.echoMyEnum(MyEnum.Four);
+    
+    expect(r5).toEqual(MyEnum.Four)
 
     await connection.stop();
 }
