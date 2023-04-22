@@ -55,10 +55,16 @@ const testMethod = async () => {
     expect(r4).toEqual(instance)
 
     const r5 = await hubProxy.echoMyEnum(MyEnum.Four);
-    
+
     expect(r5).toEqual(MyEnum.Four)
 
     await connection.stop();
 }
 
-test('unary.test', testMethod);
+test('unary.test', async () => {
+    try {
+        await testMethod();
+    } catch {
+        expect(true).toEqual(false)
+    }
+});
