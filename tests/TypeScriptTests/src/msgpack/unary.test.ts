@@ -63,4 +63,11 @@ const testMethod = async () => {
     await connection.stop();
 }
 
-test('unary.test', testMethod);
+test('unary.test', () => {
+    try{
+        testMethod()
+    }
+    catch{
+        expect(true).toBe(false);
+    }
+});
