@@ -62,7 +62,7 @@ const testMethod = async () => {
 
         expect(r5).toEqual(MyEnum.Four)
     } catch {
-        // eat exception
+        expect(true).toEqual(false)
     }
 
     await connection.stop();

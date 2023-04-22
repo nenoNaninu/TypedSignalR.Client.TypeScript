@@ -58,7 +58,7 @@ const testMethod = async () => {
         const r5 = await hubProxy.echoMyEnum(MyEnum.Four);
         expect(r5).toEqual(MyEnum.Four)
     } catch {
-        // eat exception
+        expect(true).toEqual(false)
     }
 
     await connection.stop();
