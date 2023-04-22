@@ -12,15 +12,15 @@ builder.Services.AddControllers();
 builder.Services.AddSignalR()
     .AddJsonProtocol()
   // dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none --enum name
-  // .AddMessagePackProtocol(); // default
+  .AddMessagePackProtocol(); // default
   // Configuration to serialize an enum as a value instead of a string.
   // dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none
-  .AddMessagePackProtocol(options =>
-  {
-      options.SerializerOptions = MessagePackSerializerOptions.Standard
-          .WithResolver(ContractlessStandardResolver.Instance)
-          .WithSecurity(MessagePackSecurity.UntrustedData);
-  });
+  // .AddMessagePackProtocol(options =>
+  // {
+  //     options.SerializerOptions = MessagePackSerializerOptions.Standard
+  //         .WithResolver(ContractlessStandardResolver.Instance)
+  //         .WithSecurity(MessagePackSecurity.UntrustedData);
+  // });
 
 builder.Services.AddSingleton<IDataStore, DataStore>();
 
