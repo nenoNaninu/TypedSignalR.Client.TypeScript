@@ -36,10 +36,9 @@ const testMethod = async () => {
         const result = await hubProxy.startTest();
 
         expect(result).toEqual(true);
-
-        subscription.dispose();
     }
     finally {
+        subscription.dispose();
         await connection.stop()
     }
 }
