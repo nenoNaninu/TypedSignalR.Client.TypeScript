@@ -388,7 +388,7 @@ builder.Services.AddSignalR()
 
 If you do not set any options in `AddMessagePackProtocol`, use the following command.
 
-```
+```bash
 dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none --enum name
 ```
 
@@ -412,7 +412,7 @@ builder.Services.AddSignalR()
 
 If you set up the above configuration, use the following command
 
-```
+```bash
 dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none
 ```
 
