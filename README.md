@@ -15,6 +15,8 @@ TypedSignalR.Client.TypeScript is a library/CLI tool that analyzes SignalR hub a
 - [Streaming Support](#streaming-support)
 - [Client Results Support](#client-results-support)
 - [MessagePack Hub Protocol Support](#messagepack-hub-protocol-support)
+  - [Default Configuration in ASP.NE Core](#default-configuration-in-aspne-core)
+  - [Recommended configuration](#recommended-configuration)
 - [Related Work](#related-work)
 
 
@@ -371,13 +373,33 @@ When serializing a user-defined type, use a property name as a key (in other wor
 Therefore, apply `[MessagePackObject(true)]` to a user-defined type, or use `ContractlessStandardResolver`.
 The default configuration for MessagePack Hub Protocol [includes the ContractlessStandardResolver](https://github.com/dotnet/aspnetcore/blob/release/7.0/src/SignalR/common/Protocols.MessagePack/src/Protocol/MessagePackHubProtocol.cs#L73-L77).
 
-```
-dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none
-```
+### Default Configuration in ASP.NE Core
 
-SignalR serializes an enum as a string by default. The following configuration is required to serialize an enum as an integer value.
+Calling `AddMessagePackProtocol` is required to use the MessagePack Hub Protocol.
+For more information, please see [the official documentation](https://learn.microsoft.com/en-us/aspnet/core/signalr/messagepackhubprotocol).
 
 ```cs
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSignalR()
+    .AddJsonProtocol()
+    .AddMessagePackProtocol();
+```
+
+If you do not set any options in `AddMessagePackProtocol`, use the following command.
+
+```
+dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none --enum name
+```
+
+### Recommended configuration
+
+SignalR MessagePack Hub Protocol serializes an enum as a string by default.
+The following configuration is required to serialize an enum as an integer value.
+
+```cs
+var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddSignalR()
     .AddJsonProtocol()
     .AddMessagePackProtocol(options =>
@@ -386,6 +408,12 @@ builder.Services.AddSignalR()
             .WithResolver(ContractlessStandardResolver.Instance)
             .WithSecurity(MessagePackSecurity.UntrustedData);
     });
+```
+
+If you set up the above configuration, use the following command
+
+```
+dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none
 ```
 
 ## Related Work
