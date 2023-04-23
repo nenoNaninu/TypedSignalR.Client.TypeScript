@@ -16,7 +16,7 @@ TypedSignalR.Client.TypeScript is a library/CLI tool that analyzes SignalR hub a
 - [Client Results Support](#client-results-support)
 - [MessagePack Hub Protocol Support](#messagepack-hub-protocol-support)
   - [Default Configuration in ASP.NE Core](#default-configuration-in-aspne-core)
-  - [Recommended configuration](#recommended-configuration)
+  - [Recommended Configuration](#recommended-configuration)
 - [Related Work](#related-work)
 
 
@@ -392,7 +392,7 @@ If you do not set any options in `AddMessagePackProtocol`, use the following com
 dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none --enum name
 ```
 
-### Recommended configuration
+### Recommended Configuration
 
 SignalR MessagePack Hub Protocol serializes an enum as a string by default.
 The following configuration is required to serialize an enum as an integer value.
