@@ -13,7 +13,7 @@ const rl = createInterface({
 const readline = rl[Symbol.asyncIterator]();
 
 const connection = new HubConnectionBuilder()
-    .withUrl("http://localhost:5000/realtime/chat")
+    .withUrl("http://localhost:5000/hubs/chathub")
     .build();
 
 const receiver: IChatReceiver = {

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using TypedSignalR.Client;
 
 var connection = new HubConnectionBuilder()
-    .WithUrl("http://localhost:5000/realtime/chat")
+    .WithUrl("http://localhost:5000/hubs/chathub")
     .Build();
 
 var cancellationToken = Cancellation.CreateCompletionToken();
