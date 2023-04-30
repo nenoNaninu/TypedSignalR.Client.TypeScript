@@ -191,7 +191,7 @@ import { IChatReceiver } from "./generated/TypedSignalR.Client/App.Interfaces.Ch
 import { Message } from "./generated/App.Interfaces.Chat";
 
 const connection = new HubConnectionBuilder()
-    .withUrl("https://example.com/realtime/chat")
+    .withUrl("https://example.com/hubs/chathub")
     .build();
 
 const receiver: IChatReceiver = {
