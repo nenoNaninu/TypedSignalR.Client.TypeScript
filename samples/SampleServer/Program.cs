@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using SampleServer.Hub;
+using TypedSignalR.Client.DevTools;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,9 +16,12 @@ var app = builder.Build();
 
 //app.UseHttpsRedirection();
 
+app.UseSignalRHubSpecification(); // <- Add!
+app.UseSignalRHubDevelopmentUI(); // <- Add!
+
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHub<ChatHub>("/realtime/chat");
+app.MapHub<ChatHub>("/hubs/chathub");
 
 app.Run();
