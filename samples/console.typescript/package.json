@@ -2,14 +2,14 @@
     "type": "module",
     "license": "MIT",
     "devDependencies": {
-        "@types/node": "^17.0.35",
-        "ts-node": "^10.7.0",
-        "typescript": "^4.6.4"
+        "@types/node": "^18.16.3",
+        "ts-node": "^10.9.1",
+        "typescript": "^5.0.4"
     },
     "scripts": {
         "start": "node --experimental-loader=ts-node/esm --es-module-specifier-resolution=node main.ts"
     },
     "dependencies": {
-        "@microsoft/signalr": "^6.0.5"
+        "@microsoft/signalr": "^7.0.5"
     }
 }
