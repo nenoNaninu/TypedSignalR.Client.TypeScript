@@ -26,6 +26,7 @@ Implementing SignalR Hubs (server-side) in C# can be strongly typed by using int
 
 ```ts
 // TypeScript SignalR client
+// without TypedSignalR.Client.TypeScript
 
 // Specify a hub method to invoke using string.
 await connection.invoke("HubMethod1");
@@ -51,7 +52,8 @@ dotnet tsrts --project path/to/Project.csproj --output generated
 ```
 
 ```ts
-// TypedSignalR.Client.TypeScript
+// TypeScript SignalR client
+// with TypedSignalR.Client.TypeScript
 // Generated source code
 
 export type HubProxyFactory<T> = {
