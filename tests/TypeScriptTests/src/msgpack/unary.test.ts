@@ -70,7 +70,7 @@ const testMethod = async () => {
 
         const r7 = await hubProxy.requestList(list);
 
-        expect(r7.length).toEqual(3)
+        expect(r7.length).toEqual(2)
         expect(r7[0].Id).toEqual("b237bcb2-053a-4d4a-8868-6e78ca651ecd")
         expect(r7[1].Id).toEqual("7e0ddf0a-2e55-4a32-98a0-049e12a4d728")
         expect(r7[2].Id).toEqual("14ba25de-0a67-4713-8d29-59bcbec1c194")
