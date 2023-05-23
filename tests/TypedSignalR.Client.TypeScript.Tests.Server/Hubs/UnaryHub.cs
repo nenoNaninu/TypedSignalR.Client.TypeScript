@@ -45,4 +45,34 @@ public class UnaryHub : Hub, IUnaryHub
 
         return Task.FromResult("TypedSignalR.Client.TypeScript");
     }
+
+    public Task<MyResponseItem[]> RequestArray(MyRequestItem[] array)
+    {
+        var buffer = new MyResponseItem[array.Length];
+
+        for (int i = 0; i < array.Length; i++)
+        {
+            buffer[i] = new MyResponseItem
+            {
+                Text = $"{array[i].Text}{array[i].Text}"
+            };
+        }
+
+        return Task.FromResult(buffer);
+    }
+
+    public Task<List<MyResponseItem2>> RequestList(List<MyRequestItem2> list)
+    {
+        var buffer = new List<MyResponseItem2>(list.Count);
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            buffer.Add(new MyResponseItem2
+            {
+                Id = list[list.Count - 1 - i].Id
+            });
+        }
+
+        return Task.FromResult(buffer);
+    }
 }

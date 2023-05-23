@@ -18,6 +18,30 @@ public enum MyEnum
     Four = 4,
 }
 
+[TranspilationSource]
+public class MyRequestItem
+{
+    public string? Text { get; init; }
+}
+
+[TranspilationSource]
+public class MyResponseItem
+{
+    public required string Text { get; init; }
+}
+
+[TranspilationSource]
+public class MyRequestItem2
+{
+    public required Guid Id { get; init; }
+}
+
+[TranspilationSource]
+public class MyResponseItem2
+{
+    public Guid Id { get; init; }
+}
+
 [Hub]
 public interface IUnaryHub
 {
@@ -26,4 +50,6 @@ public interface IUnaryHub
     Task<string> Cat(string x, string y);
     Task<UserDefinedType> Echo(UserDefinedType instance);
     Task<MyEnum> EchoMyEnum(MyEnum myEnum);
+    Task<MyResponseItem[]> RequestArray(MyRequestItem[] array);
+    Task<List<MyResponseItem2>> RequestList(List<MyRequestItem2> list);
 }
