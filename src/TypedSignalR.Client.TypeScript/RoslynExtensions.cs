@@ -62,6 +62,42 @@ internal static partial class RoslynExtensions
             });
     }
 
+    public static IEnumerable<ITypeSymbol> GetRelevantTypes(this ITypeSymbol typeSymbol)
+    {
+        if (typeSymbol is INamedTypeSymbol namedTypeSymbol)
+        {
+            if (namedTypeSymbol.IsGenericType)
+            {
+                yield return namedTypeSymbol;
+
+                foreach (var typeArgument in namedTypeSymbol.TypeArguments)
+                {
+                    foreach (var it in GetRelevantTypes(typeArgument))
+                    {
+                        yield return it;
+                    }
+                }
+            }
+            else
+            {
+                yield return namedTypeSymbol;
+            }
+        }
+        else if (typeSymbol is IArrayTypeSymbol arrayTypeSymbol)
+        {
+            var elementType = arrayTypeSymbol.ElementType;
+
+            foreach (var it in GetRelevantTypes(elementType))
+            {
+                yield return it;
+            }
+        }
+        else
+        {
+            yield return typeSymbol;
+        }
+    }
+
     public static bool IsAttributeAnnotated(this INamedTypeSymbol source, INamedTypeSymbol attributeSymbol)
     {
         return source.GetAttributes()
