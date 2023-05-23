@@ -1,20 +1,11 @@
 import { HubConnectionBuilder } from '@microsoft/signalr'
 import { getHubProxyFactory } from '../generated/msgpack/TypedSignalR.Client'
-import { MyEnum, UserDefinedType } from '../generated/msgpack/TypedSignalR.Client.TypeScript.Tests.Shared';
+import { MyEnum, MyRequestItem, MyRequestItem2, UserDefinedType } from '../generated/msgpack/TypedSignalR.Client.TypeScript.Tests.Shared';
 import crypto from 'crypto'
 import { MessagePackHubProtocol } from '@microsoft/signalr-protocol-msgpack';
 
 const getRandomInt = (max: number) => {
     return Math.floor(Math.random() * max);
-}
-
-const toUTCString = (date: string | Date): string => {
-    if (typeof date === 'string') {
-        const d = new Date(date);
-        return d.toUTCString();
-    }
-
-    return date.toUTCString();
 }
 
 const testMethod = async () => {
@@ -61,6 +52,28 @@ const testMethod = async () => {
         const r5 = await hubProxy.echoMyEnum(MyEnum.Four);
 
         expect(r5).toEqual(MyEnum.Four)
+
+        const array: MyRequestItem[] = []
+        array.push({ Text: "melonpan" })
+        array.push({ Text: "banana" })
+
+        const r6 = await hubProxy.requestArray(array);
+
+        expect(r6.length).toEqual(2)
+        expect(r6[0].Text).toEqual("melonpanmelonpan")
+        expect(r6[1].Text).toEqual("bananabanana")
+
+        const list: MyRequestItem2[] = []
+        list.push({ Id: "14ba25de-0a67-4713-8d29-59bcbec1c194" })
+        list.push({ Id: "7e0ddf0a-2e55-4a32-98a0-049e12a4d728" })
+        list.push({ Id: "b237bcb2-053a-4d4a-8868-6e78ca651ecd" })
+
+        const r7 = await hubProxy.requestList(list);
+
+        expect(r7.length).toEqual(3)
+        expect(r7[0].Id).toEqual("b237bcb2-053a-4d4a-8868-6e78ca651ecd")
+        expect(r7[1].Id).toEqual("7e0ddf0a-2e55-4a32-98a0-049e12a4d728")
+        expect(r7[2].Id).toEqual("14ba25de-0a67-4713-8d29-59bcbec1c194")
     }
     finally {
         await connection.stop();
