@@ -69,6 +69,7 @@ internal class ApiGenerator
             );
 
         var tapperAttributeAnnotatedTypesLookup = hubParametersAndReturnTypes.Concat(receiverParameterTypes)
+            .SelectMany(RoslynExtensions.GetRelevantTypes)
             .OfType<INamedTypeSymbol>()
             .Where(x => x.IsAttributeAnnotated(_specialSymbols.TranspilationSourceAttributeSymbols))
             .Distinct<INamedTypeSymbol>(SymbolEqualityComparer.Default)
