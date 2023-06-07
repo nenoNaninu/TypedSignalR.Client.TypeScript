@@ -130,9 +130,18 @@ internal static partial class RoslynExtensions
                     var typeArg = namedTypeSymbol.TypeArguments[0] as INamedTypeSymbol;
 
                     // Task<IAsyncEnumerable<T>> -> T
+                    // NOTE:
+                    //     SymbolEqualityComparer.Default.Equals(null, null) return true,
+                    //     so verify that specialSymbols.AsyncEnumerableSymbol is not null first.
+                    if (specialSymbols.AsyncEnumerableSymbol is not null
+                        && SymbolEqualityComparer.Default.Equals(typeArg?.OriginalDefinition, specialSymbols.AsyncEnumerableSymbol))
+                    {
+                        return typeArg.TypeArguments[0];
+                    }
+
                     // Task<ChannelReader<T>> -> T
-                    if (SymbolEqualityComparer.Default.Equals(typeArg?.OriginalDefinition, specialSymbols.AsyncEnumerableSymbol)
-                        || SymbolEqualityComparer.Default.Equals(typeArg?.OriginalDefinition, specialSymbols.ChannelReaderSymbol))
+                    if (specialSymbols.ChannelReaderSymbol is not null
+                        && SymbolEqualityComparer.Default.Equals(typeArg?.OriginalDefinition, specialSymbols.ChannelReaderSymbol))
                     {
                         return typeArg.TypeArguments[0];
                     }

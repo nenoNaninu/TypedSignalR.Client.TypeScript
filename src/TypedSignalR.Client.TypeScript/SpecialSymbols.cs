@@ -8,9 +8,9 @@ internal class SpecialSymbols
 {
     public readonly INamedTypeSymbol TaskSymbol;
     public readonly INamedTypeSymbol GenericTaskSymbol;
-    public readonly INamedTypeSymbol AsyncEnumerableSymbol;
-    public readonly INamedTypeSymbol ChannelReaderSymbol;
     public readonly INamedTypeSymbol CancellationTokenSymbol;
+    public readonly INamedTypeSymbol? AsyncEnumerableSymbol;
+    public readonly INamedTypeSymbol? ChannelReaderSymbol;
     public readonly ImmutableArray<INamedTypeSymbol> HubAttributeSymbols;
     public readonly ImmutableArray<INamedTypeSymbol> ReceiverAttributeSymbols;
     public readonly ImmutableArray<INamedTypeSymbol> TranspilationSourceAttributeSymbols;
@@ -19,9 +19,9 @@ internal class SpecialSymbols
     {
         TaskSymbol = compilation.GetTypeByMetadataName("System.Threading.Tasks.Task")!;
         GenericTaskSymbol = compilation.GetTypeByMetadataName("System.Threading.Tasks.Task`1")!;
-        AsyncEnumerableSymbol = compilation.GetTypeByMetadataName("System.Collections.Generic.IAsyncEnumerable`1")!;
-        ChannelReaderSymbol = compilation.GetTypeByMetadataName("System.Threading.Channels.ChannelReader`1")!;
         CancellationTokenSymbol = compilation.GetTypeByMetadataName("System.Threading.CancellationToken")!;
+        AsyncEnumerableSymbol = compilation.GetTypeByMetadataName("System.Collections.Generic.IAsyncEnumerable`1");
+        ChannelReaderSymbol = compilation.GetTypeByMetadataName("System.Threading.Channels.ChannelReader`1");
 
         var hubAttributeSymbol = compilation.GetTypesByMetadataName("TypedSignalR.Client.HubAttribute");
         var receiverAttributeSymbol = compilation.GetTypesByMetadataName("TypedSignalR.Client.ReceiverAttribute");

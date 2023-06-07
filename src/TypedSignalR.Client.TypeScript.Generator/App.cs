@@ -98,8 +98,21 @@ public class App : ConsoleAppBase
 
         typeMapperProvider.AddTypeMapper(new TaskTypeMapper(compilation));
         typeMapperProvider.AddTypeMapper(new GenericTaskTypeMapper(compilation));
-        typeMapperProvider.AddTypeMapper(new AsyncEnumerableTypeMapper(compilation));
-        typeMapperProvider.AddTypeMapper(new ChannelReaderTypeMapper(compilation));
+
+        // By default, netstandard2.0 does not include IAsyncEnumerable<T> and ChannelReader<T>
+        var asyncEnumerableTypeMapper = new AsyncEnumerableTypeMapper(compilation);
+
+        if (asyncEnumerableTypeMapper.IsSupported())
+        {
+            typeMapperProvider.AddTypeMapper(asyncEnumerableTypeMapper);
+        }
+
+        var channelReaderTypeMapper = new ChannelReaderTypeMapper(compilation);
+
+        if (channelReaderTypeMapper.IsSupported())
+        {
+            typeMapperProvider.AddTypeMapper(channelReaderTypeMapper);
+        }
 
         var options = new TypedSignalRTranspilationOptions(
             compilation,
