@@ -50,6 +50,7 @@ export type HubProxyFactoryProvider = {
 <# } #>
 }
 
+// @ts-ignore
 export const getHubProxyFactory = ((hubType: string) => {
 <# foreach(var hubType in HubTypes) { #>
     if(hubType === "<#= hubType.Name #>") {
@@ -64,6 +65,7 @@ export type ReceiverRegisterProvider = {
 <# } #>
 }
 
+// @ts-ignore
 export const getReceiverRegister = ((receiverType: string) => {
 <# foreach(var receiverType in ReceiverTypes) { #>
     if(receiverType === "<#= receiverType.Name #>") {

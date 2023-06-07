@@ -74,7 +74,7 @@ export type HubProxyFactoryProvider = {
             this.Write(this.ToStringHelper.ToStringWithCulture(hubType.Name));
             this.Write(">;\r\n");
  } 
-            this.Write("}\r\n\r\nexport const getHubProxyFactory = ((hubType: string) => {\r\n");
+            this.Write("}\r\n\r\n// @ts-ignore\r\nexport const getHubProxyFactory = ((hubType: string) => {\r\n");
  foreach(var hubType in HubTypes) { 
             this.Write("    if(hubType === \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(hubType.Name));
@@ -90,7 +90,8 @@ export type HubProxyFactoryProvider = {
             this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Name));
             this.Write(">;\r\n");
  } 
-            this.Write("}\r\n\r\nexport const getReceiverRegister = ((receiverType: string) => {\r\n");
+            this.Write("}\r\n\r\n// @ts-ignore\r\nexport const getReceiverRegister = ((receiverType: string) =>" +
+                    " {\r\n");
  foreach(var receiverType in ReceiverTypes) { 
             this.Write("    if(receiverType === \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Name));
