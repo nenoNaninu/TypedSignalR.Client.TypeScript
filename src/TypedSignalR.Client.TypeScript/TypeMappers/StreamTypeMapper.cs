@@ -26,6 +26,11 @@ public sealed class AsyncEnumerableTypeMapper : ITypeMapper
 
         throw new InvalidOperationException($"GenericTaskTypeMapper is not support {typeSymbol.ToDisplayString()}.");
     }
+
+    public bool IsSupported()
+    {
+        return this.Assign is not null;
+    }
 }
 
 public sealed class ChannelReaderTypeMapper : ITypeMapper
@@ -49,5 +54,10 @@ public sealed class ChannelReaderTypeMapper : ITypeMapper
         }
 
         throw new InvalidOperationException($"GenericTaskTypeMapper is not support {typeSymbol.ToDisplayString()}.");
+    }
+
+    public bool IsSupported()
+    {
+        return this.Assign is not null;
     }
 }
