@@ -43,5 +43,6 @@ app.MapHub<SideEffectHub>("/hubs/SideEffectHub");
 app.MapHub<ReceiverTestHub>("/hubs/ReceiverTestHub");
 app.MapHub<StreamingHub>("/hubs/StreamingHub");
 app.MapHub<ClientResultsTestHub>("/hubs/ClientResultsTestHub");
+app.MapHub<NestedTypeHub>("/hubs/NestedTypeHub");
 
 app.Run();
