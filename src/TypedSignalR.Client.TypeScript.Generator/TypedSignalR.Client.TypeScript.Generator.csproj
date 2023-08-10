@@ -23,7 +23,7 @@
 
     <ItemGroup>
         <PackageReference Include="ConsoleAppFramework" Version="4.2.4" />
-        <PackageReference Include="Microsoft.Build" Version="17.4.0" ExcludeAssets="runtime" />
+        <PackageReference Include="Microsoft.Build" Version="17.7.0" ExcludeAssets="runtime" />
         <PackageReference Include="Microsoft.Build.Locator" Version="1.5.5" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.4.0" />
         <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.4.0" />
