@@ -108,14 +108,32 @@ internal class InterfaceTranspiler
 
     private static void WriteJSDoc(IMethodSymbol methodSymbol, ref CodeWriter codeWriter)
     {
+        var xmlDoc = methodSymbol.GetDocumentationCommentXml();
+
+        XmlDocument? doc = null;
+        if (!string.IsNullOrEmpty(xmlDoc))
+        {
+            doc = new();
+            doc.Load(xmlDoc);
+        }
+
         codeWriter.AppendLine("    /**");
+
+        // Write method summary if available
+        if (doc != null) codeWriter.AppendLine($"    * {doc.GetElementById("summary")?.InnerText.Trim() ?? "Documentation unavailable."}");
+        var parameterSummaries = doc?.GetElementsByTagName("param").Cast<XmlElement>().ToDictionary(x => x.GetAttribute("name"), x => x.InnerText.Trim()) ?? new();
 
         foreach (var parameter in methodSymbol.Parameters)
         {
-            codeWriter.AppendLine($"    * @param {parameter.Name} Transpiled from {parameter.Type.ToDisplayString()}");
+            codeWriter.AppendLine(parameterSummaries.TryGetValue(parameter.Name, out string? summary)
+                ? $"    * @param {parameter.Name} {summary} (Transpiled from {parameter.Type.ToDisplayString()})"
+                : $"    * @param {parameter.Name} Transpiled from {parameter.Type.ToDisplayString()}");
         }
 
-        codeWriter.AppendLine($"    * @returns Transpiled from {methodSymbol.ReturnType.ToDisplayString()}");
+        var returnSummary = doc?.GetElementById("returns")?.InnerText.Trim();
+        codeWriter.AppendLine(string.IsNullOrEmpty(returnSummary)
+            ? $"    * @returns Transpiled from {methodSymbol.ReturnType.ToDisplayString()}"
+            : $"    * @returns {returnSummary} (Transpiled from {methodSymbol.ReturnType.ToDisplayString()})");
         codeWriter.AppendLine("    */");
     }
 
