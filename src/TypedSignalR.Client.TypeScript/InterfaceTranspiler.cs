@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -114,23 +115,28 @@ internal class InterfaceTranspiler
         if (!string.IsNullOrEmpty(xmlDoc))
         {
             doc = new();
-            doc.Load(xmlDoc);
+            doc.LoadXml(xmlDoc);
         }
 
         codeWriter.AppendLine("    /**");
 
         // Write method summary if available
-        if (doc != null) codeWriter.AppendLine($"    * {doc.GetElementById("summary")?.InnerText.Trim() ?? "Documentation unavailable."}");
+        var summaryList = doc?.GetElementsByTagName("summary");
+        var summary = summaryList?.Count > 0 ? summaryList[0]?.InnerText.Trim() : null;
+
+        if (doc != null) codeWriter.AppendLine($"    * {summary ?? "Documentation unavailable."}");
         var parameterSummaries = doc?.GetElementsByTagName("param").Cast<XmlElement>().ToDictionary(x => x.GetAttribute("name"), x => x.InnerText.Trim()) ?? new();
 
         foreach (var parameter in methodSymbol.Parameters)
         {
-            codeWriter.AppendLine(parameterSummaries.TryGetValue(parameter.Name, out string? summary)
-                ? $"    * @param {parameter.Name} {summary} (Transpiled from {parameter.Type.ToDisplayString()})"
+            codeWriter.AppendLine(parameterSummaries.TryGetValue(parameter.Name, out string? paramSummary)
+                ? $"    * @param {parameter.Name} {paramSummary} (Transpiled from {parameter.Type.ToDisplayString()})"
                 : $"    * @param {parameter.Name} Transpiled from {parameter.Type.ToDisplayString()}");
         }
 
-        var returnSummary = doc?.GetElementById("returns")?.InnerText.Trim();
+        var returnList = doc?.GetElementsByTagName("returns");
+        var returnSummary = returnList?.Count > 0 ? returnList[0]?.InnerText.Trim() : null;
+
         codeWriter.AppendLine(string.IsNullOrEmpty(returnSummary)
             ? $"    * @returns Transpiled from {methodSymbol.ReturnType.ToDisplayString()}"
             : $"    * @returns {returnSummary} (Transpiled from {methodSymbol.ReturnType.ToDisplayString()})");
