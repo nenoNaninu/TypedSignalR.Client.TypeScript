@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using Tapper;
@@ -91,6 +92,17 @@ internal class InterfaceTranspiler
         ITypedSignalRTranspilationOptions options,
         ref CodeWriter codeWriter)
     {
+        var doc = GetDocumentationFromSymbol(interfaceSymbol);
+        var summaryList = doc?.GetElementsByTagName("summary");
+        var summary = summaryList?.Count > 0 ? summaryList[0]?.InnerText.Trim() : null;
+
+        if (!string.IsNullOrEmpty(summary))
+        {
+            codeWriter.AppendLine("/**");
+            codeWriter.AppendLine($"* {summary}");
+            codeWriter.AppendLine($"*/");
+        }
+
         codeWriter.AppendLine($"export type {interfaceSymbol.Name} = {{");
 
         foreach (var method in interfaceSymbol.GetMethods())
@@ -109,14 +121,7 @@ internal class InterfaceTranspiler
 
     private static void WriteJSDoc(IMethodSymbol methodSymbol, ref CodeWriter codeWriter)
     {
-        var xmlDoc = methodSymbol.GetDocumentationCommentXml();
-
-        XmlDocument? doc = null;
-        if (!string.IsNullOrEmpty(xmlDoc))
-        {
-            doc = new();
-            doc.LoadXml(xmlDoc);
-        }
+        var doc = GetDocumentationFromSymbol(methodSymbol);
 
         codeWriter.AppendLine("    /**");
 
@@ -226,5 +231,23 @@ internal class InterfaceTranspiler
         }
 
         codeWriter.Append(TypeMapper.MapTo(returnType, options));
+    }
+
+    ///-------------------------------------------------------------------------------------------------
+    /// <summary>   Gets the XML documentation from a symbol. </summary>
+    ///
+    /// <param name="symbol">   The symbol. </param>
+    ///
+    /// <returns>   The documentation from symbol.  </returns>
+    ///-------------------------------------------------------------------------------------------------
+    private static XmlDocument? GetDocumentationFromSymbol(ISymbol symbol)
+    {
+        var xmlDoc = symbol.GetDocumentationCommentXml();
+        if (string.IsNullOrEmpty(xmlDoc))
+            return null;
+
+        XmlDocument? doc = new();
+        doc.LoadXml(xmlDoc);
+        return doc;
     }
 }
