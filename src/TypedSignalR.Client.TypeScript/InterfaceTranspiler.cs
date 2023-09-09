@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using Tapper;
@@ -90,6 +92,17 @@ internal class InterfaceTranspiler
         ITypedSignalRTranspilationOptions options,
         ref CodeWriter codeWriter)
     {
+        var doc = GetDocumentationFromSymbol(interfaceSymbol);
+        var summaryList = doc?.GetElementsByTagName("summary");
+        var summary = summaryList?.Count > 0 ? summaryList[0]?.InnerText.Trim() : null;
+
+        if (!string.IsNullOrEmpty(summary))
+        {
+            codeWriter.AppendLine("/**");
+            codeWriter.AppendLine($"* {summary}");
+            codeWriter.AppendLine($"*/");
+        }
+
         codeWriter.AppendLine($"export type {interfaceSymbol.Name} = {{");
 
         foreach (var method in interfaceSymbol.GetMethods())
@@ -108,14 +121,30 @@ internal class InterfaceTranspiler
 
     private static void WriteJSDoc(IMethodSymbol methodSymbol, ref CodeWriter codeWriter)
     {
+        var doc = GetDocumentationFromSymbol(methodSymbol);
+
         codeWriter.AppendLine("    /**");
+
+        // Write method summary if available
+        var summaryList = doc?.GetElementsByTagName("summary");
+        var summary = summaryList?.Count > 0 ? summaryList[0]?.InnerText.Trim() : null;
+
+        if (doc != null) codeWriter.AppendLine($"    * {summary ?? "Documentation unavailable."}");
+        var parameterSummaries = doc?.GetElementsByTagName("param").Cast<XmlElement>().ToDictionary(x => x.GetAttribute("name"), x => x.InnerText.Trim()) ?? new();
 
         foreach (var parameter in methodSymbol.Parameters)
         {
-            codeWriter.AppendLine($"    * @param {parameter.Name} Transpiled from {parameter.Type.ToDisplayString()}");
+            codeWriter.AppendLine(parameterSummaries.TryGetValue(parameter.Name, out string? paramSummary)
+                ? $"    * @param {parameter.Name} {paramSummary} (Transpiled from {parameter.Type.ToDisplayString()})"
+                : $"    * @param {parameter.Name} Transpiled from {parameter.Type.ToDisplayString()}");
         }
 
-        codeWriter.AppendLine($"    * @returns Transpiled from {methodSymbol.ReturnType.ToDisplayString()}");
+        var returnList = doc?.GetElementsByTagName("returns");
+        var returnSummary = returnList?.Count > 0 ? returnList[0]?.InnerText.Trim() : null;
+
+        codeWriter.AppendLine(string.IsNullOrEmpty(returnSummary)
+            ? $"    * @returns Transpiled from {methodSymbol.ReturnType.ToDisplayString()}"
+            : $"    * @returns {returnSummary} (Transpiled from {methodSymbol.ReturnType.ToDisplayString()})");
         codeWriter.AppendLine("    */");
     }
 
@@ -202,5 +231,23 @@ internal class InterfaceTranspiler
         }
 
         codeWriter.Append(TypeMapper.MapTo(returnType, options));
+    }
+
+    ///-------------------------------------------------------------------------------------------------
+    /// <summary>   Gets the XML documentation from a symbol. </summary>
+    ///
+    /// <param name="symbol">   The symbol. </param>
+    ///
+    /// <returns>   The documentation from symbol.  </returns>
+    ///-------------------------------------------------------------------------------------------------
+    private static XmlDocument? GetDocumentationFromSymbol(ISymbol symbol)
+    {
+        var xmlDoc = symbol.GetDocumentationCommentXml();
+        if (string.IsNullOrEmpty(xmlDoc))
+            return null;
+
+        XmlDocument? doc = new();
+        doc.LoadXml(xmlDoc);
+        return doc;
     }
 }
