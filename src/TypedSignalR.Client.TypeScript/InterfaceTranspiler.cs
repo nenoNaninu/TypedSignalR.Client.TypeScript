@@ -121,23 +121,23 @@ internal class InterfaceTranspiler
 
     private static void WriteJSDoc(IMethodSymbol methodSymbol, ref CodeWriter codeWriter)
     {
-        var xmlDocumentation = GetDocumentationComment(methodSymbol);
+        var documentationComment = GetDocumentationComment(methodSymbol);
 
         codeWriter.AppendLine("    /**");
 
-        if (xmlDocumentation is not null)
+        if (documentationComment is not null)
         {
-            WriteJSDocSummary(xmlDocumentation, ref codeWriter);
+            WriteJSDocSummary(documentationComment, ref codeWriter);
         }
 
-        var parameterDocumentations = GetParameterDocumentations(xmlDocumentation);
+        var parameterDocumentations = GetParameterDocumentationComments(documentationComment);
 
         foreach (var parameter in methodSymbol.Parameters)
         {
             WriteJSDocParameter(parameter, parameterDocumentations, ref codeWriter);
         }
 
-        WriteJSDocReturn(methodSymbol, xmlDocumentation, ref codeWriter);
+        WriteJSDocReturn(methodSymbol, documentationComment, ref codeWriter);
         codeWriter.AppendLine("    */");
     }
 
@@ -333,7 +333,7 @@ internal class InterfaceTranspiler
         }
     }
 
-    private static IReadOnlyDictionary<string, string[]>? GetParameterDocumentations(XmlDocument? xmlDocument)
+    private static IReadOnlyDictionary<string, string[]>? GetParameterDocumentationComments(XmlDocument? xmlDocument)
     {
         if (xmlDocument is null)
         {
