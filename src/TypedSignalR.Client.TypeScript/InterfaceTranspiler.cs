@@ -316,7 +316,7 @@ internal class InterfaceTranspiler
     {
         var documentationComment = symbol.GetDocumentationCommentXml();
 
-        if (string.IsNullOrEmpty(documentationComment))
+        if (string.IsNullOrWhiteSpace(documentationComment))
         {
             return null;
         }
