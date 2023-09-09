@@ -92,22 +92,14 @@ internal class InterfaceTranspiler
         ITypedSignalRTranspilationOptions options,
         ref CodeWriter codeWriter)
     {
-        var doc = GetDocumentationComment(interfaceSymbol);
-        var summaryList = doc?.GetElementsByTagName("summary");
-        var summary = summaryList?.Count > 0 ? summaryList[0]?.InnerText.Trim() : null;
 
-        if (!string.IsNullOrEmpty(summary))
-        {
-            codeWriter.AppendLine("/**");
-            codeWriter.AppendLine($"* {summary}");
-            codeWriter.AppendLine($"*/");
-        }
+        WriteJSDocInterfaceSummary(interfaceSymbol, ref codeWriter);
 
         codeWriter.AppendLine($"export type {interfaceSymbol.Name} = {{");
 
         foreach (var method in interfaceSymbol.GetMethods())
         {
-            WriteJSDoc(method, ref codeWriter);
+            WriteJSDocMethod(method, ref codeWriter);
             codeWriter.Append($"    {method.Name.Format(options.MethodStyle)}(");
             WriteParameters(method, options, specialSymbols, ref codeWriter);
             codeWriter.Append("): ");
@@ -119,7 +111,36 @@ internal class InterfaceTranspiler
         codeWriter.AppendLine();
     }
 
-    private static void WriteJSDoc(IMethodSymbol methodSymbol, ref CodeWriter codeWriter)
+    private static void WriteJSDocInterfaceSummary(INamedTypeSymbol interfaceSymbol, ref CodeWriter codeWriter)
+    {
+        var documentationComment = GetDocumentationComment(interfaceSymbol);
+        var summaryList = documentationComment?.GetElementsByTagName("summary");
+
+        if (summaryList is null
+            || summaryList.Count == 0
+            || string.IsNullOrWhiteSpace(summaryList[0]!.InnerText))
+        {
+            return;
+        }
+
+        var summaryLines = summaryList[0]!.InnerText
+            .Trim()
+            .NormalizeNewLines(Environment.NewLine)
+            .Split(Environment.NewLine)
+            .Select(x => x.Trim())
+            .ToArray();
+
+        codeWriter.AppendLine("/**");
+
+        foreach (var line in summaryLines)
+        {
+            codeWriter.AppendLine($"* {line}");
+        }
+
+        codeWriter.AppendLine($"*/");
+    }
+
+    private static void WriteJSDocMethod(IMethodSymbol methodSymbol, ref CodeWriter codeWriter)
     {
         var documentationComment = GetDocumentationComment(methodSymbol);
 
@@ -127,21 +148,21 @@ internal class InterfaceTranspiler
 
         if (documentationComment is not null)
         {
-            WriteJSDocSummary(documentationComment, ref codeWriter);
+            WriteJSDocMethodSummary(documentationComment, ref codeWriter);
         }
 
         var parameterDocumentations = GetParameterDocumentationComments(documentationComment);
 
         foreach (var parameter in methodSymbol.Parameters)
         {
-            WriteJSDocParameter(parameter, parameterDocumentations, ref codeWriter);
+            WriteJSDocMethodParameter(parameter, parameterDocumentations, ref codeWriter);
         }
 
-        WriteJSDocReturn(methodSymbol, documentationComment, ref codeWriter);
+        WriteJSDocMethodReturn(methodSymbol, documentationComment, ref codeWriter);
         codeWriter.AppendLine("    */");
     }
 
-    private static void WriteJSDocSummary(XmlDocument xmlDocument, ref CodeWriter codeWriter)
+    private static void WriteJSDocMethodSummary(XmlDocument xmlDocument, ref CodeWriter codeWriter)
     {
         var summaryList = xmlDocument.GetElementsByTagName("summary");
 
@@ -163,7 +184,7 @@ internal class InterfaceTranspiler
         }
     }
 
-    private static void WriteJSDocParameter(IParameterSymbol parameter, IReadOnlyDictionary<string, string[]>? parameterDocumentations, ref CodeWriter codeWriter)
+    private static void WriteJSDocMethodParameter(IParameterSymbol parameter, IReadOnlyDictionary<string, string[]>? parameterDocumentations, ref CodeWriter codeWriter)
     {
         if (parameterDocumentations is null
             || !parameterDocumentations.TryGetValue(parameter.Name, out var parameterDocument)
@@ -192,7 +213,7 @@ internal class InterfaceTranspiler
         codeWriter.AppendLine($"    *     (Transpiled from {parameter.Type.ToDisplayString()})");
     }
 
-    private static void WriteJSDocReturn(IMethodSymbol methodSymbol, XmlDocument? xmlDocument, ref CodeWriter codeWriter)
+    private static void WriteJSDocMethodReturn(IMethodSymbol methodSymbol, XmlDocument? xmlDocument, ref CodeWriter codeWriter)
     {
         var returnList = xmlDocument?.GetElementsByTagName("returns");
 
