@@ -127,8 +127,7 @@ internal class InterfaceTranspiler
             .Trim()
             .NormalizeNewLines(Environment.NewLine)
             .Split(Environment.NewLine)
-            .Select(x => x.Trim())
-            .ToArray();
+            .Select(x => x.Trim());
 
         codeWriter.AppendLine("/**");
 
