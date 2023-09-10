@@ -92,22 +92,14 @@ internal class InterfaceTranspiler
         ITypedSignalRTranspilationOptions options,
         ref CodeWriter codeWriter)
     {
-        var doc = GetDocumentationFromSymbol(interfaceSymbol);
-        var summaryList = doc?.GetElementsByTagName("summary");
-        var summary = summaryList?.Count > 0 ? summaryList[0]?.InnerText.Trim() : null;
 
-        if (!string.IsNullOrEmpty(summary))
-        {
-            codeWriter.AppendLine("/**");
-            codeWriter.AppendLine($"* {summary}");
-            codeWriter.AppendLine($"*/");
-        }
+        WriteJSDocInterfaceSummary(interfaceSymbol, ref codeWriter);
 
         codeWriter.AppendLine($"export type {interfaceSymbol.Name} = {{");
 
         foreach (var method in interfaceSymbol.GetMethods())
         {
-            WriteJSDoc(method, ref codeWriter);
+            WriteJSDocMethod(method, ref codeWriter);
             codeWriter.Append($"    {method.Name.Format(options.MethodStyle)}(");
             WriteParameters(method, options, specialSymbols, ref codeWriter);
             codeWriter.Append("): ");
@@ -119,33 +111,140 @@ internal class InterfaceTranspiler
         codeWriter.AppendLine();
     }
 
-    private static void WriteJSDoc(IMethodSymbol methodSymbol, ref CodeWriter codeWriter)
+    private static void WriteJSDocInterfaceSummary(INamedTypeSymbol interfaceSymbol, ref CodeWriter codeWriter)
     {
-        var doc = GetDocumentationFromSymbol(methodSymbol);
+        var documentationComment = GetDocumentationComment(interfaceSymbol);
+        var summaryList = documentationComment?.GetElementsByTagName("summary");
+
+        if (summaryList is null
+            || summaryList.Count == 0
+            || string.IsNullOrWhiteSpace(summaryList[0]!.InnerText))
+        {
+            return;
+        }
+
+        var summaryLines = summaryList[0]!.InnerText
+            .Trim()
+            .NormalizeNewLines(Environment.NewLine)
+            .Split(Environment.NewLine)
+            .Select(x => x.Trim());
+
+        codeWriter.AppendLine("/**");
+
+        foreach (var line in summaryLines)
+        {
+            codeWriter.AppendLine($"* {line}");
+        }
+
+        codeWriter.AppendLine($"*/");
+    }
+
+    private static void WriteJSDocMethod(IMethodSymbol methodSymbol, ref CodeWriter codeWriter)
+    {
+        var documentationComment = GetDocumentationComment(methodSymbol);
 
         codeWriter.AppendLine("    /**");
 
-        // Write method summary if available
-        var summaryList = doc?.GetElementsByTagName("summary");
-        var summary = summaryList?.Count > 0 ? summaryList[0]?.InnerText.Trim() : null;
+        if (documentationComment is not null)
+        {
+            WriteJSDocMethodSummary(documentationComment, ref codeWriter);
+        }
 
-        if (doc != null) codeWriter.AppendLine($"    * {summary ?? "Documentation unavailable."}");
-        var parameterSummaries = doc?.GetElementsByTagName("param").Cast<XmlElement>().ToDictionary(x => x.GetAttribute("name"), x => x.InnerText.Trim()) ?? new();
+        var parameterDocumentations = GetParameterDocumentationComments(documentationComment);
 
         foreach (var parameter in methodSymbol.Parameters)
         {
-            codeWriter.AppendLine(parameterSummaries.TryGetValue(parameter.Name, out string? paramSummary)
-                ? $"    * @param {parameter.Name} {paramSummary} (Transpiled from {parameter.Type.ToDisplayString()})"
-                : $"    * @param {parameter.Name} Transpiled from {parameter.Type.ToDisplayString()}");
+            WriteJSDocMethodParameter(parameter, parameterDocumentations, ref codeWriter);
         }
 
-        var returnList = doc?.GetElementsByTagName("returns");
-        var returnSummary = returnList?.Count > 0 ? returnList[0]?.InnerText.Trim() : null;
-
-        codeWriter.AppendLine(string.IsNullOrEmpty(returnSummary)
-            ? $"    * @returns Transpiled from {methodSymbol.ReturnType.ToDisplayString()}"
-            : $"    * @returns {returnSummary} (Transpiled from {methodSymbol.ReturnType.ToDisplayString()})");
+        WriteJSDocMethodReturn(methodSymbol, documentationComment, ref codeWriter);
         codeWriter.AppendLine("    */");
+    }
+
+    private static void WriteJSDocMethodSummary(XmlDocument xmlDocument, ref CodeWriter codeWriter)
+    {
+        var summaryList = xmlDocument.GetElementsByTagName("summary");
+
+        if (summaryList.Count == 0
+            || string.IsNullOrWhiteSpace(summaryList[0]?.InnerText))
+        {
+            return;
+        }
+
+        var summaryLines = summaryList[0]!.InnerText
+            .Trim()
+            .NormalizeNewLines(Environment.NewLine)
+            .Split(Environment.NewLine)
+            .Select(x => x.Trim());
+
+        foreach (var summary in summaryLines)
+        {
+            codeWriter.AppendLine($"    * {summary}");
+        }
+    }
+
+    private static void WriteJSDocMethodParameter(IParameterSymbol parameter, IReadOnlyDictionary<string, string[]>? parameterDocumentations, ref CodeWriter codeWriter)
+    {
+        if (parameterDocumentations is null
+            || !parameterDocumentations.TryGetValue(parameter.Name, out var parameterDocument)
+            || parameterDocument.Length == 0
+            || (parameterDocument.Length == 1 && string.IsNullOrWhiteSpace(parameterDocument[0])))
+        {
+            codeWriter.AppendLine($"    * @param {parameter.Name} Transpiled from {parameter.Type.ToDisplayString()}");
+            return;
+        }
+
+        if (parameterDocument.Length == 1)
+        {
+            codeWriter.AppendLine($"    * @param {parameter.Name} {parameterDocument[0]} (Transpiled from {parameter.Type.ToDisplayString()})");
+            return;
+        }
+
+        // if parameterDocument.Length > 1
+
+        codeWriter.AppendLine($"    * @param {parameter.Name}");
+
+        foreach (var line in parameterDocument)
+        {
+            codeWriter.AppendLine($"    *     {line}");
+        }
+
+        codeWriter.AppendLine($"    *     (Transpiled from {parameter.Type.ToDisplayString()})");
+    }
+
+    private static void WriteJSDocMethodReturn(IMethodSymbol methodSymbol, XmlDocument? xmlDocument, ref CodeWriter codeWriter)
+    {
+        var returnList = xmlDocument?.GetElementsByTagName("returns");
+
+        if (returnList is null
+            || returnList.Count == 0
+            || string.IsNullOrWhiteSpace(returnList[0]?.InnerText))
+        {
+            codeWriter.AppendLine($"    * @returns Transpiled from {methodSymbol.ReturnType.ToDisplayString()}");
+            return;
+        }
+
+        var returnSummaryLines = returnList[0]!.InnerText
+            .Trim()
+            .NormalizeNewLines(Environment.NewLine)
+            .Split(Environment.NewLine)
+            .Select(x => x.Trim())
+            .ToArray();
+
+        if (returnSummaryLines.Length == 1)
+        {
+            codeWriter.AppendLine($"    * @returns {returnSummaryLines} (Transpiled from {methodSymbol.ReturnType.ToDisplayString()})");
+            return;
+        }
+
+        codeWriter.AppendLine($"    * @returns");
+
+        foreach (var line in returnSummaryLines)
+        {
+            codeWriter.AppendLine($"    *     {line}");
+        }
+
+        codeWriter.AppendLine($"    *     (Transpiled from {methodSymbol.ReturnType.ToDisplayString()})");
     }
 
     private static void WriteParameters(IMethodSymbol methodSymbol, ITranspilationOptions options, SpecialSymbols specialSymbols, ref CodeWriter codeWriter)
@@ -233,21 +332,45 @@ internal class InterfaceTranspiler
         codeWriter.Append(TypeMapper.MapTo(returnType, options));
     }
 
-    ///-------------------------------------------------------------------------------------------------
-    /// <summary>   Gets the XML documentation from a symbol. </summary>
-    ///
-    /// <param name="symbol">   The symbol. </param>
-    ///
-    /// <returns>   The documentation from symbol.  </returns>
-    ///-------------------------------------------------------------------------------------------------
-    private static XmlDocument? GetDocumentationFromSymbol(ISymbol symbol)
+    private static XmlDocument? GetDocumentationComment(ISymbol symbol)
     {
-        var xmlDoc = symbol.GetDocumentationCommentXml();
-        if (string.IsNullOrEmpty(xmlDoc))
-            return null;
+        var documentationComment = symbol.GetDocumentationCommentXml();
 
-        XmlDocument? doc = new();
-        doc.LoadXml(xmlDoc);
-        return doc;
+        if (string.IsNullOrWhiteSpace(documentationComment))
+        {
+            return null;
+        }
+
+        try
+        {
+            var xmlDocument = new XmlDocument();
+            xmlDocument.LoadXml(documentationComment);
+            return xmlDocument;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static IReadOnlyDictionary<string, string[]>? GetParameterDocumentationComments(XmlDocument? xmlDocument)
+    {
+        if (xmlDocument is null)
+        {
+            return null;
+        }
+
+        return xmlDocument
+            .GetElementsByTagName("param")
+            .OfType<XmlElement>()
+            .ToDictionary(
+                x => x.GetAttribute("name"),
+                x => x.InnerText
+                    .Trim()
+                    .NormalizeNewLines(Environment.NewLine)
+                    .Split(Environment.NewLine)
+                    .Select(x => x.Trim())
+                    .ToArray()
+            );
     }
 }
