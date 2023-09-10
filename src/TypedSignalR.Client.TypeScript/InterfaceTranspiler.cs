@@ -233,7 +233,7 @@ internal class InterfaceTranspiler
 
         if (returnSummaryLines.Length == 1)
         {
-            codeWriter.AppendLine($"    * @returns {returnSummaryLines} (Transpiled from {methodSymbol.ReturnType.ToDisplayString()})");
+            codeWriter.AppendLine($"    * @returns {returnSummaryLines[0]} (Transpiled from {methodSymbol.ReturnType.ToDisplayString()})");
             return;
         }
 
