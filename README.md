@@ -15,7 +15,7 @@ TypedSignalR.Client.TypeScript is a library/CLI tool that analyzes SignalR hub a
 - [Streaming Support](#streaming-support)
 - [Client Results Support](#client-results-support)
 - [MessagePack Hub Protocol Support](#messagepack-hub-protocol-support)
-  - [Default Configuration in ASP.NE Core](#default-configuration-in-aspne-core)
+  - [Default Configuration in ASP.NET Core](#default-configuration-in-aspnet-core)
   - [Recommended Configuration](#recommended-configuration)
 - [Related Work](#related-work)
 
