@@ -375,7 +375,7 @@ When serializing a user-defined type, use a property name as a key (in other wor
 Therefore, apply `[MessagePackObject(true)]` to a user-defined type, or use `ContractlessStandardResolver`.
 The default configuration for MessagePack Hub Protocol [includes the ContractlessStandardResolver](https://github.com/dotnet/aspnetcore/blob/release/7.0/src/SignalR/common/Protocols.MessagePack/src/Protocol/MessagePackHubProtocol.cs#L73-L77).
 
-### Default Configuration in ASP.NE Core
+### Default Configuration in ASP.NET Core
 
 Calling `AddMessagePackProtocol` is required to use the MessagePack Hub Protocol.
 For more information, please see [the official documentation](https://learn.microsoft.com/en-us/aspnet/core/signalr/messagepackhubprotocol).
