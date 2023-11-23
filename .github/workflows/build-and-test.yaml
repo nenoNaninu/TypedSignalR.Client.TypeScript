@@ -40,14 +40,14 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build TypedSignalR.Client.TypeScript.csproj
-        run: dotnet build ./src/TypedSignalR.Client.TypeScript/TypedSignalR.Client.TypeScript.csproj --framework ${{ env.DOTNET_TFM }} --no-restore
+      - name: Build TypedSignalR.Client.TypeScript.Attributes.csproj
+        run: dotnet build ./src/TypedSignalR.Client.TypeScript.Attributes/TypedSignalR.Client.TypeScript.Attributes.csproj --no-restore
 
       - name: Build TypedSignalR.Client.TypeScript.Analyzer.csproj
-        run: dotnet build ./src/TypedSignalR.Client.TypeScript.Analyzer/TypedSignalR.Client.TypeScript.Analyzer.csproj --framework ${{ env.DOTNET_TFM }} --no-restore
+        run: dotnet build ./src/TypedSignalR.Client.TypeScript.Analyzer/TypedSignalR.Client.TypeScript.Analyzer.csproj --no-restore
 
-      - name: Build TypedSignalR.Client.TypeScript.Attributes.csproj
-        run: dotnet build ./src/TypedSignalR.Client.TypeScript.Attributes/TypedSignalR.Client.TypeScript.Attributes.csproj --framework ${{ env.DOTNET_TFM }} --no-restore
+      - name: Build TypedSignalR.Client.TypeScript.csproj
+        run: dotnet build ./src/TypedSignalR.Client.TypeScript/TypedSignalR.Client.TypeScript.csproj --framework ${{ env.DOTNET_TFM }} --no-restore
 
       - name: Build TypedSignalR.Client.TypeScript.Generator.csproj
         run: dotnet build ./src/TypedSignalR.Client.TypeScript.Generator/TypedSignalR.Client.TypeScript.Generator.csproj --framework ${{ env.DOTNET_TFM }} --no-restore
