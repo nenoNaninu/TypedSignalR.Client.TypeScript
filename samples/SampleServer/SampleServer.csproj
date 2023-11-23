@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="TypedSignalR.Client.DevTools" Version="1.2.1" />
+        <PackageReference Include="TypedSignalR.Client.DevTools" />
     </ItemGroup>
 
     <ItemGroup>
