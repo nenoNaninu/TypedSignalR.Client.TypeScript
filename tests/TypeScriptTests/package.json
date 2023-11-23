@@ -10,10 +10,10 @@
         "typescript": "^4.9.5"
     },
     "scripts": {
-        "test": "jest"
+        "test": "jest ./src/json/unary.test.ts"
     },
     "dependencies": {
-        "@microsoft/signalr": "^7.0.2",
-        "@microsoft/signalr-protocol-msgpack": "^7.0.2"
+        "@microsoft/signalr": "^8.0.0",
+        "@microsoft/signalr-protocol-msgpack": "^8.0.0"
     }
 }

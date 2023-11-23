@@ -1205,18 +1205,18 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@microsoft/signalr-protocol-msgpack@^7.0.2":
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/@microsoft/signalr-protocol-msgpack/-/signalr-protocol-msgpack-7.0.2.tgz#67b9619c60e423144676f3fc22473d91790904b4"
-  integrity sha512-aODnmApl9pYVdLYHT0oRIMU51e+XnNhTSTLbH3sHo2RxSgrljSU5FssF1IVq836sd/2Ka5AB/kH3ZArp/QDz2A==
+"@microsoft/signalr-protocol-msgpack@^8.0.0":
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/@microsoft/signalr-protocol-msgpack/-/signalr-protocol-msgpack-8.0.0.tgz#cc1777c8614e2586d890f1a7ea47637f1cd42ffe"
+  integrity sha512-XtN5lUPVOtU96aqpB6z00o0TQayx5fmcf7CeQKDXF1flg8G96wtNCFXKb/p4sM/nvprjSmz0JiWQfc1TVXsa6Q==
   dependencies:
-    "@microsoft/signalr" ">=7.0.2"
+    "@microsoft/signalr" ">=8.0.0"
     "@msgpack/msgpack" "^2.7.0"
 
-"@microsoft/signalr@>=7.0.2", "@microsoft/signalr@^7.0.2":
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/@microsoft/signalr/-/signalr-7.0.2.tgz#00cd9444de903602ddbea1f9f629995a1fda31ae"
-  integrity sha512-U+o33K2m6nnMojZzBrjrApKgYfiQ0A0t4I2F5oFJObgfzRSDS9v0YoYgkmva5nbPftUp3YcR5XmH0S/1+BZT6Q==
+"@microsoft/signalr@>=8.0.0", "@microsoft/signalr@^8.0.0":
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/@microsoft/signalr/-/signalr-8.0.0.tgz#cb1412e88e0527f40da9178fefc27a65c3ddeab0"
+  integrity sha512-K/wS/VmzRWePCGqGh8MU8OWbS1Zvu7DG7LSJS62fBB8rJUXwwj4axQtqrAAwKGUZHQF6CuteuQR9xMsVpM2JNA==
   dependencies:
     abort-controller "^3.0.0"
     eventsource "^2.0.2"
