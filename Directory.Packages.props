@@ -17,7 +17,7 @@
         <PackageVersion Include="Microsoft.Build.Locator" Version="1.6.10" />
         <PackageVersion Include="Tapper" Version="1.9.0" />
         <PackageVersion Include="Tapper.Attributes" Version="1.9.0" />
-        <PackageVersion Include="TypedSignalR.Client" Version="3.4.1" />
+        <PackageVersion Include="TypedSignalR.Client" Version="3.4.3" />
         <PackageVersion Include="TypedSignalR.Client.Attributes" Version="1.1.0" />
         <PackageVersion Include="TypedSignalR.Client.DevTools" Version="1.2.1" />
         <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
