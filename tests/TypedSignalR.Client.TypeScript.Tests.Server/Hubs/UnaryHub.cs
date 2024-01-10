@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using TypedSignalR.Client.TypeScript.Tests.Shared;
 
 namespace TypedSignalR.Client.TypeScript.Tests.Server.Hubs;
@@ -74,5 +75,23 @@ public class UnaryHub : Hub, IUnaryHub
         }
 
         return Task.FromResult(buffer);
+    }
+
+    public override Task OnConnectedAsync()
+    {
+        _logger.Log(LogLevel.Information, "UnaryHub.OnConnectedAsync");
+
+        return base.OnConnectedAsync();
+    }
+
+    public override Task OnDisconnectedAsync(Exception? exception)
+    {
+        //_logger.Log(LogLevel.Information, "UnaryHub.OnDisconnectedAsync");
+        if (exception is not null)
+        {
+            _logger.LogError(exception, "UnaryHub.OnDisconnectedAsync");
+        }
+
+        return base.OnDisconnectedAsync(exception);
     }
 }
