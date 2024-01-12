@@ -28,9 +28,24 @@ internal static partial class RoslynExtensions
 
     public static IEnumerable<IMethodSymbol> GetMethods(this INamedTypeSymbol source)
     {
-        return source.GetMembers()
+        var methods = source.GetMembers()
             .OfType<IMethodSymbol>()
             .Where(static x => x.MethodKind == MethodKind.Ordinary);
+
+        var allInterfaces = source.AllInterfaces;
+
+        if (allInterfaces.IsEmpty)
+        {
+            return methods;
+        }
+
+        var allMethods = allInterfaces
+            .SelectMany(static x => x.GetMembers())
+            .OfType<IMethodSymbol>()
+            .Where(static x => x.MethodKind is MethodKind.Ordinary)
+            .Concat(methods);
+
+        return allMethods;
     }
 
     public static IEnumerable<ISymbol> IgnoreStatic(this IEnumerable<ISymbol> source)
