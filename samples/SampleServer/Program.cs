@@ -1,3 +1,4 @@
+using AspNetCore.SignalR.OpenTelemetry;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using SampleServer.Hub;
@@ -8,7 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR()
+    .AddHubInstrumentation();
 
 var app = builder.Build();
 
