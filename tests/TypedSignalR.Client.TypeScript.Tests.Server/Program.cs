@@ -1,3 +1,6 @@
+#if NET8_0_OR_GREATER
+using AspNetCore.SignalR.OpenTelemetry;
+#endif
 using MessagePack;
 using MessagePack.Resolvers;
 using Microsoft.AspNetCore.HttpLogging;
@@ -10,6 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddSignalR()
+#if NET8_0_OR_GREATER
+    .AddHubInstrumentation()
+#endif
     .AddJsonProtocol()
    // dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none --enum name
    // .AddMessagePackProtocol(); // default
