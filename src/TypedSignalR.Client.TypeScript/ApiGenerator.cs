@@ -41,7 +41,7 @@ internal class ApiGenerator
     private string GenerateHeader(IReadOnlyList<INamedTypeSymbol> hubTypes, IReadOnlyList<INamedTypeSymbol> receiverTypes)
     {
         var sb = new StringBuilder();
-        sb.AppendLine(@"import { HubConnection, IStreamResult, Subject } from '@microsoft/signalr';");
+        sb.AppendLine(@"import type { HubConnection, IStreamResult, Subject } from '@microsoft/signalr';");
 
         var interfaceLookup = hubTypes.Concat(receiverTypes)
             .Distinct<INamedTypeSymbol>(SymbolEqualityComparer.Default)
@@ -49,7 +49,7 @@ internal class ApiGenerator
 
         foreach (var group in interfaceLookup)
         {
-            sb.AppendLine($"import {{ {string.Join(", ", group.Select(x => x.Name))} }} from './{group.Key.ToDisplayString()}';");
+            sb.AppendLine($"import type {{ {string.Join(", ", group.Select(x => x.Name))} }} from './{group.Key.ToDisplayString()}';");
         }
 
         var hubParametersAndReturnTypes = hubTypes
@@ -82,7 +82,7 @@ internal class ApiGenerator
             // TypedSignalR.Client.TypeScript creates a directory named TypedSignalR.Client in the specified directory
             // and generates TypeScript files there. (e.g. generated/TypedSignalR.Client/index.ts)
             // Therefore, in order to refer to the TypeScript file created by Tapper, we have to specify the directory one level up.
-            sb.AppendLine($"import {{ {string.Join(", ", groupingType.Select(x => x.Name))} }} from '../{groupingType.Key.ToDisplayString()}';");
+            sb.AppendLine($"import type {{ {string.Join(", ", groupingType.Select(x => x.Name))} }} from '../{groupingType.Key.ToDisplayString()}';");
         }
 
         return sb.ToString();

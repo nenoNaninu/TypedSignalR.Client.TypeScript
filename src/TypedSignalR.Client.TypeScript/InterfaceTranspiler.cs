@@ -56,7 +56,7 @@ internal class InterfaceTranspiler
         codeWriter.AppendLine("/* eslint-disable */");
         codeWriter.AppendLine("/* tslint:disable */");
         codeWriter.AppendLine("// @ts-nocheck");
-        codeWriter.AppendLine("import { IStreamResult, Subject } from '@microsoft/signalr';");
+        codeWriter.AppendLine("import type { IStreamResult, Subject } from '@microsoft/signalr';");
 
         var appearTypes = interfaceTypes
             .SelectMany(static x => x.GetMethods())
@@ -80,7 +80,7 @@ internal class InterfaceTranspiler
             // TypedSignalR.Client.TypeScript creates a directory named TypedSignalR.Client in the specified directory
             // and generates TypeScript files there. (e.g. generated/TypedSignalR.Client/index.ts)
             // Therefore, in order to refer to the TypeScript file created by Tapper, we have to specify the directory one level up.
-            codeWriter.AppendLine($"import {{ {string.Join(", ", groupingType.Select(x => x.Name))} }} from '../{groupingType.Key.ToDisplayString()}';");
+            codeWriter.AppendLine($"import type {{ {string.Join(", ", groupingType.Select(x => x.Name))} }} from '../{groupingType.Key.ToDisplayString()}';");
         }
 
         codeWriter.AppendLine();
