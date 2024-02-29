@@ -1,6 +1,6 @@
 # TypedSignalR.Client.TypeScript
 
-[![NuGet](https://img.shields.io/nuget/v/TypedSignalR.Client.TypeScript.Attributes.svg)](https://www.nuget.org/profiles/TypedSignalR.Client.TypeScript.Attributes)
+[![NuGet](https://img.shields.io/nuget/v/TypedSignalR.Client.TypeScript.Attributes.svg)](https://www.nuget.org/packages/TypedSignalR.Client.TypeScript.Attributes)
 [![build-and-test](https://github.com/nenoNaninu/TypedSignalR.Client.TypeScript/actions/workflows/build-and-test.yaml/badge.svg?branch=main)](https://github.com/nenoNaninu/TypedSignalR.Client.TypeScript/actions/workflows/build-and-test.yaml)
 
 TypedSignalR.Client.TypeScript is a library/CLI tool that analyzes SignalR hub and receiver type definitions written in C# and generates TypeScript source code to provide strongly typed SignalR clients.
