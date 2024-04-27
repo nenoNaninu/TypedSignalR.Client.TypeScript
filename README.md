@@ -428,4 +428,5 @@ dotnet tsrts --project path/to/Project.csproj --output generated --serializer Me
   - SignalR development tools inspired by SwaggerUI.
 - [nenoNaninu/Tapper](https://github.com/nenoNaninu/Tapper)
   - A Tool Transpiling C# Type into TypeScript Type.
-
+- [nenoNaninu/AspNetCore.SignalR.OpenTelemetry](https://github.com/nenoNaninu/AspNetCore.SignalR.OpenTelemetry)
+  - SignalR instrumentation library for OpenTelemetry.
