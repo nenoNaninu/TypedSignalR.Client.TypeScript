@@ -6,14 +6,14 @@ namespace TypedSignalR.Client.TypeScript.Templates;
 
 internal static class MethodSymbolExtensions
 {
-    public static string WrapLambdaExpressionSyntax(this IMethodSymbol methodSymbol, ITypedSignalRTranspilationOptions options)
+    public static string WrapLambdaExpressionSyntax(this IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
     {
         if (methodSymbol.Parameters.Length == 0)
         {
             return $"() => receiver.{methodSymbol.Name.Format(options.MethodStyle)}()";
         }
 
-        var parameters = ParametersToTypeArray(methodSymbol, options);
+        var parameters = ParametersToTypeArray(methodSymbol, specialSymbols, options);
         return $"(...args: {parameters}) => receiver.{methodSymbol.Name.Format(options.MethodStyle)}(...args)";
     }
 
@@ -78,9 +78,12 @@ internal static class MethodSymbolExtensions
         return TypeMapper.MapTo(methodSymbol.ReturnType, options);
     }
 
-    private static string ParametersToTypeArray(IMethodSymbol methodSymbol, ITypedSignalRTranspilationOptions options)
+    private static string ParametersToTypeArray(IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
     {
-        var parameters = methodSymbol.Parameters.Select(x => TypeMapper.MapTo(x.Type, options));
+        var parameters = methodSymbol.Parameters
+            .Where(x => !SymbolEqualityComparer.Default.Equals(x.Type, specialSymbols.CancellationTokenSymbol))
+            .Select(x => TypeMapper.MapTo(x.Type, options));
+
         return $"[{string.Join(", ", parameters)}]";
     }
 
