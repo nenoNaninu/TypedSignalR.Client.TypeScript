@@ -226,6 +226,11 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
 
             foreach (var parameter in method.Parameters)
             {
+                if (SymbolEqualityComparer.Default.Equals(parameter.Type, specialSymbols.CancellationTokenSymbol))
+                {
+                    continue;
+                }
+
                 ValidateType(context, parameter.Type, parameter.Locations[0], supportTypeSymbols, transpilationSourceAttributeSymbol);
             }
         }

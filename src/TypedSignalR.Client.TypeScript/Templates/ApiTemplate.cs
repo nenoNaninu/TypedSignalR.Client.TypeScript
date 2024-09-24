@@ -138,7 +138,7 @@ export type HubProxyFactoryProvider = {
             this.Write("        const __");
             this.Write(this.ToStringHelper.ToStringWithCulture(method.Name.Format(Options.NamingStyle)));
             this.Write(" = ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(method.WrapLambdaExpressionSyntax(Options)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(method.WrapLambdaExpressionSyntax(SpecialSymbols, Options)));
             this.Write(";\r\n");
  } 
             this.Write("\r\n");
