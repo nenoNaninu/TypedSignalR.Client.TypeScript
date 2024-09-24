@@ -3,7 +3,7 @@ using TypedSignalR.Client.TypeScript.Tests.Shared;
 
 namespace TypedSignalR.Client.TypeScript.Tests.Server.Hubs;
 
-public class ReceiverTestHub : Hub<IReceiver>, IReceiverTestHub
+public class ReceiverTestWithCancellationTokenHub : Hub<IReceiverWithCancellationToken>, IReceiverTestHub
 {
     private readonly string[] _message = new[] {
         "b1f7cd73-13b8-49bd-9557-ffb38859d18b",
@@ -32,7 +32,7 @@ public class ReceiverTestHub : Hub<IReceiver>, IReceiverTestHub
 
     private readonly ILogger<ReceiverTestHub> _logger;
 
-    public ReceiverTestHub(ILogger<ReceiverTestHub> logger)
+    public ReceiverTestWithCancellationTokenHub(ILogger<ReceiverTestHub> logger)
     {
         _logger = logger;
     }
@@ -43,12 +43,12 @@ public class ReceiverTestHub : Hub<IReceiver>, IReceiverTestHub
 
         for (int i = 0; i < 17; i++)
         {
-            await this.Clients.Caller.Notify();
+            await this.Clients.Caller.Notify(this.Context.ConnectionAborted);
         }
 
         for (int i = 0; i < _message.Length; i++)
         {
-            await this.Clients.Caller.ReceiveMessage(_message[i], i);
+            await this.Clients.Caller.ReceiveMessage(_message[i], i, this.Context.ConnectionAborted);
         }
 
         for (int i = 0; i < _guids.Length; i++)
