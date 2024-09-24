@@ -111,7 +111,7 @@ class <#= receiverType.Name #>_Binder implements ReceiverRegister<<#= receiverTy
     public readonly register = (connection: HubConnection, receiver: <#= receiverType.Name #>): Disposable => {
 
 <# foreach(var method in receiverType.Methods) { #>
-        const __<#= method.Name.Format(Options.NamingStyle) #> = <#= method.WrapLambdaExpressionSyntax(SpecialSymbols, Options) #>;
+        const __<#= method.Name.Format(Options.NamingStyle) #> = <#= method.TranslateReceiverMethodIntoLambdaExpressionSyntax(SpecialSymbols, Options) #>;
 <# } #>
 
 <# foreach(var method in receiverType.Methods) { #>

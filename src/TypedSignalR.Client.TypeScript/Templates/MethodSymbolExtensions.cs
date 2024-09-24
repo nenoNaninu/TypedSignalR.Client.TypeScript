@@ -6,15 +6,34 @@ namespace TypedSignalR.Client.TypeScript.Templates;
 
 internal static class MethodSymbolExtensions
 {
-    public static string WrapLambdaExpressionSyntax(this IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
+    public static string TranslateReceiverMethodIntoLambdaExpressionSyntax(this IMethodSymbol receiverMethodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
     {
-        if (methodSymbol.Parameters.Length == 0)
+        if (receiverMethodSymbol.Parameters.Length == 0)
         {
-            return $"() => receiver.{methodSymbol.Name.Format(options.MethodStyle)}()";
+            return $"() => receiver.{receiverMethodSymbol.Name.Format(options.MethodStyle)}()";
         }
 
-        var parameters = ParametersToTypeArray(methodSymbol, specialSymbols, options);
-        return $"(...args: {parameters}) => receiver.{methodSymbol.Name.Format(options.MethodStyle)}(...args)";
+        if (receiverMethodSymbol.Parameters.Length == 1
+            // Ignore if the last parameter of a receiver's method is a CancellationToken.
+            && SymbolEqualityComparer.Default.Equals(receiverMethodSymbol.Parameters[0].Type, specialSymbols.CancellationTokenSymbol))
+        {
+            return $"() => receiver.{receiverMethodSymbol.Name.Format(options.MethodStyle)}()";
+        }
+
+        var parameters = ParametersToTypeArray(receiverMethodSymbol, specialSymbols, options);
+
+        return $"(...args: {parameters}) => receiver.{receiverMethodSymbol.Name.Format(options.MethodStyle)}(...args)";
+
+        static string ParametersToTypeArray(IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
+        {
+            var methodParameters = SymbolEqualityComparer.Default.Equals(methodSymbol.Parameters.Last().Type, specialSymbols.CancellationTokenSymbol)
+                ? methodSymbol.Parameters.SkipLast(1) // Ignore if the last parameter of a receiver's method is a CancellationToken.
+                : methodSymbol.Parameters;
+
+            var parameters = methodParameters.Select(x => TypeMapper.MapTo(x.Type, options));
+
+            return $"[{string.Join(", ", parameters)}]";
+        }
     }
 
     public static string CreateMethodString(this IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
@@ -76,15 +95,6 @@ internal static class MethodSymbolExtensions
         }
 
         return TypeMapper.MapTo(methodSymbol.ReturnType, options);
-    }
-
-    private static string ParametersToTypeArray(IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
-    {
-        var parameters = methodSymbol.Parameters
-            .Where(x => !SymbolEqualityComparer.Default.Equals(x.Type, specialSymbols.CancellationTokenSymbol))
-            .Select(x => TypeMapper.MapTo(x.Type, options));
-
-        return $"[{string.Join(", ", parameters)}]";
     }
 
     private static string CreateUnaryMethodString(IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)

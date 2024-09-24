@@ -138,7 +138,7 @@ export type HubProxyFactoryProvider = {
             this.Write("        const __");
             this.Write(this.ToStringHelper.ToStringWithCulture(method.Name.Format(Options.NamingStyle)));
             this.Write(" = ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(method.WrapLambdaExpressionSyntax(SpecialSymbols, Options)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(method.TranslateReceiverMethodIntoLambdaExpressionSyntax(SpecialSymbols, Options)));
             this.Write(";\r\n");
  } 
             this.Write("\r\n");
@@ -184,7 +184,7 @@ export type HubProxyFactoryProvider = {
         /// <summary>
         /// The string builder that generation-time code is using to assemble generated output
         /// </summary>
-        protected System.Text.StringBuilder GenerationEnvironment
+        public System.Text.StringBuilder GenerationEnvironment
         {
             get
             {
