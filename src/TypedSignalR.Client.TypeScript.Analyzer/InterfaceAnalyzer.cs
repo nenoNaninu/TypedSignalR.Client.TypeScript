@@ -127,7 +127,7 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
     };
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-    => ImmutableArray.Create(AnnotationRule, HubAttributeAnnotationRule, ReceiverAttributeAnnotationRule, UnsupportedTypeRule, HubMethodReturnTypeRule, ReceiverMethodReturnTypeRule);
+        => ImmutableArray.Create(AnnotationRule, HubAttributeAnnotationRule, ReceiverAttributeAnnotationRule, UnsupportedTypeRule, HubMethodReturnTypeRule, ReceiverMethodReturnTypeRule);
 
     public override void Initialize(AnalysisContext context)
     {
@@ -224,12 +224,22 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
             // Return type must be Task or Task<T>
             ValidateReceiverReturnType(context, method, supportTypeSymbols, transpilationSourceAttributeSymbol, specialSymbols);
 
-            foreach (var parameter in method.Parameters)
+            // Validate method parameters type
+            for (int i = 0; i < method.Parameters.Length; i++)
             {
-                ValidateType(context, parameter.Type, parameter.Locations[0], supportTypeSymbols, transpilationSourceAttributeSymbol);
+                if (IsLast(i, method.Parameters.Length)
+                    // It is allowed to pass a CancellationToken as the last parameter of the receiver's method.
+                    && SymbolEqualityComparer.Default.Equals(method.Parameters[i].Type, specialSymbols.CancellationTokenSymbol))
+                {
+                    continue;
+                }
+
+                ValidateType(context, method.Parameters[i].Type, method.Parameters[i].Locations[0], supportTypeSymbols, transpilationSourceAttributeSymbol);
             }
         }
     }
+
+    private static bool IsLast(int index, int length) => index == length - 1;
 
     private static void ValidateType(
         SymbolAnalysisContext context,
@@ -399,7 +409,7 @@ public class InterfaceAnalyzer : DiagnosticAnalyzer
         {
             var typeArg = namedReturnTypeSymbol.TypeArguments[0];
             ValidateType(context, typeArg, location, supportTypeSymbols, transpilationSourceAttribute);
-            
+
             return;
         }
 
