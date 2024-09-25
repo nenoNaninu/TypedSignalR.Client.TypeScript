@@ -30,9 +30,9 @@ public class ReceiverTestWithCancellationTokenHub : Hub<IReceiverWithCancellatio
         "2022-02-06",
     };
 
-    private readonly ILogger<ReceiverTestHub> _logger;
+    private readonly ILogger<ReceiverTestWithCancellationTokenHub> _logger;
 
-    public ReceiverTestWithCancellationTokenHub(ILogger<ReceiverTestHub> logger)
+    public ReceiverTestWithCancellationTokenHub(ILogger<ReceiverTestWithCancellationTokenHub> logger)
     {
         _logger = logger;
     }
