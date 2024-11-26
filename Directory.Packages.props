@@ -6,18 +6,18 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageVersion Include="AspNetCore.SignalR.OpenTelemetry" Version="1.4.0" />
-        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
-        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.4.0" />
-        <PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.4.0" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.8.0" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.8.0" />
         <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" />
         <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
         <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.10" />
         <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="8.0.10" />
         <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.Json" Version="8.0.10" />
-        <PackageVersion Include="Microsoft.Build" Version="17.7.2" />
-        <PackageVersion Include="Microsoft.Build.Locator" Version="1.6.10" />
-        <PackageVersion Include="Tapper" Version="1.12.0" />
-        <PackageVersion Include="Tapper.Attributes" Version="1.12.0" />
+        <PackageVersion Include="Microsoft.Build" Version="17.11.4" />
+        <PackageVersion Include="Microsoft.Build.Locator" Version="1.7.8" />
+        <PackageVersion Include="Tapper" Version="1.13.0-preview2" />
+        <PackageVersion Include="Tapper.Attributes" Version="1.13.0-preview2" />
         <PackageVersion Include="TypedSignalR.Client" Version="3.6.0" />
         <PackageVersion Include="TypedSignalR.Client.Attributes" Version="1.1.0" />
         <PackageVersion Include="TypedSignalR.Client.DevTools" Version="1.2.4" />
