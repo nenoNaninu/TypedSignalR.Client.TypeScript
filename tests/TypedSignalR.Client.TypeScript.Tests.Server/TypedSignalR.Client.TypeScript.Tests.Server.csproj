@@ -17,10 +17,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.Json" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-      <PackageReference Include="AspNetCore.SignalR.OpenTelemetry" />
+        <PackageReference Include="AspNetCore.SignalR.OpenTelemetry" />
     </ItemGroup>
 
 </Project>
