@@ -16,25 +16,25 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        DOTNET_VERSION: ["8.0.x", "7.0.x"]
+        DOTNET_VERSION: ["9.0.x", "8.0.x"]
 
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ matrix.DOTNET_VERSION }}
+          dotnet-version: 9.0.x
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - if: matrix.DOTNET_VERSION == '7.0.x'
-        run: echo "DOTNET_TFM=net7.0" >> $GITHUB_ENV
-
       - if: matrix.DOTNET_VERSION == '8.0.x'
         run: echo "DOTNET_TFM=net8.0" >> $GITHUB_ENV
+
+      - if: matrix.DOTNET_VERSION == '9.0.x'
+        run: echo "DOTNET_TFM=net9.0" >> $GITHUB_ENV
 
       - name: Restore dependencies
         run: dotnet restore
