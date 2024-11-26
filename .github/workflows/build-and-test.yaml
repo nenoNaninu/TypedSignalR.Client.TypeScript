@@ -15,6 +15,7 @@ jobs:
     name: build-and-test
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         DOTNET_VERSION: ["9.0.x", "8.0.x"]
 
