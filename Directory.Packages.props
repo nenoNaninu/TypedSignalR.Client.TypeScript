@@ -6,6 +6,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageVersion Include="AspNetCore.SignalR.OpenTelemetry" Version="1.4.0" />
+        <PackageVersion Include="Cocona" Version="2.2.0" />
         <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
         <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.8.0" />
         <PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.8.0" />
@@ -23,7 +24,6 @@
         <PackageVersion Include="TypedSignalR.Client.Attributes" Version="1.1.0" />
         <PackageVersion Include="TypedSignalR.Client.DevTools" Version="1.2.4" />
         <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.9.0" />
-        <PackageVersion Include="ConsoleAppFramework" Version="4.2.4" />
         <PackageVersion Include="MessagePack" Version="2.5.187" />
         <PackageVersion Include="MessagePack.AspNetCoreMvcFormatter" Version="2.5.129" />
     </ItemGroup>
