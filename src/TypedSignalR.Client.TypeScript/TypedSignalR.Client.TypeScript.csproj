@@ -23,6 +23,10 @@
         <PackageReference Include="Tapper" />
     </ItemGroup>
 
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+        <PackageReference Include="System.Text.Json" />
+    </ItemGroup>
+
     <ItemGroup>
         <None Update="Templates\ApiTemplate.tt">
             <Generator>TextTemplatingFilePreprocessor</Generator>
