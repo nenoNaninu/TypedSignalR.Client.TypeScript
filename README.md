@@ -51,7 +51,7 @@ You only need to execute one command to analyze your C# code and generate TypeSc
 Please see the [Install Using .NET Tool](#install-using-net-tool) and [Usage](#usage) sections for more information.
 
 ```bash
-dotnet tsrts --project path/to/Project.csproj --output generated
+$ dotnet tsrts --project path/to/Project.csproj --output generated
 ```
 
 ```ts
@@ -122,11 +122,11 @@ Use `TypedSignalR.Client.TypeScript.Generatorr`(CLI Tool) to generate TypeScript
 ```bash
 # install
 # TypedSignalR.Client.TypeScript CLI (dotnet tool) requires .NET 7, but your app TFM can use .NET 6, etc.
-dotnet tool install --global TypedSignalR.Client.TypeScript.Generator
-dotnet tsrts help
+$ dotnet tool install --global TypedSignalR.Client.TypeScript.Generator
+$ dotnet tsrts help
 
 # update
-dotnet tool update --global TypedSignalR.Client.TypeScript.Generator
+$ dotnet tool update --global TypedSignalR.Client.TypeScript.Generator
 ```
 
 ## Usage
@@ -134,9 +134,9 @@ dotnet tool update --global TypedSignalR.Client.TypeScript.Generator
 First, add the following packages to your project. TypedSignalR.Client.TypeScript.Analyzer is optional, but recommended.
 
 ```bash
-dotnet add package TypedSignalR.Client.TypeScript.Attributes
-dotnet add package TypedSignalR.Client.TypeScript.Analyzer (optional, but recommended.)
-dotnet add package Tapper.Analyzer (optional, but recommended.)
+$ dotnet add package TypedSignalR.Client.TypeScript.Attributes
+$ dotnet add package TypedSignalR.Client.TypeScript.Analyzer (optional, but recommended.)
+$ dotnet add package Tapper.Analyzer (optional, but recommended.)
 ```
 
 By adding `TypedSignalR.Client.TypeScript.Attributes` package, you can use three attributes.
@@ -180,7 +180,7 @@ Finally, enter the following command.
 This command analyzes C# and generates TypeScript code.
 
 ```bash
-dotnet tsrts --project path/to/Project.csproj --output generated
+$ dotnet tsrts --project path/to/Project.csproj --output generated
 ```
 
 The generated code can be used as follows.
@@ -394,7 +394,7 @@ builder.Services.AddSignalR()
 If you do not set any options in `AddMessagePackProtocol`, use the following command.
 
 ```bash
-dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none --enum name
+$ dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none --enum name
 ```
 
 ### Recommended Configuration
@@ -418,7 +418,7 @@ builder.Services.AddSignalR()
 If you set up the above configuration, use the following command
 
 ```bash
-dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none
+$ dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none
 ```
 
 ## Related Work
