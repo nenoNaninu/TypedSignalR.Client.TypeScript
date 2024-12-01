@@ -1,16 +1,13 @@
 using Cocona;
 using Microsoft.Build.Locator;
-using Microsoft.Extensions.Logging;
 using TypedSignalR.Client.TypeScript;
+using TypedSignalR.Client.TypeScript.Logging;
 
 MSBuildLocator.RegisterDefaults();
 
 var builder = CoconaApp.CreateBuilder();
 
-builder.Logging.AddSimpleConsole(options =>
-{
-    options.SingleLine = true;
-});
+builder.Logging.AddSimpleConsoleApp();
 
 var app = builder.Build();
 
