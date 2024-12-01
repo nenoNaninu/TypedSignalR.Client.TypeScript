@@ -25,21 +25,21 @@ public class App : CoconaConsoleAppBase
     }
 
     public async Task Transpile(
-        [Option('p', Description = "Path to the project file (XXX.csproj)")]
+        [Option('p', Description = "Path to the project file (Xxx.csproj)")]
         string project,
         [Option('o', Description ="Output directory")]
         string output,
-        [Option("eol", Description ="lf / crlf / cr")]
+        [Option("eol", Description ="End of line")]
         NewLineOption newLine = NewLineOption.Lf,
         [Option("asm", Description ="Flag whether to extend the transpile target to the referenced assembly.")]
         bool assemblies = false,
-        [Option('s', Description ="JSON / MessagePack : The output type will be suitable for the selected serializer.")]
+        [Option('s', Description ="The output type will be suitable for the selected serializer.")]
         SerializerOption serializer = SerializerOption.Json,
-        [Option('n', Description ="camelCase (default) / PascalCase / none (The name in C# is used as it is.)")]
+        [Option('n', Description ="Naming style. If none is selected, the C# name is used as it is.")]
         NamingStyle namingStyle = NamingStyle.CamelCase,
-        [Option(Description ="value (default) / name / nameCamel / NamePascal / union / unionCamel / UnionPascal")]
+        [Option(Description ="Enum representation style")]
         EnumStyle @enum = EnumStyle.Value,
-        [Option('m', Description = "camelCase (default) / PascalCase / none (The name in C# is used as it is.)")]
+        [Option('m', Description = "Method naming style. If none is selected, the C# name is used as it is.")]
         MethodStyle method = MethodStyle.CamelCase,
         [Option("attr", Description ="The flag whether attributes such as JsonPropertyName should affect transpilation.")]
         bool attribute = true)
