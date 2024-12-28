@@ -26,7 +26,7 @@
         },
         "RefAsm": {
             "commandName": "Project",
-            "commandLineArgs": "--project ..\\..\\..\\..\\..\\tests\\TypedSignalR.Client.TypeScript.Tests.Server\\TypedSignalR.Client.TypeScript.Tests.Server.csproj --output ..\\..\\..\\..\\..\\tests\\TypeScriptTests\\src\\generated2 -asm true"
+            "commandLineArgs": "--project ..\\..\\..\\..\\..\\tests\\TypedSignalR.Client.TypeScript.Tests.Server\\TypedSignalR.Client.TypeScript.Tests.Server.csproj --output ..\\..\\..\\..\\..\\tests\\TypeScriptTests\\src\\generated2 --asm true"
         }
     }
 }
