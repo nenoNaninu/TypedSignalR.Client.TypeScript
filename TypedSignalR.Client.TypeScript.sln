@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TypedSignalR.Client.TypeScr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TypedSignalR.Client.TypeScript.Tests.Shared", "tests\TypedSignalR.Client.TypeScript.Tests.Shared\TypedSignalR.Client.TypeScript.Tests.Shared.csproj", "{F8D9F38E-E113-4DB8-B62F-CB60FCD299D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypedSignalR.Client.TypeScript.Tests.Ref", "tests\TypedSignalR.Client.TypeScript.Tests.Ref\TypedSignalR.Client.TypeScript.Tests.Ref.csproj", "{6F69E6E9-DDDE-4DA3-9F7D-D1ACE082609B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{F8D9F38E-E113-4DB8-B62F-CB60FCD299D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8D9F38E-E113-4DB8-B62F-CB60FCD299D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8D9F38E-E113-4DB8-B62F-CB60FCD299D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F69E6E9-DDDE-4DA3-9F7D-D1ACE082609B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F69E6E9-DDDE-4DA3-9F7D-D1ACE082609B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F69E6E9-DDDE-4DA3-9F7D-D1ACE082609B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F69E6E9-DDDE-4DA3-9F7D-D1ACE082609B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +105,7 @@ Global
 		{486D6624-E55A-45CC-B1E5-07024A29BCD1} = {2F2FEF5E-8426-4223-A386-69726CE5F564}
 		{2A6A7DAF-BA68-435D-822B-03607C3063E1} = {E898FC3D-C2A0-4CC1-8991-F5D4D8AF1501}
 		{F8D9F38E-E113-4DB8-B62F-CB60FCD299D6} = {E898FC3D-C2A0-4CC1-8991-F5D4D8AF1501}
+		{6F69E6E9-DDDE-4DA3-9F7D-D1ACE082609B} = {E898FC3D-C2A0-4CC1-8991-F5D4D8AF1501}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {49059161-99AF-451C-9E97-6BE55392E455}
