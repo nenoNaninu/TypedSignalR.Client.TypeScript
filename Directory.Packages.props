@@ -16,11 +16,11 @@
         <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
         <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
         <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.10" />
-        <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="8.0.10" />
+        <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="9.0.1" />
         <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.Json" Version="8.0.10" />
         <PackageVersion Include="Microsoft.Build" Version="17.11.4" />
         <PackageVersion Include="Microsoft.Build.Locator" Version="1.7.8" />
-        <PackageVersion Include="System.Text.Json" Version="9.0.0" />
+        <PackageVersion Include="System.Text.Json" Version="9.0.1" />
         <PackageVersion Include="Tapper" Version="1.13.1" />
         <PackageVersion Include="Tapper.Attributes" Version="1.13.1" />
         <PackageVersion Include="TypedSignalR.Client" Version="3.6.0" />
