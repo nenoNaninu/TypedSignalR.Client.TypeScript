@@ -26,7 +26,7 @@
         <PackageVersion Include="TypedSignalR.Client" Version="3.6.0" />
         <PackageVersion Include="TypedSignalR.Client.Attributes" Version="1.1.0" />
         <PackageVersion Include="TypedSignalR.Client.DevTools" Version="1.2.4" />
-        <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+        <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.0" />
         <PackageVersion Include="MessagePack" Version="2.5.187" />
         <PackageVersion Include="MessagePack.AspNetCoreMvcFormatter" Version="2.5.129" />
     </ItemGroup>
