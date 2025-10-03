@@ -22,7 +22,6 @@ TypedSignalR.Client.TypeScript is a library/CLI tool that analyzes SignalR hub a
   - [Recommended Configuration](#recommended-configuration)
 - [Related Work](#related-work)
 
-
 ## Why TypedSignalR.Client.TypeScript?
 
 Implementing SignalR Hubs (server-side) in C# can be strongly typed by using interfaces, but the [TypeScript SignalR client](https://github.com/dotnet/aspnetcore/tree/main/src/SignalR/clients/ts/signalr) is not strongly typed. To call Hub methods, we must specify the method defined in Hub using a string. We also have to determine the return type manually. Moreover, registering client methods called from a server also requires specifying the method name as a string, and we must set parameter types manually.
@@ -82,7 +81,7 @@ export type ReceiverRegisterProvider = {
     (receiverType: "IReceiver2"): ReceiverRegister<IReceiver2>;
 }
 
-export const getHubProxyFactory : HubProxyFactoryProvider = ...; 
+export const getHubProxyFactory : HubProxyFactoryProvider = ...;
 export const getReceiverRegister : ReceiverRegisterProvider = ...;
 ```
 
@@ -149,6 +148,8 @@ Then, annotate `HubAttribute` and `ReceiverAttribute` to each interface definiti
 Also, annotate `TranspilationSourceAttribute` to user-defined types used in the interface definition of Hub and Receiver.
 Adding this attribute is relatively easy if you add the [TypedSignalR.Client.TypeScript.Analyzer](#analyzer) to your project.
 
+> Make sure that all your hubs, receivers and models are within a namespace, otherwise the generator will not work.
+
 ```cs
 using Tapper;
 using TypedSignalR.Client;
@@ -180,7 +181,15 @@ Finally, enter the following command.
 This command analyzes C# and generates TypeScript code.
 
 ```bash
-$ dotnet tsrts --project path/to/Project.csproj --output generated
+$ dotnet tsrts --project path/to/Project.csproj --output generated --asm true
+```
+
+Or add it to your build steps in your csproj.
+
+```xml
+<Target Name="SignalRClient" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)'!='Release'">
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet tsrts --project path/to/Project.csproj --output generated --asm true" ContinueOnError="WarnAndContinue" />
+</Target>
 ```
 
 The generated code can be used as follows.
@@ -224,7 +233,6 @@ const participants = await hubProxy.getParticipants()
 // ...
 ```
 
-
 ## Supported Types
 
 TypedSignalR.Client.TypeScript uses a library named [nenoNaninu/Tapper](https://github.com/nenoNaninu/Tapper) to convert C# types to TypeScript types.
@@ -266,11 +274,11 @@ public record CustomType2(float Value, DateTime ReleaseDate);
 ```
 
 ## Analyzer
+
 User-defined types used in parameters and return values of methods defined within interfaces annotated with `Hub` or `Receiver` must be annotated with `TranspilationSource`.
 The Analyzer checks in real-time whether this rule is followed. If not, the IDE will tell you.
 
 ![analyzer](https://user-images.githubusercontent.com/27144255/170770137-28790bcf-08d1-403f-9625-2cdf6f390e76.gif)
-
 
 ## Streaming Support
 
@@ -349,7 +357,7 @@ If you use `Task<T>` for the method return type in the receiver interface, you c
 [Receiver]
 public interface IMyHubReceiver
 {
-    // Return type: Task<T> 
+    // Return type: Task<T>
     Task<Guid> GetGuidFromClient();
 }
 ```
@@ -422,6 +430,7 @@ $ dotnet tsrts --project path/to/Project.csproj --output generated --serializer 
 ```
 
 ## Related Work
+
 - [nenoNaninu/TypedSignalR.Client](https://github.com/nenoNaninu/TypedSignalR.Client)
   - C# Source Generator to create strongly typed SignalR clients.
 - [nenoNaninu/TypedSignalR.Client.DevTools](https://github.com/nenoNaninu/TypedSignalR.Client.DevTools)
