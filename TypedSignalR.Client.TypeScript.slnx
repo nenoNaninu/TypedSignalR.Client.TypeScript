@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/samples/">
+    <Project Path="samples/App.Interfaces/App.Interfaces.csproj" />
+    <Project Path="samples/Console.CSharp/Console.CSharp.csproj" />
+    <Project Path="samples/SampleServer/SampleServer.csproj" />
+  </Folder>
+  <Folder Name="/sandbox/">
+    <Project Path="sandbox/SignalRServer.Shared/SignalRServer.Shared.csproj" />
+    <Project Path="sandbox/SignalRServer/SignalRServer.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/TypedSignalR.Client.TypeScript.Analyzer/TypedSignalR.Client.TypeScript.Analyzer.csproj" />
+    <Project Path="src/TypedSignalR.Client.TypeScript.Attributes/TypedSignalR.Client.TypeScript.Attributes.csproj" />
+    <Project Path="src/TypedSignalR.Client.TypeScript.Generator/TypedSignalR.Client.TypeScript.Generator.csproj" />
+    <Project Path="src/TypedSignalR.Client.TypeScript/TypedSignalR.Client.TypeScript.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TypedSignalR.Client.TypeScript.Tests.Server/TypedSignalR.Client.TypeScript.Tests.Server.csproj" />
+    <Project Path="tests/TypedSignalR.Client.TypeScript.Tests.Shared/TypedSignalR.Client.TypeScript.Tests.Shared.csproj" />
+  </Folder>
+</Solution>
