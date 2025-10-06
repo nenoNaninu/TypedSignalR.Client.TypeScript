@@ -11,6 +11,7 @@ TypedSignalR.Client.TypeScript is a library/CLI tool that analyzes SignalR hub a
 - [Packages](#packages)
   - [Install Using .NET Tool](#install-using-net-tool)
 - [Usage](#usage)
+- [Transpile the Types Contained in Referenced Assemblies](#transpile-the-types-contained-in-referenced-assemblies)
 - [Supported Types](#supported-types)
   - [Built-in Supported Types](#built-in-supported-types)
   - [User Defined Types](#user-defined-types)
@@ -20,6 +21,8 @@ TypedSignalR.Client.TypeScript is a library/CLI tool that analyzes SignalR hub a
 - [MessagePack Hub Protocol Support](#messagepack-hub-protocol-support)
   - [Default Configuration in ASP.NET Core](#default-configuration-in-aspnet-core)
   - [Recommended Configuration](#recommended-configuration)
+- [GitHub Actions Integration](#github-actions-integration)
+- [MSBuild Integration](#msbuild-integration)
 - [Related Work](#related-work)
 
 ## Why TypedSignalR.Client.TypeScript?
@@ -148,7 +151,7 @@ Then, annotate `HubAttribute` and `ReceiverAttribute` to each interface definiti
 Also, annotate `TranspilationSourceAttribute` to user-defined types used in the interface definition of Hub and Receiver.
 Adding this attribute is relatively easy if you add the [TypedSignalR.Client.TypeScript.Analyzer](#analyzer) to your project.
 
-> Make sure that all your hubs, receivers and models are within a namespace, otherwise the generator will not work.
+> Make sure that all your types to be transpiled are within a namespace.
 
 ```cs
 using Tapper;
@@ -181,15 +184,7 @@ Finally, enter the following command.
 This command analyzes C# and generates TypeScript code.
 
 ```bash
-$ dotnet tsrts --project path/to/Project.csproj --output generated --asm true
-```
-
-Or add it to your build steps in your csproj.
-
-```xml
-<Target Name="SignalRClient" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)'!='Release'">
-    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet tsrts --project path/to/Project.csproj --output generated --asm true" ContinueOnError="WarnAndContinue" />
-</Target>
+$ dotnet tsrts --project path/to/Project.csproj --output generated
 ```
 
 The generated code can be used as follows.
@@ -231,6 +226,14 @@ await hubProxy.join(username)
 const participants = await hubProxy.getParticipants()
 
 // ...
+```
+
+## Transpile the Types Contained in Referenced Assemblies
+
+By default, only types defined in the project specified by the --project option are targeted for transpiling. By passing the --asm true option, types contained in project/package reference assemblies will also be targeted for transpiling.
+
+```bash
+$ dotnet tsrts --project path/to/Project.csproj --output generated -asm true
 ```
 
 ## Supported Types
@@ -427,6 +430,57 @@ If you set up the above configuration, use the following command
 
 ```bash
 $ dotnet tsrts --project path/to/Project.csproj --output generated --serializer MessagePack --naming-style none
+```
+
+## GitHub Actions Integration
+
+```yaml
+name: typedsignalr-typescript-code-generator
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: "9.0.x"
+  DOTNET_NOLOGO: true
+
+jobs:
+  typedsignalr-typescript-code-generator:
+    name: typedsignalr-typescript-code-generator
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build All
+        run: dotnet build --no-restore
+
+      - run: dotnet tool install --global TypedSignalR.Client.TypeScript.Generator
+
+      - run: dotnet tsrts --project ./xxx/yyyy/zzz.csproj --output ${{ github.workspace }}/generated
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: generated
+          path: ${{ github.workspace }}/generated
+```
+
+## MSBuild Integration
+
+Add it to your build steps in your csproj.
+
+```xml
+<Target Name="SignalRClient" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)'!='Release'">
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet tsrts --project path/to/Project.csproj --output generated --asm true" ContinueOnError="WarnAndContinue" />
+</Target>
 ```
 
 ## Related Work
