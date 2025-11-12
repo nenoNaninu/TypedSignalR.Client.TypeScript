@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        DOTNET_VERSION: ["9.0.x", "8.0.x"]
+        DOTNET_VERSION: ["10.0.x", "9.0.x", "8.0.x"]
 
     steps:
       - uses: actions/checkout@v4
@@ -25,6 +25,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
+            10.0.x
             9.0.x
             8.0.x
 
@@ -38,6 +39,9 @@ jobs:
 
       - if: matrix.DOTNET_VERSION == '9.0.x'
         run: echo "DOTNET_TFM=net9.0" >> $GITHUB_ENV
+
+      - if: matrix.DOTNET_VERSION == '10.0.x'
+        run: echo "DOTNET_TFM=net10.0" >> $GITHUB_ENV
 
       - name: Restore dependencies
         run: dotnet restore
