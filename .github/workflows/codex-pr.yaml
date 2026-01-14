@@ -1,0 +1,92 @@
+name: Codex PR Creation
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  codex-pr:
+    name: Create PR with Codex
+    runs-on: ubuntu-latest
+    if: |
+      startsWith(github.event.comment.body, '/codex') &&
+      github.event.comment.user.login == github.repository_owner
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Codex
+        id: run_codex
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt: |
+            Issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}
+            
+            ${{ github.event.issue.body }}
+            
+            This repository is a TypeScript SignalR client library.
+            Please implement code changes to address the above issue.
+            Always include tests for the changes you make.
+          sandbox: workspace-write
+          safety-strategy: drop-sudo
+
+      - name: Create Pull Request
+        id: create_pr
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: codex/issue-${{ github.event.issue.number }}
+          branch-suffix: timestamp
+          commit-message: Address issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}
+          title: '[Codex] Address issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}'
+          body: |
+            This PR was automatically created by Codex to address issue #${{ github.event.issue.number }}.
+          base: main
+
+      - name: Comment on issue
+        if: steps.create_pr.outputs.pull-request-number != ''
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: `✅ PR created: #${{ steps.create_pr.outputs.pull-request-number }}
+
+            ${{ steps.create_pr.outputs.pull-request-url }}`,
+            });
+
+      - name: Comment on issue (no changes)
+        if: steps.create_pr.outputs.pull-request-number == ''
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: 'ℹ️ Codex ran but no changes were made.',
+            });
+
+      - name: Handle errors
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: '❌ An error occurred while running Codex. Please check the workflow logs.',
+            });
+
