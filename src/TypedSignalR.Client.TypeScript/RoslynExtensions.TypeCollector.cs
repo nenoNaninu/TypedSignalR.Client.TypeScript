@@ -68,6 +68,7 @@ internal static partial class RoslynExtensions
 
                 return attributes.Any(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, attributeSymbol));
             })
+            .Distinct<INamedTypeSymbol>(SymbolEqualityComparer.Default)
             .ToArray();
 
         return types;
@@ -100,6 +101,7 @@ internal static partial class RoslynExtensions
 
                 return false;
             })
+            .Distinct<INamedTypeSymbol>(SymbolEqualityComparer.Default)
             .ToArray();
 
         return types;
