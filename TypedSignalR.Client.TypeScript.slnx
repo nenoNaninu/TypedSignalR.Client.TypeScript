@@ -17,5 +17,6 @@
   <Folder Name="/tests/">
     <Project Path="tests/TypedSignalR.Client.TypeScript.Tests.Server/TypedSignalR.Client.TypeScript.Tests.Server.csproj" />
     <Project Path="tests/TypedSignalR.Client.TypeScript.Tests.Shared/TypedSignalR.Client.TypeScript.Tests.Shared.csproj" />
+    <Project Path="tests/TypedSignalR.Client.TypeScript.Tests/TypedSignalR.Client.TypeScript.Tests.csproj" />
   </Folder>
 </Solution>
