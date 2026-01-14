@@ -26,6 +26,7 @@ jobs:
         uses: openai/codex-action@v1
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          model: gpt-5.1-codex-max
           prompt: |
             Issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}
             
@@ -33,7 +34,7 @@ jobs:
             
             This repository is a TypeScript SignalR client library.
             Please implement code changes to address the above issue.
-            Always include tests for the changes you make.
+            Keep changes to a minimum and only modify what is necessary.
           sandbox: workspace-write
           safety-strategy: drop-sudo
 
@@ -48,6 +49,7 @@ jobs:
           body: |
             This PR was automatically created by Codex to address issue #${{ github.event.issue.number }}.
           base: main
+          token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
 
       - name: Comment on issue
         if: steps.create_pr.outputs.pull-request-number != ''
@@ -60,8 +62,6 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.payload.issue.number,
               body: `✅ PR created: #${{ steps.create_pr.outputs.pull-request-number }}
-
-            ${{ steps.create_pr.outputs.pull-request-url }}`,
             });
 
       - name: Comment on issue (no changes)
