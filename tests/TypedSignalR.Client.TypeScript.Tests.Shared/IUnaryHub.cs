@@ -43,11 +43,15 @@ public class MyResponseItem2
 }
 
 [Hub]
-public interface IUnaryHub
+public partial interface IUnaryHub
 {
     Task<string> Get();
     Task<int> Add(int x, int y);
     Task<string> Cat(string x, string y);
+}
+
+public partial interface IUnaryHub
+{
     Task<UserDefinedType> Echo(UserDefinedType instance);
     Task<MyEnum> EchoMyEnum(MyEnum myEnum);
     Task<MyResponseItem[]> RequestArray(MyRequestItem[] array);
