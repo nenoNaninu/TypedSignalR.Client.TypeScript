@@ -11,6 +11,7 @@ TypedSignalR.Client.TypeScript is a library/CLI tool that analyzes SignalR hub a
 - [Packages](#packages)
   - [Install Using .NET Tool](#install-using-net-tool)
 - [Usage](#usage)
+- [Nullable Style](#nullable-style)
 - [Transpile the Types Contained in Referenced Assemblies](#transpile-the-types-contained-in-referenced-assemblies)
 - [Supported Types](#supported-types)
   - [Built-in Supported Types](#built-in-supported-types)
@@ -54,6 +55,7 @@ Please see the [Install Using .NET Tool](#install-using-net-tool) and [Usage](#u
 
 ```bash
 $ dotnet tsrts --project path/to/Project.csproj --output generated
+$ dotnet tsrts --project path/to/Project.csproj --output generated --nullable null
 ```
 
 ```ts
@@ -187,6 +189,12 @@ This command analyzes C# and generates TypeScript code.
 $ dotnet tsrts --project path/to/Project.csproj --output generated
 ```
 
+If you want nullable members and nullable hub/receiver method types to use `null` instead of `undefined`, pass `--nullable null`.
+
+```bash
+$ dotnet tsrts --project path/to/Project.csproj --output generated --nullable null
+```
+
 The generated code can be used as follows.
 There are two important APIs that are generated.
 
@@ -228,6 +236,24 @@ const participants = await hubProxy.getParticipants()
 // ...
 ```
 
+## Nullable Style
+
+TypedSignalR.Client.TypeScript forwards Tapper's nullable strategy and also applies it to generated hub and receiver method signatures.
+
+Use the default `undefined` style to keep nullable reference type members as optional properties.
+
+```bash
+$ dotnet tsrts --project path/to/Project.csproj --output generated --nullable undefined
+```
+
+Use `null` when you want explicit `null` unions in generated TypeScript.
+
+```bash
+$ dotnet tsrts --project path/to/Project.csproj --output generated --nullable null
+```
+
+With `--nullable null`, a nullable C# property such as `string? Text` is emitted as `text: string | null`, and a nullable hub method such as `Task<string?> EchoNullableText(string? value)` is emitted with `string | null` in both the parameter and the return type.
+
 ## Transpile the Types Contained in Referenced Assemblies
 
 By default, only types defined in the project specified by the --project option are targeted for transpiling. By passing the --asm true option, types contained in project/package reference assemblies will also be targeted for transpiling.
@@ -244,7 +270,7 @@ Here is a brief introduction of which types are supported.
 
 ### Built-in Supported Types
 
-`bool` `byte` `sbyte` `char` `decimal` `double` `float` `int` `uint` `long` `ulong` `short` `ushort` `object` `string` `Uri` `Guid` `DateTime` `System.Nullable<T>` `byte[]` `T[]` `System.Array` `ArraySegment<T>` `List<T>` `LinkedList<T>` `Queue<T>` `Stack<T>` `HashSet<T>` `IEnumerable<T>` `IReadOnlyCollection<T>` `ICollection<T>` `IList<T>` `ISet<T>` `Dictionary<TKey, TValue>` `IDictionary<TKey, TValue>` `IReadOnlyDictionary<TKey, TValue>` `Tuple`
+`bool` `byte` `sbyte` `char` `decimal` `double` `float` `int` `uint` `long` `ulong` `short` `ushort` `object` `string` `Uri` `Guid` `DateTime` `System.Nullable<T>` (`undefined` or `null`) `byte[]` `T[]` `System.Array` `ArraySegment<T>` `List<T>` `LinkedList<T>` `Queue<T>` `Stack<T>` `HashSet<T>` `IEnumerable<T>` `IReadOnlyCollection<T>` `ICollection<T>` `IList<T>` `ISet<T>` `Dictionary<TKey, TValue>` `IDictionary<TKey, TValue>` `IReadOnlyDictionary<TKey, TValue>` `Tuple`
 
 ### User Defined Types
 
@@ -465,7 +491,7 @@ jobs:
 
       - run: dotnet tool install --global TypedSignalR.Client.TypeScript.Generator
 
-      - run: dotnet tsrts --project ./xxx/yyyy/zzz.csproj --output ${{ github.workspace }}/generated
+      - run: dotnet tsrts --project ./xxx/yyyy/zzz.csproj --output ${{ github.workspace }}/generated --nullable null
 
       - uses: actions/upload-artifact@v4
         with:
@@ -479,7 +505,7 @@ Add it to your build steps in your csproj.
 
 ```xml
 <Target Name="SignalRClient" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)'!='Release'">
-    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet tsrts --project path/to/Project.csproj --output generated --asm true" ContinueOnError="WarnAndContinue" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet tsrts --project path/to/Project.csproj --output generated --asm true --nullable null" ContinueOnError="WarnAndContinue" />
 </Target>
 ```
 
