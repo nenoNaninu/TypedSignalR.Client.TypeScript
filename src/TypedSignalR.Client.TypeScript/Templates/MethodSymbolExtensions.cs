@@ -30,7 +30,7 @@ internal static class MethodSymbolExtensions
                 ? methodSymbol.Parameters.SkipLast(1) // Ignore if the last parameter of a receiver's method is a CancellationToken.
                 : methodSymbol.Parameters;
 
-            var parameters = methodParameters.Select(x => TypeMapper.MapTo(x.Type, options));
+            var parameters = methodParameters.Select(x => TypeScriptTypeMapper.MapTo(x.Type, specialSymbols, options));
 
             return $"[{string.Join(", ", parameters)}]";
         }
@@ -52,7 +52,7 @@ internal static class MethodSymbolExtensions
     {
         var parameters = methodSymbol.Parameters
             .Where(x => !SymbolEqualityComparer.Default.Equals(x.Type, specialSymbols.CancellationTokenSymbol))
-            .Select(x => $"{x.Name}: {TypeMapper.MapTo(x.Type, options)}");
+            .Select(x => $"{x.Name}: {TypeScriptTypeMapper.MapTo(x.Type, specialSymbols, options)}");
 
         return string.Join(", ", parameters);
     }
@@ -77,7 +77,7 @@ internal static class MethodSymbolExtensions
         {
             var typeArg = (returnType as INamedTypeSymbol)!.TypeArguments[0];
 
-            return $"IStreamResult<{TypeMapper.MapTo(typeArg, options)}>";
+            return $"IStreamResult<{TypeScriptTypeMapper.MapTo(typeArg, specialSymbols, options)}>";
         }
 
         // Task<IAsyncEnumerable<T>>, Task<ChannelReader<T>>
@@ -90,11 +90,11 @@ internal static class MethodSymbolExtensions
             {
                 var typeArg2 = (typeArg as INamedTypeSymbol)!.TypeArguments[0];
 
-                return $"IStreamResult<{TypeMapper.MapTo(typeArg2, options)}>";
+                return $"IStreamResult<{TypeScriptTypeMapper.MapTo(typeArg2, specialSymbols, options)}>";
             }
         }
 
-        return TypeMapper.MapTo(methodSymbol.ReturnType, options);
+        return TypeScriptTypeMapper.MapTo(methodSymbol.ReturnType, specialSymbols, options);
     }
 
     private static string CreateUnaryMethodString(IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)

@@ -9,7 +9,9 @@ $ dotnet run --project ./tests/TypedSignalR.Client.TypeScript.Tests.Server/Typed
 
 Generate TypeScript code.
 ```
-$ dotnet tsrts --project ./tests/TypedSignalR.Client.TypeScript.Tests.Shared/TypedSignalR.Client.TypeScript.Tests.Shared.csproj --out ./tests/TypeScriptTests/src/generated
+$ dotnet tsrts --project ./tests/TypedSignalR.Client.TypeScript.Tests.Shared/TypedSignalR.Client.TypeScript.Tests.Shared.csproj --output ./tests/TypeScriptTests/src/generated/json
+$ dotnet tsrts --project ./tests/TypedSignalR.Client.TypeScript.Tests.Shared/TypedSignalR.Client.TypeScript.Tests.Shared.csproj --output ./tests/TypeScriptTests/src/generated/json-null --nullable null
+$ dotnet tsrts --project ./tests/TypedSignalR.Client.TypeScript.Tests.Shared/TypedSignalR.Client.TypeScript.Tests.Shared.csproj --output ./tests/TypeScriptTests/src/generated/msgpack --serializer MessagePack --naming-style none
 ```
 
 Launch tests.
