@@ -46,6 +46,8 @@ public class MyResponseItem2
 public partial interface IUnaryHub
 {
     Task<string> Get();
+    [Microsoft.AspNetCore.SignalR.HubMethodName("UnaryHub_GetWithCustomName")]
+    Task<string> GetWithCustomName();
     Task<int> Add(int x, int y);
     Task<string> Cat(string x, string y);
 }

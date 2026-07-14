@@ -30,6 +30,9 @@ const testMethod = async () => {
         const r1 = await hubProxy.get();
         expect(r1).toEqual("TypedSignalR.Client.TypeScript");
 
+        const renamed = await hubProxy.getWithCustomName();
+        expect(renamed).toEqual("HubMethodNameAttribute");
+
         const x = getRandomInt(1000);
         const y = getRandomInt(1000);
 

@@ -6,6 +6,23 @@ namespace TypedSignalR.Client.TypeScript.Templates;
 
 internal static class MethodSymbolExtensions
 {
+    public static string GetSignalRMethodName(this IMethodSymbol methodSymbol)
+    {
+        var hubMethodName = methodSymbol
+            .GetAttributes()
+            .FirstOrDefault(x =>
+                x.AttributeClass?.ToDisplayString() ==
+                "Microsoft.AspNetCore.SignalR.HubMethodNameAttribute");
+
+        if (hubMethodName?.ConstructorArguments.Length == 1 &&
+            hubMethodName.ConstructorArguments[0].Value is string name)
+        {
+            return name;
+        }
+
+        return methodSymbol.Name;
+    }
+
     public static string TranslateReceiverMethodIntoLambdaExpressionSyntax(this IMethodSymbol receiverMethodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
     {
         if (receiverMethodSymbol.Parameters.Length == 0)
@@ -100,39 +117,42 @@ internal static class MethodSymbolExtensions
     private static string CreateUnaryMethodString(IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
     {
         var name = methodSymbol.Name.Format(options.MethodStyle);
+        var signalRMethodName = methodSymbol.GetSignalRMethodName();
         var parameters = methodSymbol.ParametersToTypeScriptString(specialSymbols, options);
         var returnType = methodSymbol.ReturnTypeToTypeScriptString(specialSymbols, options);
         var args = methodSymbol.ParametersToTypeScriptArgumentString(specialSymbols, options);
 
         return $@"
     public readonly {name} = async ({parameters}): {returnType} => {{
-        return await this.connection.invoke(""{methodSymbol.Name}""{args});
+        return await this.connection.invoke(""{signalRMethodName}""{args});
     }}";
     }
 
     private static string CreateServerToClientStreamingMethodString(IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
     {
         var name = methodSymbol.Name.Format(options.MethodStyle);
+        var signalRMethodName = methodSymbol.GetSignalRMethodName();
         var parameters = methodSymbol.ParametersToTypeScriptString(specialSymbols, options);
         var returnType = methodSymbol.ReturnTypeToTypeScriptString(specialSymbols, options);
         var args = methodSymbol.ParametersToTypeScriptArgumentString(specialSymbols, options);
 
         return $@"
     public readonly {name} = ({parameters}): {returnType} => {{
-        return this.connection.stream(""{methodSymbol.Name}""{args});
+        return this.connection.stream(""{signalRMethodName}""{args});
     }}";
     }
 
     private static string CreateClientToServerStreamingMethodString(IMethodSymbol methodSymbol, SpecialSymbols specialSymbols, ITypedSignalRTranspilationOptions options)
     {
         var name = methodSymbol.Name.Format(options.MethodStyle);
+        var signalRMethodName = methodSymbol.GetSignalRMethodName();
         var parameters = methodSymbol.ParametersToTypeScriptString(specialSymbols, options);
         var returnType = methodSymbol.ReturnTypeToTypeScriptString(specialSymbols, options);
         var args = methodSymbol.ParametersToTypeScriptArgumentString(specialSymbols, options);
 
         return $@"
     public readonly {name} = async ({parameters}): {returnType} => {{
-        return await this.connection.send(""{methodSymbol.Name}""{args});
+        return await this.connection.send(""{signalRMethodName}""{args});
     }}";
     }
 }
