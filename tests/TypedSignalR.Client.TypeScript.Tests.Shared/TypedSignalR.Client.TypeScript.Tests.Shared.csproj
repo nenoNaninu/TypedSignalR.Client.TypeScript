@@ -10,4 +10,8 @@
     <ProjectReference Include="..\..\src\TypedSignalR.Client.TypeScript.Attributes\TypedSignalR.Client.TypeScript.Attributes.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" />
+  </ItemGroup>
+
 </Project>
