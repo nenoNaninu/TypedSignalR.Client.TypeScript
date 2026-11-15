@@ -20,9 +20,9 @@ jobs:
         DOTNET_VERSION: ["10.0.x", "9.0.x", "8.0.x"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6.1.0
         with:
           dotnet-version: |
             10.0.x
@@ -30,7 +30,7 @@ jobs:
             8.0.x
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
 
