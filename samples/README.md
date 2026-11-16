@@ -1,6 +1,6 @@
 # Samples
 
-- .NET 6
+- .NET 11
 - node.js v16.14.2
 - yarn v1.22.17
 
