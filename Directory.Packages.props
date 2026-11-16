@@ -20,8 +20,8 @@
         <PackageVersion Include="Microsoft.Build" Version="17.11.48" />
         <PackageVersion Include="Microsoft.Build.Locator" Version="1.10.12" />
         <PackageVersion Include="System.Text.Json" Version="10.0.0" />
-        <PackageVersion Include="Tapper" Version="1.14.0" />
-        <PackageVersion Include="Tapper.Attributes" Version="1.14.0" />
+        <PackageVersion Include="Tapper" Version="1.15.0" />
+        <PackageVersion Include="Tapper.Attributes" Version="1.15.0" />
         <PackageVersion Include="TypedSignalR.Client" Version="3.6.0" />
         <PackageVersion Include="TypedSignalR.Client.Attributes" Version="1.1.0" />
         <PackageVersion Include="TypedSignalR.Client.DevTools" Version="1.2.4" />

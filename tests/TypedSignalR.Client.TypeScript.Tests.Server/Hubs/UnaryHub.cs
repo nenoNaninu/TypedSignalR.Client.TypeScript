@@ -40,6 +40,13 @@ public class UnaryHub : Hub, IUnaryHub
         return Task.FromResult(myEnum);
     }
 
+    public Task<string?> EchoNullableText(string? value)
+    {
+        _logger.Log(LogLevel.Information, "UnaryHub.EchoNullableText");
+
+        return Task.FromResult(value);
+    }
+
     public Task<string> Get()
     {
         _logger.Log(LogLevel.Information, "UnaryHub.Get");

@@ -5,7 +5,6 @@ using System.Xml;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using Tapper;
-using Tapper.TypeMappers;
 
 namespace TypedSignalR.Client.TypeScript;
 
@@ -263,7 +262,7 @@ internal class InterfaceTranspiler
                 return;
             }
 
-            codeWriter.Append($"{parameter.Name}: {TypeMapper.MapTo(parameter.Type, options)}");
+            codeWriter.Append($"{parameter.Name}: {TypeScriptTypeMapper.MapTo(parameter.Type, specialSymbols, (ITypedSignalRTranspilationOptions)options)}");
             return;
         }
 
@@ -271,7 +270,7 @@ internal class InterfaceTranspiler
             .Select(x =>
                 SymbolEqualityComparer.Default.Equals(x.Type, specialSymbols.CancellationTokenSymbol)
                     ? null
-                    : $"{x.Name}: {TypeMapper.MapTo(x.Type, options)}")
+                    : $"{x.Name}: {TypeScriptTypeMapper.MapTo(x.Type, specialSymbols, (ITypedSignalRTranspilationOptions)options)}")
             .Where(x => x is not null);
 
         codeWriter.Append(string.Join(", ", paramStrings));
@@ -304,7 +303,7 @@ internal class InterfaceTranspiler
             if (SymbolEqualityComparer.Default.Equals(returnType.OriginalDefinition, specialSymbols.AsyncEnumerableSymbol))
             {
                 var typeArg = ((INamedTypeSymbol)returnType).TypeArguments[0];
-                codeWriter.Append($"IStreamResult<{TypeMapper.MapTo(typeArg, options)}>");
+                codeWriter.Append($"IStreamResult<{TypeScriptTypeMapper.MapTo(typeArg, specialSymbols, (ITypedSignalRTranspilationOptions)options)}>");
                 return;
             }
 
@@ -322,14 +321,14 @@ internal class InterfaceTranspiler
                     {
                         var typeArg2 = namedTypeArg.TypeArguments[0];
 
-                        codeWriter.Append($"IStreamResult<{TypeMapper.MapTo(typeArg2, options)}>");
+                        codeWriter.Append($"IStreamResult<{TypeScriptTypeMapper.MapTo(typeArg2, specialSymbols, (ITypedSignalRTranspilationOptions)options)}>");
                         return;
                     }
                 }
             }
         }
 
-        codeWriter.Append(TypeMapper.MapTo(returnType, options));
+        codeWriter.Append(TypeScriptTypeMapper.MapTo(returnType, specialSymbols, (ITypedSignalRTranspilationOptions)options));
     }
 
     private static XmlDocument? GetDocumentationComment(ISymbol symbol)

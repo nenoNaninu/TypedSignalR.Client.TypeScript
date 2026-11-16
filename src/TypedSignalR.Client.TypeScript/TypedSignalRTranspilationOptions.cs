@@ -12,6 +12,7 @@ public class TypedSignalRTranspilationOptions : TranspilationOptions, ITypedSign
         SerializerOption serializerOption,
         NamingStyle namingStyle,
         EnumStyle enumStyle,
+        NullableStrategy nullableStrategy,
         MethodStyle methodStyle,
         NewLineOption newLineOption,
         int indent,
@@ -25,7 +26,8 @@ public class TypedSignalRTranspilationOptions : TranspilationOptions, ITypedSign
             newLineOption,
             indent,
             referencedAssembliesTranspilation,
-            enableAttributeReference)
+            enableAttributeReference,
+            nullableStrategy)
     {
         MethodStyle = methodStyle;
     }

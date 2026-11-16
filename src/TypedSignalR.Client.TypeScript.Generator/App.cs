@@ -39,6 +39,8 @@ public class App : CoconaConsoleAppBase
         NamingStyle namingStyle = NamingStyle.CamelCase,
         [Option(Description ="Enum representation style")]
         EnumStyle @enum = EnumStyle.Value,
+        [Option("nullable", Description ="Nullable representation style. 'undefined' keeps optional properties, 'null' emits explicit null unions.")]
+        NullableStrategy nullable = NullableStrategy.Undefined,
         [Option('m', Description = "Method naming style. If none is selected, the C# name is used as it is.")]
         MethodStyle method = MethodStyle.CamelCase,
         [Option("attr", Description ="The flag whether attributes such as JsonPropertyName should affect transpilation.")]
@@ -52,7 +54,7 @@ public class App : CoconaConsoleAppBase
         {
             var compilation = await this.CreateCompilationAsync(project);
 
-            await TranspileCore(compilation, output, newLine, 4, assemblies, serializer, namingStyle, @enum, method, attribute);
+            await TranspileCore(compilation, output, newLine, 4, assemblies, serializer, namingStyle, @enum, nullable, method, attribute);
 
             _logger.Log(LogLevel.Information, "======== Transpilation is completed. ========");
             _logger.Log(LogLevel.Information, "Please check the output folder: {output}", output);
@@ -91,6 +93,7 @@ public class App : CoconaConsoleAppBase
         SerializerOption serializerOption,
         NamingStyle namingStyle,
         EnumStyle enumStyle,
+        NullableStrategy nullableStrategy,
         MethodStyle methodStyle,
         bool enableAttributeReference)
     {
@@ -124,7 +127,8 @@ public class App : CoconaConsoleAppBase
             newLine,
             indent,
             referencedAssembliesTranspilation,
-            enableAttributeReference
+            enableAttributeReference,
+            nullableStrategy
         );
 
         // Tapper

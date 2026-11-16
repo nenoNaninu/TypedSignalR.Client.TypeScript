@@ -54,6 +54,7 @@ public partial interface IUnaryHub
 {
     Task<UserDefinedType> Echo(UserDefinedType instance);
     Task<MyEnum> EchoMyEnum(MyEnum myEnum);
+    Task<string?> EchoNullableText(string? value);
     Task<MyResponseItem[]> RequestArray(MyRequestItem[] array);
     Task<List<MyResponseItem2>> RequestList(List<MyRequestItem2> list);
 }
