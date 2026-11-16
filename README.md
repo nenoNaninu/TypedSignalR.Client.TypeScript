@@ -123,7 +123,7 @@ Use `TypedSignalR.Client.TypeScript.Generatorr`(CLI Tool) to generate TypeScript
 
 ```bash
 # install
-# TypedSignalR.Client.TypeScript CLI (dotnet tool) requires .NET 7, but your app TFM can use .NET 6, etc.
+# TypedSignalR.Client.TypeScript CLI (dotnet tool) requires .NET 10 or later, but your app TFM can use older versions.
 $ dotnet tool install --global TypedSignalR.Client.TypeScript.Generator
 $ dotnet tsrts help
 
@@ -443,7 +443,7 @@ on:
   workflow_dispatch:
 
 env:
-  DOTNET_VERSION: "10.0.x"
+  DOTNET_VERSION: "11.0.x"
   DOTNET_NOLOGO: true
 
 jobs:
@@ -451,9 +451,9 @@ jobs:
     name: typedsignalr-typescript-code-generator
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
@@ -467,7 +467,7 @@ jobs:
 
       - run: dotnet tsrts --project ./xxx/yyyy/zzz.csproj --output ${{ github.workspace }}/generated
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: generated
           path: ${{ github.workspace }}/generated

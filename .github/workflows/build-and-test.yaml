@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        DOTNET_VERSION: ["10.0.x", "9.0.x", "8.0.x"]
+        DOTNET_VERSION: ["11.0.x", "10.0.x"]
 
     steps:
       - uses: actions/checkout@v7.0.1
@@ -25,23 +25,19 @@ jobs:
         uses: actions/setup-dotnet@v6.1.0
         with:
           dotnet-version: |
+            11.0.x
             10.0.x
-            9.0.x
-            8.0.x
 
       - name: Setup Node.js
         uses: actions/setup-node@v7.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - if: matrix.DOTNET_VERSION == '8.0.x'
-        run: echo "DOTNET_TFM=net8.0" >> $GITHUB_ENV
-
-      - if: matrix.DOTNET_VERSION == '9.0.x'
-        run: echo "DOTNET_TFM=net9.0" >> $GITHUB_ENV
-
       - if: matrix.DOTNET_VERSION == '10.0.x'
         run: echo "DOTNET_TFM=net10.0" >> $GITHUB_ENV
+
+      - if: matrix.DOTNET_VERSION == '11.0.x'
+        run: echo "DOTNET_TFM=net11.0" >> $GITHUB_ENV
 
       - name: Restore dependencies
         run: dotnet restore
