@@ -7,26 +7,26 @@
     <ItemGroup>
         <PackageVersion Include="AspNetCore.SignalR.OpenTelemetry" Version="1.8.0" />
         <PackageVersion Include="Cocona" Version="2.2.0" />
-        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
-        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.14.0" />
-        <PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.14.0" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.0.0" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="5.0.0" />
         <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" />
-        <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
-        <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.0" />
-        <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
-        <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
-        <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.22" />
-        <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="8.0.22" />
-        <PackageVersion Include="Microsoft.Build" Version="17.11.48" />
-        <PackageVersion Include="Microsoft.Build.Locator" Version="1.10.12" />
-        <PackageVersion Include="System.Text.Json" Version="10.0.0" />
-        <PackageVersion Include="Tapper" Version="1.14.0" />
-        <PackageVersion Include="Tapper.Attributes" Version="1.14.0" />
-        <PackageVersion Include="TypedSignalR.Client" Version="3.6.0" />
+        <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0" />
+        <PackageVersion Include="Microsoft.Extensions.Logging" Version="11.0.0" />
+        <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="11.0.0" />
+        <PackageVersion Include="Microsoft.Extensions.Hosting" Version="11.0.0" />
+        <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.15" />
+        <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="10.0.15" />
+        <PackageVersion Include="Microsoft.Build" Version="18.0.2" />
+        <PackageVersion Include="Microsoft.Build.Framework" Version="18.0.2" />
+        <PackageVersion Include="Microsoft.Build.Locator" Version="1.11.2" />
+        <PackageVersion Include="Tapper" Version="1.15.1" />
+        <PackageVersion Include="Tapper.Attributes" Version="1.15.1" />
+        <PackageVersion Include="TypedSignalR.Client" Version="3.7.0" />
         <PackageVersion Include="TypedSignalR.Client.Attributes" Version="1.1.0" />
         <PackageVersion Include="TypedSignalR.Client.DevTools" Version="1.2.4" />
-        <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.1" />
-        <PackageVersion Include="MessagePack" Version="2.5.187" />
-        <PackageVersion Include="MessagePack.AspNetCoreMvcFormatter" Version="2.5.129" />
+        <PackageVersion Include="Swashbuckle.AspNetCore" Version="11.0.1" />
+        <PackageVersion Include="MessagePack" Version="3.1.12" />
+        <PackageVersion Include="MessagePack.AspNetCoreMvcFormatter" Version="3.1.12" />
     </ItemGroup>
 </Project>
