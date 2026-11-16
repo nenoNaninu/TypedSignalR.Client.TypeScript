@@ -24,7 +24,7 @@ public class App : CoconaConsoleAppBase
         _logger = logger;
     }
 
-    public async Task Transpile(
+    public async Task<int> Transpile(
         [Option('p', Description = "Path to the project file (Xxx.csproj)")]
         string project,
         [Option('o', Description ="Output directory")]
@@ -56,11 +56,15 @@ public class App : CoconaConsoleAppBase
 
             _logger.Log(LogLevel.Information, "======== Transpilation is completed. ========");
             _logger.Log(LogLevel.Information, "Please check the output folder: {output}", output);
+
+            return 0;
         }
         catch (Exception ex)
         {
             _logger.Log(LogLevel.Information, "======== Exception ========");
             _logger.Log(LogLevel.Error, "{ex}", ex);
+
+            return 1;
         }
     }
 
