@@ -144,7 +144,7 @@ export type HubProxyFactoryProvider = {
             this.Write("\r\n");
  foreach(var method in receiverType.Methods) { 
             this.Write("        connection.on(\"");
-            this.Write(this.ToStringHelper.ToStringWithCulture(method.Name));
+            this.Write(this.ToStringHelper.ToStringWithCulture(method.GetSignalRMethodName()));
             this.Write("\", __");
             this.Write(this.ToStringHelper.ToStringWithCulture(method.Name.Format(Options.NamingStyle)));
             this.Write(");\r\n");
@@ -152,7 +152,7 @@ export type HubProxyFactoryProvider = {
             this.Write("\r\n        const methodList: ReceiverMethod[] = [\r\n");
  for(int i = 0; i < receiverType.Methods.Count; i++) { 
             this.Write("            { methodName: \"");
-            this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Methods[i].Name));
+            this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Methods[i].GetSignalRMethodName()));
             this.Write("\", method: __");
             this.Write(this.ToStringHelper.ToStringWithCulture(receiverType.Methods[i].Name.Format(Options.NamingStyle)));
             this.Write(" }");

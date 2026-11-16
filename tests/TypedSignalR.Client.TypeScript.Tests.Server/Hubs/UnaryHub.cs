@@ -47,6 +47,14 @@ public class UnaryHub : Hub, IUnaryHub
         return Task.FromResult("TypedSignalR.Client.TypeScript");
     }
 
+    [HubMethodName("UnaryHub_GetWithCustomName")]
+    public Task<string> GetWithCustomName()
+    {
+        _logger.Log(LogLevel.Information, "UnaryHub.GetWithCustomName");
+
+        return Task.FromResult("HubMethodNameAttribute");
+    }
+
     public Task<MyResponseItem[]> RequestArray(MyRequestItem[] array)
     {
         var buffer = new MyResponseItem[array.Length];
